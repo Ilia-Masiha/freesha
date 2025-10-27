@@ -7,5 +7,26 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ilia Abbasi",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.4",
+    "@types/jest": "^30.0.0",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^24.9.1",
+    "@types/pg": "^8.15.5",
+    "drizzle-kit": "^0.31.5",
+    "jest": "^30.2.0",
+    "nodemon": "^3.1.10",
+    "ts-jest": "^29.4.5",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.44.7",
+    "express": "^5.1.0",
+    "morgan": "^1.10.1",
+    "pg": "^8.16.3"
+  }
 }
