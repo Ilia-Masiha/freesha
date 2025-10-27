@@ -1,0 +1,11 @@
+{
+  "name": "freesha-backend",
+  "version": "1.0.0",
+  "description": "Backend of the freesha project with Express.js",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ilia Abbasi",
+  "license": "ISC"
+}
