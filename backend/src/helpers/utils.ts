@@ -1,5 +1,9 @@
-import { Tag } from "./types.js";
+import { Tag, None } from "./types.js";
 
-export function customLog(tag: Tag, text: string): void {
-  console.log(`[${tag.toUpperCase()}] ${text}`);
+export function timeNow(): string {
+  return new Date().toTimeString().split(" ")[0]!;
+}
+
+export function customLog(tag: Tag, text: string | None): void {
+  console.log(`(${timeNow()}) [${tag.toUpperCase()}] ${text}`);
 }
