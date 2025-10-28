@@ -1,11 +1,12 @@
 import express from "express";
 
 import { error404Middleware } from "../middlewares/response.js";
-import { registerUser } from "../controllers/register.js";
+import { registerValidator } from "../middlewares/validation.js";
+import { register } from "../controllers/register.js";
 
 const router = express.Router();
 
-router.post("/", registerUser);
+router.post("/", registerValidator, register);
 
 router.all("/{*anything}", error404Middleware);
 
