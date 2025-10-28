@@ -2,6 +2,9 @@
 add
 commit
 
+# Drizzle
+drizzle
+
 # Logs
 logs
 *.log
