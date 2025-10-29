@@ -1,8 +1,11 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import { matchedData, validationResult } from "express-validator";
 import nodemailer from "nodemailer";
+import bcrypt from "bcryptjs";
 
 import * as db from "../database/db.js";
+import { redisSet } from "../database/redis.js";
+import { generateOtp } from "../helpers/utils.js";
 
 const transporter = nodemailer.createTransport({
   service: process.env.EMAIL_SERVICE,
@@ -37,8 +40,8 @@ async function sendOtp(to: string, otp: string) {
 export async function register(
   req: Request,
   res: Response,
-  _next: NextFunction
-): Promise<Response> {
+  next: NextFunction
+): Promise<Response | void> {
   const validationError = validationResult(req).array()[0];
 
   if (validationError) {
@@ -48,10 +51,26 @@ export async function register(
 
   const { name, email, password } = matchedData(req);
 
-  if (await db.emailExists(email)) {
+  const dbResult = await db.emailExists(email);
+
+  if (dbResult[0]) {
     const message = "This email is already in use";
     return res.status(409).json({ message });
   }
 
-  return res.sendStatus(201);
+  const hashedPassword = await bcrypt.hash(password, 12);
+  const preRegisterInfo = JSON.stringify({ name, email, hashedPassword });
+  const otp = generateOtp();
+
+  try {
+    await sendOtp(email, otp);
+  } catch (error) {
+    return next(new Error("Failed to send OTP email"));
+  }
+
+  redisSet(`otp:${email}`, otp, 5 * 60);
+  redisSet(`pre-register:${email}`, preRegisterInfo, 6 * 60);
+
+  const message = "Sent OTP email";
+  return res.status(200).json({ message });
 }
