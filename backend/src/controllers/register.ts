@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
+import { matchedData, validationResult } from "express-validator";
 import nodemailer from "nodemailer";
+
+import * as db from "../database/db.js";
 
 const transporter = nodemailer.createTransport({
   service: process.env.EMAIL_SERVICE,
@@ -31,10 +34,24 @@ async function sendOtp(to: string, otp: string) {
   await transporter.sendMail(mailOptions);
 }
 
-export function register(
-  _req: Request,
+export async function register(
+  req: Request,
   res: Response,
   _next: NextFunction
-): Response {
+): Promise<Response> {
+  const validationError = validationResult(req).array()[0];
+
+  if (validationError) {
+    const message = validationError.msg;
+    return res.status(400).json({ message });
+  }
+
+  const { name, email, password } = matchedData(req);
+
+  if (await db.emailExists(email)) {
+    const message = "This email is already in use";
+    return res.status(409).json({ message });
+  }
+
   return res.sendStatus(201);
 }
