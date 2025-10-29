@@ -1,12 +1,5 @@
 import { body } from "express-validator";
 
-export const roleValidatorSanitizer = (value: string) => {
-  if (value === "freelancer" || value === "client") {
-    return value;
-  }
-  return false;
-};
-
 export const nameValidator = () =>
   body("name")
     .trim()
@@ -39,12 +32,8 @@ export const passwordValidator = () =>
     .isStrongPassword()
     .withMessage("Password is too weak");
 
-export const roleValidator = () =>
-  body("role").customSanitizer(roleValidatorSanitizer);
-
 export const registerValidator = () => [
   nameValidator(),
   emailValidator(),
   passwordValidator(),
-  roleValidator(),
 ];
