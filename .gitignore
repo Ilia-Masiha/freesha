@@ -1,9 +1,9 @@
 # Custom
-add
-commit
+backend/add
+backend/commit
 
 # Drizzle
-drizzle
+backend/drizzle/
 
 # Logs
 logs
