@@ -12,6 +12,7 @@ export const nameValidator = () =>
 
 export const emailValidator = () =>
   body("email")
+    .trim()
     .notEmpty()
     .withMessage("ایمیل ضروری است")
     .isString()
@@ -32,8 +33,19 @@ export const passwordValidator = () =>
     .isStrongPassword()
     .withMessage("پسورد ضعیف است");
 
+export const otpValidator = () =>
+  body("otp")
+    .notEmpty()
+    .withMessage("کد تائید ضروری است")
+    .isString()
+    .withMessage("کد تائید باید یک رشته باشد")
+    .isLength({ min: 5, max: 5 })
+    .withMessage("کد تائید باید دقیقا 5 کاراکتر باشد");
+
 export const registerValidator = () => [
   nameValidator(),
   emailValidator(),
   passwordValidator(),
 ];
+
+export const verifyemailValidator = () => [emailValidator(), otpValidator()];

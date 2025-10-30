@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
-import { customLog } from "../helpers/utils";
+
+import { customLog } from "../helpers/utils.js";
 
 export function error404Middleware(
   _req: Request,
