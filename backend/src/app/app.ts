@@ -1,10 +1,15 @@
 import express from "express";
 import { Application } from "express-serve-static-core";
 import morgan from "morgan";
+import cors from "cors";
 
 import mainRouter from "../routes/main.js";
 import { timeNow } from "../helpers/utils.js";
 import { generalErrorHandler } from "../middlewares/response.js";
+
+const corsOptions = {
+  origin: ["http://127.0.0.1"],
+};
 
 morgan.token("time-only", () => {
   return timeNow();
@@ -12,6 +17,8 @@ morgan.token("time-only", () => {
 
 export function createApp(): Application {
   const app: Application = express();
+
+  app.use(cors(corsOptions));
 
   app.use(
     morgan("(:time-only) [MORGAN] :method :url :status - :response-time ms")

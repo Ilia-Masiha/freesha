@@ -9,7 +9,7 @@ export function customLog(tag: Tag, text: string | None): void {
 }
 
 export function generateOtp(length = 5): string {
-  const chars = "01234567890ABCDEFGHJKLMNPQRSTUVWXYZ";
+  const chars = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
   let result = "";
 
   for (let i = 0; i < length; i++) {

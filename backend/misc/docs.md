@@ -28,7 +28,7 @@ This is the documentation for the backend of freesha.
   npm run migrate
   ```
 
-6. Create a new email address or use your own email address for OTP sending. If you want to use your own email address, read the next section: "OTP"
+6. Create a new email address or use your own email address for OTP sending. If you want to use your own email address, read the next section: [OTP](https://github.com/ilia-abbasi/freesha/blob/main/backend/misc/docs.md#otp)
 
 7. Create the `.env` file outside the `backend` directory, in the root of this repository:
   ```env
@@ -53,6 +53,8 @@ To use your own email address for sending OTPs, follow these steps (GMAIL):
   6. Put your own email address in `EMAIL_USER` environment variable.
   7. Put `gmail` in `EMAIL_SERVICE` environment variable.
 
+OTP is a 5-character string consisting of 0-9 and A-Z except capital i (`I`) and capital o (`O`), because they can be confused with `1` and `0`. This gives 45,435,424 distinct OTPs.
+
 ## Running
 
 You can either use `npm run dev` to run the backend in watch mode, or build it first and then run the Javascript files instead:  
@@ -63,4 +65,7 @@ You can either use `npm run dev` to run the backend in watch mode, or build it f
 
 ## Response format
 
-Every response has a `message` and `data` property. (UNFINISHED)
+Every response has a `message` and `data` property:
+
+  - `message`: This is a string explaining the response.
+  - `data`: This could either be an array or an object based on the type of request. For example if you requested the list of users, you should expect `data` to be an array, but if you requested the information of a single user, you should expect `data` to be an object.

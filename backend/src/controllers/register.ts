@@ -1,11 +1,16 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import { matchedData, validationResult } from "express-validator";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "url";
 import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
+import path from "node:path";
 
 import * as db from "../database/db.js";
 import { redisSet } from "../database/redis.js";
 import { generateOtp } from "../helpers/utils.js";
+
+const __filename = fileURLToPath(import.meta.url);
 
 const transporter = nodemailer.createTransport({
   service: process.env.EMAIL_SERVICE,
@@ -16,22 +21,18 @@ const transporter = nodemailer.createTransport({
 });
 
 async function sendOtp(to: string, otp: string) {
+  let emailContent = readFileSync(
+    path.join(__filename, "/../../../misc/otp_email.html"),
+    "utf-8"
+  );
+
+  emailContent = emailContent.replace("==OTP==", otp);
+
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: to,
-    subject: "Freesha - Your Verification Code",
-    html: `
-      <div>
-        <h3>Email Verification</h3>
-
-        <p><strong>NEVER SHARE THIS CODE WITH ANYONE</strong></p>
-        <p>Your OTP code is: <strong>${otp}</strong></p>
-
-        <p>This code will expire in 5 minutes.<br>
-           If you didn't request the code, just ignore this email.
-        </p>
-      </div>
-    `,
+    subject: "فریشا - کد تائید ایمیل",
+    html: emailContent,
   };
 
   await transporter.sendMail(mailOptions);
@@ -54,13 +55,14 @@ export async function register(
   const dbResult = await db.emailExists(email);
 
   if (dbResult[0]) {
-    const message = "This email is already in use";
+    const message = "این ایمیل قبلا استفاده شده است";
     return res.status(409).json({ message });
   }
 
   const hashedPassword = await bcrypt.hash(password, 12);
   const preRegisterInfo = JSON.stringify({ name, email, hashedPassword });
   const otp = generateOtp();
+  const hashedOtp = await bcrypt.hash(otp, 12);
 
   try {
     await sendOtp(email, otp);
@@ -68,9 +70,9 @@ export async function register(
     return next(new Error("Failed to send OTP email"));
   }
 
-  redisSet(`otp:${email}`, otp, 5 * 60);
+  redisSet(`otp:${email}`, hashedOtp, 5 * 60);
   redisSet(`pre-register:${email}`, preRegisterInfo, 6 * 60);
 
-  const message = "Sent OTP email";
+  const message = "کد تائید به ایمیل شما ارسال شد";
   return res.status(200).json({ message });
 }

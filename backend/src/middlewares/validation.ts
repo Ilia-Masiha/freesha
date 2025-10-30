@@ -4,36 +4,48 @@ export const nameValidator = () =>
   body("name")
     .trim()
     .notEmpty()
-    .withMessage("name is required")
+    .withMessage("نام ضروری است")
     .isString()
-    .withMessage("name must be a string")
+    .withMessage("نام باید یک رشته باشد")
     .isLength({ min: 1, max: 40 })
-    .withMessage("name length can not exceed 40");
+    .withMessage("نام نباید بیش از 40 کاراکتر باشد");
 
 export const emailValidator = () =>
   body("email")
+    .trim()
     .notEmpty()
-    .withMessage("email is required")
+    .withMessage("ایمیل ضروری است")
     .isString()
-    .withMessage("email must be a string")
+    .withMessage("ایمیل باید یک رشته باشد")
     .isLength({ max: 320 })
-    .withMessage("email length can not exceed 320")
+    .withMessage("ایمیل نباید بیش از 320 کاراکتر باشد")
     .isEmail()
-    .withMessage("email must be valid");
+    .withMessage("ایمیل باید معتبر باشد");
 
 export const passwordValidator = () =>
   body("password")
     .notEmpty()
-    .withMessage("password is required")
+    .withMessage("پسورد ضروری است")
     .isString()
-    .withMessage("password must be a string")
+    .withMessage("پسورد باید یک رشته باشد")
     .isLength({ max: 10_000 })
-    .withMessage("Are you serious?")
+    .withMessage("حالت خوبه؟")
     .isStrongPassword()
-    .withMessage("Password is too weak");
+    .withMessage("پسورد ضعیف است");
+
+export const otpValidator = () =>
+  body("otp")
+    .notEmpty()
+    .withMessage("کد تائید ضروری است")
+    .isString()
+    .withMessage("کد تائید باید یک رشته باشد")
+    .isLength({ min: 5, max: 5 })
+    .withMessage("کد تائید باید دقیقا 5 کاراکتر باشد");
 
 export const registerValidator = () => [
   nameValidator(),
   emailValidator(),
   passwordValidator(),
 ];
+
+export const verifyemailValidator = () => [emailValidator(), otpValidator()];
