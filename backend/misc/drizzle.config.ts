@@ -1,4 +1,4 @@
-import "./src/helpers/load_env";
+import "../src/helpers/load_env";
 import { defineConfig } from "drizzle-kit";
 
 export default defineConfig({

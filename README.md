@@ -1,2 +1,3 @@
 # freesha
-Where talented freelancers meet visionary clients .
+
+Where talented freelancers meet visionary clients.
