@@ -6,7 +6,7 @@ export function error404Middleware(
   res: Response,
   _next: NextFunction
 ): Response {
-  return res.status(404).send("Not found");
+  return res.status(404).send("منبع مورد نظر پیدا نشد");
 }
 
 export function generalErrorHandler(
@@ -18,6 +18,6 @@ export function generalErrorHandler(
   customLog("server", err.message!);
   customLog("server", err.stack!);
 
-  const message = "Something went wrong on the server";
+  const message = "خطایی در سرور رخ داده است";
   return res.status(500).json({ message });
 }
