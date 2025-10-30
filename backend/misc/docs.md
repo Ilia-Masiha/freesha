@@ -53,6 +53,8 @@ To use your own email address for sending OTPs, follow these steps (GMAIL):
   6. Put your own email address in `EMAIL_USER` environment variable.
   7. Put `gmail` in `EMAIL_SERVICE` environment variable.
 
+OTP is a 5-character string consisting of 0-9 and A-Z except capital i (`I`) and capital o (`O`), because they can be confused with `1` and `0`. This gives 45,435,424 distinct OTPs.
+
 ## Running
 
 You can either use `npm run dev` to run the backend in watch mode, or build it first and then run the Javascript files instead:  
