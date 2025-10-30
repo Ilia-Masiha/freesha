@@ -17,6 +17,7 @@
   "author": "Ilia Abbasi",
   "license": "ISC",
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.4",
     "@types/express-validator": "^2.20.33",
@@ -35,6 +36,7 @@
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.7",
     "express": "^5.1.0",

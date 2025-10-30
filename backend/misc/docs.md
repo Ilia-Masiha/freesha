@@ -28,7 +28,7 @@ This is the documentation for the backend of freesha.
   npm run migrate
   ```
 
-6. Create a new email address or use your own email address for OTP sending. If you want to use your own email address, read the next section: "OTP"
+6. Create a new email address or use your own email address for OTP sending. If you want to use your own email address, read the next section: [OTP](https://github.com/ilia-abbasi/freesha/blob/main/backend/misc/docs.md#otp)
 
 7. Create the `.env` file outside the `backend` directory, in the root of this repository:
   ```env

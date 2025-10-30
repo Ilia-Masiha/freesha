@@ -62,6 +62,7 @@ export async function register(
   const hashedPassword = await bcrypt.hash(password, 12);
   const preRegisterInfo = JSON.stringify({ name, email, hashedPassword });
   const otp = generateOtp();
+  const hashedOtp = await bcrypt.hash(otp, 12);
 
   try {
     await sendOtp(email, otp);
@@ -69,7 +70,7 @@ export async function register(
     return next(new Error("Failed to send OTP email"));
   }
 
-  redisSet(`otp:${email}`, otp, 5 * 60);
+  redisSet(`otp:${email}`, hashedOtp, 5 * 60);
   redisSet(`pre-register:${email}`, preRegisterInfo, 6 * 60);
 
   const message = "کد تائید به ایمیل شما ارسال شد";
