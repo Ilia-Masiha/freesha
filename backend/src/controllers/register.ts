@@ -23,7 +23,7 @@ const transporter = nodemailer.createTransport({
 
 async function sendOtp(to: string, otp: string) {
   let emailContent = readFileSync(
-    path.join(__filename, "/../../../misc/otp_email.html"),
+    path.join(__filename, "../../../misc/otp_email.html"),
     "utf-8"
   );
 

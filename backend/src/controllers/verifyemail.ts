@@ -57,5 +57,5 @@ export async function verifyemail(
   const userInfo = dbResponse2.result;
 
   const resObj = makeResObj(messages.successfulRegister, userInfo);
-  return res.sendStatus(201).json(resObj);
+  return res.status(201).json(resObj);
 }
