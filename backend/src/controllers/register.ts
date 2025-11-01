@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import { matchedData, validationResult } from "express-validator";
 import { readFileSync } from "node:fs";
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
 import path from "node:path";
@@ -9,6 +9,7 @@ import path from "node:path";
 import * as db from "../database/db.js";
 import { redisSet } from "../database/redis.js";
 import { generateOtp } from "../helpers/utils.js";
+import { messages } from "../helpers/messages.js";
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -55,7 +56,7 @@ export async function register(
   const dbResult = await db.emailExists(email);
 
   if (dbResult[0]) {
-    const message = "این ایمیل قبلا استفاده شده است";
+    const message = messages.usedEmail;
     return res.status(409).json({ message });
   }
 
@@ -70,9 +71,9 @@ export async function register(
     return next(new Error("Failed to send OTP email"));
   }
 
-  redisSet(`otp:${email}`, hashedOtp, 5 * 60);
-  redisSet(`pre-register:${email}`, preRegisterInfo, 6 * 60);
+  await redisSet(`otp:${email}`, hashedOtp, 5 * 60);
+  await redisSet(`pre-register:${email}`, preRegisterInfo, 6 * 60);
 
-  const message = "کد تائید به ایمیل شما ارسال شد";
+  const message = messages.sentOtp;
   return res.status(200).json({ message });
 }
