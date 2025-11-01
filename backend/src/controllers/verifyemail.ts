@@ -3,7 +3,7 @@ import { validationResult, matchedData } from "express-validator";
 import bcrypt from "bcryptjs";
 
 import * as db from "../database/db.js";
-import { redisGet } from "../database/redis.js";
+import { redisDel, redisGet } from "../database/redis.js";
 import { messages } from "../helpers/messages.js";
 import { PreRegisterInfo } from "../helpers/types.js";
 import { makeResObj } from "../helpers/utils.js";
@@ -53,6 +53,9 @@ export async function verifyemail(
   if (dbResponse2.error || !dbResponse2.result) {
     return next(dbResponse2.error);
   }
+
+  await redisDel(`otp:${email}`);
+  await redisDel(`pre-register:${email}`);
 
   const userInfo = dbResponse2.result;
 
