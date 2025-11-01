@@ -32,12 +32,12 @@ export async function redisSet(key: string, value: RedisValue, expiration = 0) {
 
   try {
     await redisClient.set(key, value, { EX: expiration });
-  } catch (err) {
+  } catch (error) {
     customLog(
       "redis",
       `An error occurred while setting (${key}/${value}) pair:`
     );
-    customLog("redis", (err as Error).message);
+    customLog("redis", (error as Error).message);
   }
 }
 
@@ -45,10 +45,19 @@ export async function redisGet(key: string) {
   try {
     const value = await redisClient.get(key);
     return value;
-  } catch (err) {
+  } catch (error) {
     customLog("redis", `An error occurred while getting (${key}):`);
-    customLog("redis", (err as Error).message);
+    customLog("redis", (error as Error).message);
     return false;
+  }
+}
+
+export async function redisDel(key: string) {
+  try {
+    await redisClient.del(key);
+  } catch (error) {
+    customLog("redis", `An error occurred while deleting (${key}):`);
+    customLog("redis", (error as Error).message);
   }
 }
 

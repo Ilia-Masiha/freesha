@@ -2,9 +2,15 @@ import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
 import { eq } from "drizzle-orm";
 import { Pool } from "pg";
 
-import { usersTable } from "./schema.js";
+import { rolesTable, usersTable } from "./schema.js";
 import { customLog } from "../helpers/utils.js";
-import { DatabaseResponse } from "../helpers/types.js";
+import {
+  DbError,
+  DbResponse,
+  DbResult,
+  PreRegisterInfo,
+  User,
+} from "../helpers/types.js";
 
 let db: NodePgDatabase<Record<string, never>> & {
   $client: Pool;
@@ -22,7 +28,11 @@ export async function disconnectDb() {
   customLog("database", "Connection closed");
 }
 
-export async function emailExists(email: string): Promise<DatabaseResponse> {
+function makeDbResponse(result: DbResult, error: DbError): DbResponse {
+  return { result, error };
+}
+
+export async function emailExists(email: string): Promise<DbResponse> {
   try {
     const result = await db
       .select({
@@ -31,8 +41,50 @@ export async function emailExists(email: string): Promise<DatabaseResponse> {
       .from(usersTable)
       .where(eq(usersTable.email, email));
 
-    return [result[0], null];
+    return makeDbResponse(result[0], null);
   } catch (error) {
-    return [null, error as Error];
+    return makeDbResponse(null, error as Error);
+  }
+}
+
+export async function insertUser(
+  preRegisterInfo: PreRegisterInfo
+): Promise<DbResponse> {
+  try {
+    const result = await db
+      .insert(usersTable)
+      .values({
+        name: preRegisterInfo.name,
+        email: preRegisterInfo.email,
+        password: preRegisterInfo.hashedPassword,
+        roleId: 1,
+      })
+      .returning({
+        id: usersTable.id,
+      });
+
+    return makeDbResponse(result[0]?.id, null);
+  } catch (error) {
+    return makeDbResponse(null, error as Error);
+  }
+}
+
+export async function getUser(id: number): Promise<DbResponse> {
+  try {
+    const result = await db
+      .select({
+        name: usersTable.name,
+        email: usersTable.email,
+        roleName: rolesTable.roleName,
+        createdAt: usersTable.createdAt,
+        updatedAt: usersTable.updatedAt,
+      })
+      .from(usersTable)
+      .innerJoin(rolesTable, eq(usersTable.roleId, rolesTable.id))
+      .where(eq(usersTable.id, id));
+
+    return makeDbResponse(result[0], null);
+  } catch (error) {
+    return makeDbResponse(null, error as Error);
   }
 }
