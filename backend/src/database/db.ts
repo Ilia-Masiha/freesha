@@ -9,7 +9,6 @@ import {
   DbResponse,
   DbResult,
   PreRegisterInfo,
-  User,
 } from "../helpers/types.js";
 
 let db: NodePgDatabase<Record<string, never>> & {
@@ -30,6 +29,24 @@ export async function disconnectDb() {
 
 function makeDbResponse(result: DbResult, error: DbError): DbResponse {
   return { result, error };
+}
+
+export async function seed() {
+  try {
+    await db
+      .insert(rolesTable)
+      .values([
+        { id: 1, roleName: "user" },
+        { id: 2, roleName: "admin" },
+      ])
+      .onConflictDoNothing();
+
+    customLog("database", "Roles seeded successfully");
+    process.exit(0);
+  } catch (error) {
+    customLog("database", `Seeding failed: ${error}`);
+    process.exit(1);
+  }
 }
 
 export async function emailExists(email: string): Promise<DbResponse> {

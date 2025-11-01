@@ -26,6 +26,7 @@ This is the documentation for the backend of freesha.
   ```sh
   npm run generate
   npm run migrate
+  npm run seed
   ```
 
 6. Create a new email address or use your own email address for OTP sending. If you want to use your own email address, read the next section: [OTP](https://github.com/ilia-abbasi/freesha/blob/main/backend/misc/docs.md#otp)

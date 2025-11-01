@@ -10,6 +10,7 @@
     "build": "tsc --build",
     "generate": "drizzle-kit generate --name=init --config ./misc/drizzle.config.ts",
     "migrate": "drizzle-kit migrate --config ./misc/drizzle.config.ts",
+    "seed": "tsx ./misc/seed.ts",
     "test": "jest",
     "test:units": "jest --testPathPatterns=./src/__tests__/units",
     "test:e2e": "jest --testPathPatterns=./src/__tests__/e2e"
