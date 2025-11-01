@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express-serve-static-core";
 import { validationResult, matchedData } from "express-validator";
 import bcrypt from "bcryptjs";
 
+import * as db from "../database/db.js";
 import { redisGet } from "../database/redis.js";
 import { messages } from "../helpers/messages.js";
 import { PreRegisterInfo } from "../helpers/types.js";
@@ -9,7 +10,7 @@ import { PreRegisterInfo } from "../helpers/types.js";
 export async function verifyemail(
   req: Request,
   res: Response,
-  _next: NextFunction
+  next: NextFunction
 ): Promise<Response | void> {
   const validationError = validationResult(req).array()[0];
 
@@ -40,5 +41,10 @@ export async function verifyemail(
 
   const preRegisterInfo: PreRegisterInfo = JSON.parse(preRegisterInfoJson);
 
-  return res.sendStatus(201);
+  const dbResponse = await db.insertUser(preRegisterInfo);
+  if (dbResponse.error) {
+    return next(dbResponse.error);
+  }
+
+  return res.sendStatus(201).send(dbResponse.result);
 }

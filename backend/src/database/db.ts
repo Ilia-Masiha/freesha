@@ -4,7 +4,13 @@ import { Pool } from "pg";
 
 import { usersTable } from "./schema.js";
 import { customLog } from "../helpers/utils.js";
-import { DatabaseResponse } from "../helpers/types.js";
+import {
+  DbError,
+  DbResponse,
+  DbResult,
+  PreRegisterInfo,
+  User,
+} from "../helpers/types.js";
 
 let db: NodePgDatabase<Record<string, never>> & {
   $client: Pool;
@@ -22,7 +28,11 @@ export async function disconnectDb() {
   customLog("database", "Connection closed");
 }
 
-export async function emailExists(email: string): Promise<DatabaseResponse> {
+function makeDbResponse(result: DbResult, error: DbError): DbResponse {
+  return { result, error };
+}
+
+export async function emailExists(email: string): Promise<DbResponse> {
   try {
     const result = await db
       .select({
@@ -31,8 +41,34 @@ export async function emailExists(email: string): Promise<DatabaseResponse> {
       .from(usersTable)
       .where(eq(usersTable.email, email));
 
-    return [result[0], null];
+    return makeDbResponse(result[0], null);
   } catch (error) {
-    return [null, error as Error];
+    return makeDbResponse(null, error as Error);
+  }
+}
+
+export async function insertUser(
+  preRegisterInfo: PreRegisterInfo
+): Promise<DbResponse> {
+  try {
+    const result: User[] = await db
+      .insert(usersTable)
+      .values({
+        name: preRegisterInfo.name,
+        email: preRegisterInfo.email,
+        password: preRegisterInfo.hashedPassword,
+        roleId: 1,
+      })
+      .returning({
+        name: usersTable.name,
+        email: usersTable.email,
+        roleId: usersTable.roleId,
+        createdAt: usersTable.createdAt,
+        updatedAt: usersTable.updatedAt,
+      });
+
+    return makeDbResponse(result[0], null);
+  } catch (error) {
+    return makeDbResponse(null, error as Error);
   }
 }

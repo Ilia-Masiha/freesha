@@ -55,7 +55,7 @@ export async function register(
 
   const dbResult = await db.emailExists(email);
 
-  if (dbResult[0]) {
+  if (dbResult.result) {
     const message = messages.usedEmail;
     return res.status(409).json({ message });
   }
