@@ -1,4 +1,4 @@
-import { Tag, None } from "./types.js";
+import { Tag, None, ResObj } from "./types.js";
 
 export function timeNow(): string {
   return new Date().toTimeString().split(" ")[0]!;
@@ -18,4 +18,8 @@ export function generateOtp(length = 5): string {
   }
 
   return result;
+}
+
+export function makeResObj(message: string, data: Object = {}): ResObj {
+  return { message, data };
 }

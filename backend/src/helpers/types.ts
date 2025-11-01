@@ -7,16 +7,23 @@ export interface PreRegisterInfo {
 }
 
 export interface User {
+  id: number;
   name: string;
   email: string;
-  roleId: number;
-  createdAt: Date;
-  updatedAt: Date;
+  roleId?: number;
+  roleName?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface DbResponse {
   result: DbResult;
   error: DbError;
+}
+
+export interface ResObj {
+  message: string;
+  data: Object;
 }
 
 export type Tag = "server" | "database" | "redis";

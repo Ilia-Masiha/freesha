@@ -8,7 +8,7 @@ import path from "node:path";
 
 import * as db from "../database/db.js";
 import { redisSet } from "../database/redis.js";
-import { generateOtp } from "../helpers/utils.js";
+import { generateOtp, makeResObj } from "../helpers/utils.js";
 import { messages } from "../helpers/messages.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -47,8 +47,8 @@ export async function register(
   const validationError = validationResult(req).array()[0];
 
   if (validationError) {
-    const message = validationError.msg;
-    return res.status(400).json({ message });
+    const resObj = makeResObj(validationError.msg);
+    return res.status(400).json(resObj);
   }
 
   const { name, email, password } = matchedData(req);
@@ -56,8 +56,8 @@ export async function register(
   const dbResult = await db.emailExists(email);
 
   if (dbResult.result) {
-    const message = messages.usedEmail;
-    return res.status(409).json({ message });
+    const resObj = makeResObj(messages.usedEmail);
+    return res.status(409).json(resObj);
   }
 
   const hashedPassword = await bcrypt.hash(password, 12);
@@ -74,6 +74,6 @@ export async function register(
   await redisSet(`otp:${email}`, hashedOtp, 5 * 60);
   await redisSet(`pre-register:${email}`, preRegisterInfo, 6 * 60);
 
-  const message = messages.sentOtp;
-  return res.status(200).json({ message });
+  const resObj = makeResObj(messages.sentOtp);
+  return res.status(200).json(resObj);
 }
