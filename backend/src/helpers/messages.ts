@@ -5,4 +5,5 @@ export const messages = {
   successfulRegister: "ثبت نام با موفقیت انجام شد",
   error500: "خطایی در سرور رخ داده است",
   error404: "منبع مورد نظر پیدا نشد",
+  error401: "احراز هویت ناموفق بود",
 };
