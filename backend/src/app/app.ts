@@ -1,5 +1,6 @@
 import express from "express";
 import { Application } from "express-serve-static-core";
+import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import cors from "cors";
 
@@ -19,7 +20,7 @@ export function createApp(): Application {
   const app: Application = express();
 
   app.use(cors(corsOptions));
-
+  app.use(cookieParser());
   app.use(
     morgan("(:time-only) [MORGAN] :method :url :status - :response-time ms")
   );

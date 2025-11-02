@@ -8,7 +8,9 @@ import {
   DbError,
   DbResponse,
   DbResult,
+  None,
   PreRegisterInfo,
+  User,
 } from "../helpers/types.js";
 
 let db: NodePgDatabase<Record<string, never>> & {
@@ -27,7 +29,10 @@ export async function disconnectDb() {
   customLog("database", "Connection closed");
 }
 
-function makeDbResponse(result: DbResult, error: DbError): DbResponse {
+function makeDbResponse<T>(
+  result: T | None,
+  error: DbError
+): DbResponse<T | None> {
   return { result, error };
 }
 
@@ -49,7 +54,9 @@ export async function seed() {
   }
 }
 
-export async function emailExists(email: string): Promise<DbResponse> {
+export async function emailExists(
+  email: string
+): Promise<DbResponse<DbResult>> {
   try {
     const result = await db
       .select({
@@ -66,7 +73,7 @@ export async function emailExists(email: string): Promise<DbResponse> {
 
 export async function insertUser(
   preRegisterInfo: PreRegisterInfo
-): Promise<DbResponse> {
+): Promise<DbResponse<DbResult>> {
   try {
     const result = await db
       .insert(usersTable)
@@ -86,10 +93,11 @@ export async function insertUser(
   }
 }
 
-export async function getUser(id: number): Promise<DbResponse> {
+export async function getUser(id: number): Promise<DbResponse<User | None>> {
   try {
     const result = await db
       .select({
+        id: usersTable.id,
         name: usersTable.name,
         email: usersTable.email,
         roleName: rolesTable.roleName,
@@ -100,8 +108,8 @@ export async function getUser(id: number): Promise<DbResponse> {
       .innerJoin(rolesTable, eq(usersTable.roleId, rolesTable.id))
       .where(eq(usersTable.id, id));
 
-    return makeDbResponse(result[0], null);
+    return makeDbResponse<User>(result[0], null);
   } catch (error) {
-    return makeDbResponse(null, error as Error);
+    return makeDbResponse<null>(null, error as Error);
   }
 }

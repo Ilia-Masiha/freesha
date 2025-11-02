@@ -70,3 +70,49 @@ Every response has a `message` and `data` property:
 
   - `message`: This is a string explaining the response.
   - `data`: This could either be an array or an object based on the type of request. For example if you requested the list of users, you should expect `data` to be an array, but if you requested the information of a single user, you should expect `data` to be an object.
+
+## Endpoints
+
+- `POST /register`:  
+  The endpoint is used for registering a new user. Send user information in the request body in this format:  
+  ```json
+  REQUEST BODY
+  {
+    "name": "John Doe",
+    "email": "john@doe.com",
+    "password": "verySecure!123"
+  }
+  ```
+  Response body will contain a `message` about the result of your request. These status codes are expected:  
+  - `400`: Validation error. More information in `message`.
+  - `409`: Duplicate email. The email that you are trying to register with, already exists in the database.
+  - `200`: OK. OTP is sent to the email for verification.
+
+- `POST /verifyemail`:  
+  The endpoint is used for verifying your email using the OTP that was sent to it. Send information in the request body in this format:  
+  ```json
+  REQUEST BODY
+  {
+    "email": "john@doe.com",
+    "otp": "ABCDE",
+  }
+  ```
+  Response body will contain a `message` about the result of your request. If successful, `data` will also contain information about the verified user. Response body will be in this format (If status code is `201`):  
+  ```json
+  RESPONSE BODY
+  {
+    "message": "ثبت نام با موفقیت انجام شد",
+    "data": {
+      "id": 5,
+      "name": "John Doe",
+      "email": "john@doe.com",
+      "roleName": "user",
+      "createdAt": "2025-10-02T11:52:24.977Z",
+      "updatedAt": "2025-10-02T11:52:24.977Z"
+    }
+  }
+  ```
+  If status code is `201`, a session key will be sent as an `httponly` cookie. These status codes are expected:  
+  - `400`: Validation error. More information in `message`.
+  - `401`: Invalid OTP.
+  - `201`: Successfully verified the OTP and created the user in database.

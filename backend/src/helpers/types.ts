@@ -16,14 +16,21 @@ export interface User {
   updatedAt?: Date;
 }
 
-export interface DbResponse {
-  result: DbResult;
+export interface DbResponse<T> {
+  result: T | None;
   error: DbError;
 }
 
 export interface ResObj {
   message: string;
   data: Object;
+}
+
+export interface SessionData {
+  id: number;
+  name: string;
+  email: string;
+  roleName: string;
 }
 
 export type Tag = "server" | "database" | "redis";
