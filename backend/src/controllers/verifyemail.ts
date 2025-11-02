@@ -68,7 +68,7 @@ export async function verifyemail(
     email: userInfo.email,
     roleName: userInfo.roleName!,
   };
-  setSessionData(res, randomUUID(), sessionData);
+  await setSessionData(res, randomUUID(), sessionData);
 
   const resObj = makeResObj(messages.successfulRegister, userInfo);
   return res.status(201).json(resObj);

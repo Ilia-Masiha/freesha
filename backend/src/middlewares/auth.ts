@@ -36,9 +36,9 @@ export async function setSessionData(
 ) {
   const sessionDataJson = JSON.stringify(sessionData);
 
-  await redisSet(`session:${sessionKey}`, sessionDataJson);
+  await redisSet(`session:${sessionKey}`, sessionDataJson, 24 * 60 * 60);
 
-  res.cookie("sessionData", sessionKey, {
+  res.cookie("sessionKey", sessionKey, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
