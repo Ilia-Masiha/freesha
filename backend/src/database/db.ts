@@ -29,10 +29,7 @@ export async function disconnectDb() {
   customLog("database", "Connection closed");
 }
 
-function makeDbResponse<T>(
-  result: T | None,
-  error: DbError
-): DbResponse<T | None> {
+function makeDbResponse<T>(result: T, error: DbError): DbResponse<T> {
   return { result, error };
 }
 
@@ -108,7 +105,31 @@ export async function getUser(id: number): Promise<DbResponse<User | None>> {
       .innerJoin(rolesTable, eq(usersTable.roleId, rolesTable.id))
       .where(eq(usersTable.id, id));
 
-    return makeDbResponse<User>(result[0], null);
+    return makeDbResponse<User | None>(result[0], null);
+  } catch (error) {
+    return makeDbResponse<null>(null, error as Error);
+  }
+}
+
+export async function getUserByEmail(
+  email: string
+): Promise<DbResponse<User | None>> {
+  try {
+    const result = await db
+      .select({
+        id: usersTable.id,
+        name: usersTable.name,
+        email: usersTable.email,
+        hashedPassword: usersTable.password,
+        roleName: rolesTable.roleName,
+        createdAt: usersTable.createdAt,
+        updatedAt: usersTable.updatedAt,
+      })
+      .from(usersTable)
+      .innerJoin(rolesTable, eq(usersTable.roleId, rolesTable.id))
+      .where(eq(usersTable.email, email));
+
+    return makeDbResponse<User | None>(result[0], null);
   } catch (error) {
     return makeDbResponse<null>(null, error as Error);
   }

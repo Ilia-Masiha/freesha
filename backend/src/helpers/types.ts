@@ -10,6 +10,7 @@ export interface User {
   id: number;
   name: string;
   email: string;
+  hashedPassword?: string;
   roleId?: number;
   roleName?: string;
   createdAt?: Date;
@@ -17,7 +18,7 @@ export interface User {
 }
 
 export interface DbResponse<T> {
-  result: T | None;
+  result: T;
   error: DbError;
 }
 

@@ -24,3 +24,5 @@ export function generalErrorHandler(
   const resObj = makeResObj(messages.error500);
   return res.status(500).json(resObj);
 }
+
+export const limitResponse = makeResObj(messages.error429);

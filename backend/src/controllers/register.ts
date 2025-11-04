@@ -54,6 +54,9 @@ export async function register(
   const { name, email, password } = matchedData(req);
 
   const dbResult = await db.emailExists(email);
+  if (dbResult.error) {
+    return next(dbResult.error);
+  }
 
   if (dbResult.result) {
     const resObj = makeResObj(messages.usedEmail);

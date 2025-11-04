@@ -49,3 +49,5 @@ export const registerValidator = () => [
 ];
 
 export const verifyemailValidator = () => [emailValidator(), otpValidator()];
+
+export const loginValidator = () => [emailValidator(), passwordValidator()];
