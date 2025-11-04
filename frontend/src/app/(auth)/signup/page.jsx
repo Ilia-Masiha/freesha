@@ -6,11 +6,12 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { signup } from "@/services/authServices";
 import toast from "react-hot-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OtpInput from "react-otp-input";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { verifyEmail } from "@/services/authServices";
 import { useRouter } from "next/navigation";
+import useCountdown from "@/hooks/useCountdown";
 
 const schema = yup
   .object({
@@ -39,8 +40,13 @@ const schema = yup
 const Signup = () => {
   const router = useRouter();
   const [step, setStep] = useState(1);
-  const [email, setEmail] = useState("");
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
   const [otp, setOtp] = useState("");
+  const { formattedTime, isExpired, startTimer, resetTimer } = useCountdown(20);
   const {
     register,
     handleSubmit,
@@ -56,6 +62,28 @@ const Signup = () => {
     mode: "onTouched",
   });
 
+  useEffect(() => {
+    if (step === 2) {
+      startTimer();
+    }
+  }, [step, startTimer]);
+
+  const handleResendCode = async () => {
+    if (!isExpired) return;
+    try {
+      const { message } = await signup({
+        name: userData.name,
+        email: userData.email,
+        password: userData.password,
+      });
+      toast.success("کد تایید مجدد ارسال شد");
+      resetTimer();
+      setOtp("");
+    } catch (err) {
+      toast.error(err?.response?.data?.message);
+    }
+  };
+
   const signupHandler = async (data) => {
     try {
       const { message } = await signup({
@@ -64,7 +92,8 @@ const Signup = () => {
         password: data.password,
       });
       setStep(2);
-      setEmail(data.email);
+      setOtp("");
+      setUserData(data);
       toast.success(message);
     } catch (err) {
       toast.error(err?.response?.data?.message);
@@ -74,7 +103,7 @@ const Signup = () => {
   const emailVerificationHandler = async () => {
     if (otp) {
       try {
-        const { message } = await verifyEmail({ email, otp });
+        const { message } = await verifyEmail({ email: userData.email, otp });
         toast.success(message);
         router.push("/");
       } catch (err) {
@@ -131,7 +160,7 @@ const Signup = () => {
           </form>
           <Link href="/signin" className="text-sm text-secondary-700 mt-4">
             قبلا ثبت نام کرده اید ؟
-            <span className="text-primary-500">ورود</span>
+            <span className="text-primary-500">ورود </span>
           </Link>
         </article>
       </section>
@@ -163,9 +192,19 @@ const Signup = () => {
             containerStyle="flex flex-row-reverse"
           />
         </div>
-        <p className="w-full text-start my-5 text-sm font-semibold mr-2">
-          <span className="text-primary-600">90</span> ثانیه تا ارسال مجدد کد
-        </p>
+        {!isExpired ? (
+          <p className="w-full text-start my-5 text-sm font-semibold mr-2">
+            <span className="text-primary-600">{formattedTime}</span> ثانیه تا
+            ارسال مجدد کد
+          </p>
+        ) : (
+          <p
+            className="w-full text-start my-5 text-sm font-semibold mr-2 cursor-pointer"
+            onClick={handleResendCode}
+          >
+            ارسال مجدد کد تایید
+          </p>
+        )}
         <button
           onClick={emailVerificationHandler}
           className="w-full auth rounded-lg py-2 text-white cursor-pointer"
