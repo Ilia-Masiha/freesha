@@ -1,3 +1,4 @@
+import { Toaster } from "react-hot-toast";
 import "../globals.css";
 
 export const metadata = {
@@ -10,6 +11,7 @@ export default function RootLayout({ children }) {
     <html lang="fa" dir="rtl">
       <body className="antialiased auth">
         <main>{children}</main>
+        <Toaster />
       </body>
     </html>
   );

@@ -1,7 +1,65 @@
+"use client";
 import FormInput from "@/components/FormInput";
 import Link from "next/link";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { signup } from "@/services/authServices";
+import toast from "react-hot-toast";
+
+const schema = yup
+  .object({
+    name: yup
+      .string()
+      .required("نام کاربری الزامی است")
+      .min(6, "نام کاربری باید حداقل ۶ کاراکتر باشد"),
+    email: yup
+      .string()
+      .required("ایمیل الزامی است")
+      .email("لطفا یک ایمیل معتبر وارد کنید"),
+    password: yup
+      .string()
+      .required("رمز عبور الزامی است")
+      .min(6, "رمز عبور باید حداقل ۶ کاراکتر باشد"),
+    repeatPassword: yup
+      .string()
+      .required("تکرار رمز عبور الزامی است")
+      .oneOf(
+        [yup.ref("password"), null],
+        "رمزهای عبور باید مطابقت داشته باشند"
+      ),
+  })
+  .required();
 
 const Signup = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid, isDirty, isSubmitting },
+  } = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      repeatPassword: "",
+    },
+    resolver: yupResolver(schema),
+    mode: "onTouched",
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      const { message } = await signup({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
+      toast.success(message);
+    } catch (err) {
+      toast.error(err?.response?.data?.message);
+    }
+  };
+
   return (
     <section className="flex justify-center pt-4">
       <article className="w-[35%] my-5 rounded-lg bg-bg px-8 py-6 flex flex-col items-center">
@@ -9,16 +67,37 @@ const Signup = () => {
         <h3 className="w-full mt-8 text-start text-xl font-semibold">
           ثبت نام
         </h3>
-        <form className="w-full mt-5">
-          <FormInput id="name" label="نام کاربری" name="name" />
-          <FormInput id="email" label="ایمیل" name="email" />
-          <FormInput id="password" label="رمز عبور" name="password" />
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full mt-5">
           <FormInput
-            id="repeatPassword"
+            register={register}
+            errors={errors}
+            label="نام کاربری"
+            name="name"
+          />
+          <FormInput
+            register={register}
+            errors={errors}
+            label="ایمیل"
+            name="email"
+          />
+          <FormInput
+            register={register}
+            errors={errors}
+            label="رمز عبور"
+            name="password"
+            type="password"
+          />
+          <FormInput
+            register={register}
+            errors={errors}
             label="تکرار رمز عبور"
             name="repeatPassword"
+            type="password"
           />
-          <button className="w-full auth rounded-lg py-2 text-white mt-4 cursor-pointer">
+          <button
+            disabled={!isValid || !isDirty || isSubmitting}
+            className="w-full auth rounded-lg py-2 text-white mt-4 cursor-pointer disabled:cursor-not-allowed disabled:opacity-65"
+          >
             ثبت نام
           </button>
         </form>
