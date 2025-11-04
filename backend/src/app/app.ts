@@ -1,16 +1,13 @@
 import express from "express";
 import { Application } from "express-serve-static-core";
+import rateLimit from "express-rate-limit";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import cors from "cors";
 
 import mainRouter from "../routes/main.js";
 import { timeNow } from "../helpers/utils.js";
-import { generalErrorHandler } from "../middlewares/response.js";
-
-const corsOptions = {
-  origin: ["http://127.0.0.1"],
-};
+import { generalErrorHandler, limitResponse } from "../middlewares/response.js";
 
 morgan.token("time-only", () => {
   return timeNow();
@@ -19,8 +16,22 @@ morgan.token("time-only", () => {
 export function createApp(): Application {
   const app: Application = express();
 
-  app.use(cors(corsOptions));
+  const minuteLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    limit: 65,
+    message: limitResponse,
+  });
+
+  const secondLimiter = rateLimit({
+    windowMs: 1 * 1000,
+    limit: 3,
+    message: limitResponse,
+  });
+
+  app.use(minuteLimiter);
+  app.use(secondLimiter);
   app.use(cookieParser());
+  app.use(cors());
   app.use(
     morgan("(:time-only) [MORGAN] :method :url :status - :response-time ms")
   );
