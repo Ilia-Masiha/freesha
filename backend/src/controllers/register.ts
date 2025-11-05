@@ -7,10 +7,12 @@ import bcrypt from "bcryptjs";
 import path from "node:path";
 
 import * as db from "../database/db.js";
-import { redisSet } from "../database/redis.js";
+import { redisSet, redisTtl } from "../database/redis.js";
 import { generateOtp, makeResObj } from "../helpers/utils.js";
 import { messages } from "../helpers/messages.js";
 
+const OTP_EXP = 3 * 60;
+const OTP_WINDOW = 1.5 * 60;
 const __filename = fileURLToPath(import.meta.url);
 
 const transporter = nodemailer.createTransport({
@@ -63,6 +65,17 @@ export async function register(
     return res.status(409).json(resObj);
   }
 
+  const otpKey = `otp:${email}`;
+  const preRegisterKey = `pre-register:${email}`;
+  const ttl = await redisTtl(otpKey);
+  if (OTP_EXP - ttl < OTP_WINDOW) {
+    const remaining = OTP_WINDOW - (OTP_EXP - ttl);
+    const resObj = makeResObj(
+      messages.error429otp.replace("==.==", `${remaining}`)
+    );
+    return res.status(429).json(resObj);
+  }
+
   const hashedPassword = await bcrypt.hash(password, 12);
   const preRegisterInfo = JSON.stringify({ name, email, hashedPassword });
   const otp = generateOtp();
@@ -74,8 +87,8 @@ export async function register(
     return next(new Error("Failed to send OTP email"));
   }
 
-  await redisSet(`otp:${email}`, hashedOtp, 3 * 60);
-  await redisSet(`pre-register:${email}`, preRegisterInfo, 4 * 60);
+  await redisSet(otpKey, hashedOtp, OTP_EXP);
+  await redisSet(preRegisterKey, preRegisterInfo, 4 * 60);
 
   const resObj = makeResObj(messages.sentOtp);
   return res.status(200).json(resObj);
