@@ -74,8 +74,8 @@ export async function register(
     return next(new Error("Failed to send OTP email"));
   }
 
-  await redisSet(`otp:${email}`, hashedOtp, 5 * 60);
-  await redisSet(`pre-register:${email}`, preRegisterInfo, 6 * 60);
+  await redisSet(`otp:${email}`, hashedOtp, 3 * 60);
+  await redisSet(`pre-register:${email}`, preRegisterInfo, 4 * 60);
 
   const resObj = makeResObj(messages.sentOtp);
   return res.status(200).json(resObj);
