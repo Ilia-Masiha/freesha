@@ -8,3 +8,7 @@ export const verifyEmail = (data) => {
   return http.post("/verifyemail", data).then((res) => res.data);
 };
 
+export const login = (data) => {
+  return http.post("/login", data).then((res) => res.data);
+};
+

@@ -46,7 +46,7 @@ const Signup = () => {
     password: "",
   });
   const [otp, setOtp] = useState("");
-  const { formattedTime, isExpired, startTimer, resetTimer } = useCountdown(20);
+  const { formattedTime, isExpired, startTimer, resetTimer } = useCountdown(90);
   const {
     register,
     handleSubmit,
