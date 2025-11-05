@@ -74,7 +74,7 @@ Every response has a `message` and `data` property:
 ## Endpoints
 
 - `POST /register`:  
-  The endpoint is used for registering a new user. Send user information in the request body in this format:  
+  The endpoint is used for registering a new user. This endpoint can also be used to resend the OTP. Send user information in the request body in this format:  
   ```json
   REQUEST BODY
   {
@@ -86,6 +86,7 @@ Every response has a `message` and `data` property:
   Response body will contain a `message` about the result of your request. These status codes are expected:  
   - `400`: Validation error. More information in `message`.
   - `409`: Duplicate email. The email that you are trying to register with, already exists in the database.
+  - `429`: Too many OTP requests. Wait some more time before sending an OTP request again.
   - `200`: OK. OTP is sent to the email for verification.
 
 - `POST /verifyemail`:  
@@ -116,3 +117,32 @@ Every response has a `message` and `data` property:
   - `400`: Validation error. More information in `message`.
   - `401`: Invalid OTP.
   - `201`: Successfully verified the OTP and created the user in database.
+
+- `POST /login`:  
+  The endpoint is used for logging in. Send information in the request body in this format:  
+  ```json
+  REQUEST BODY
+  {
+    "email": "john@doe.com",
+    "password": "verySecure!123",
+  }
+  ```
+  Response body will contain a `message` about the result of your request. If successful, `data` will also contain information about the logged in user. Response body will be in this format (If status code is `200`):  
+  ```json
+  RESPONSE BODY
+  {
+    "message": "شما با موفقیت وارد شدید",
+    "data": {
+      "id": 5,
+      "name": "John Doe",
+      "email": "john@doe.com",
+      "roleName": "user",
+      "createdAt": "2025-10-02T11:52:24.977Z",
+      "updatedAt": "2025-10-02T11:52:24.977Z"
+    }
+  }
+  ```
+  If status code is `200`, a session key will be sent as an `httponly` cookie. These status codes are expected:  
+  - `400`: Validation error. More information in `message`.
+  - `401`: Bad credentials.
+  - `200`: Successfully logged in.

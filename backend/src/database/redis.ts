@@ -52,6 +52,18 @@ export async function redisGet(key: string) {
   }
 }
 
+export async function redisTtl(key: string): Promise<number> {
+  try {
+    let value = await redisClient.ttl(key);
+    if (typeof value !== "number") value = parseInt(value);
+    return value;
+  } catch (error) {
+    customLog("redis", `An error occurred while getting TTL of (${key}):`);
+    customLog("redis", (error as Error).message);
+    return 0;
+  }
+}
+
 export async function redisDel(key: string) {
   try {
     await redisClient.del(key);
