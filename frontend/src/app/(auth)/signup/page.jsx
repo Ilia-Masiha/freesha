@@ -12,6 +12,7 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import { verifyEmail } from "@/services/authServices";
 import { useRouter } from "next/navigation";
 import useCountdown from "@/hooks/useCountdown";
+import PasswordInput from "@/components/passwordInput";
 
 const schema = yup
   .object({
@@ -137,19 +138,17 @@ const Signup = () => {
               label="ایمیل"
               name="email"
             />
-            <FormInput
+            <PasswordInput
               register={register}
               errors={errors}
               label="رمز عبور"
               name="password"
-              type="password"
             />
-            <FormInput
+            <PasswordInput
               register={register}
               errors={errors}
               label="تکرار رمز عبور"
               name="repeatPassword"
-              type="password"
             />
             <button
               disabled={!isValid || !isDirty || isSubmitting}
@@ -206,6 +205,7 @@ const Signup = () => {
           </p>
         )}
         <button
+          type="submit"
           onClick={emailVerificationHandler}
           className="w-full auth rounded-lg py-2 text-white cursor-pointer"
         >
