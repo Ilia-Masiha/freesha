@@ -46,22 +46,22 @@ export async function verifyemail(
 
   const preRegisterInfo: PreRegisterInfo = JSON.parse(preRegisterInfoJson);
 
-  const dbResult = await db.insertUser(preRegisterInfo);
-  if (dbResult.error || !dbResult.result) {
-    return next(dbResult.error);
+  const dbResponse = await db.insertUser(preRegisterInfo);
+  if (dbResponse.error || !dbResponse.result) {
+    return next(dbResponse.error);
   }
 
-  const id: number = dbResult.result as number;
+  const id: number = dbResponse.result as number;
 
-  const dbResult2 = await db.getUser(id);
-  if (dbResult2.error || !dbResult2.result) {
-    return next(dbResult2.error);
+  const dbResponse2 = await db.getUser(id);
+  if (dbResponse2.error || !dbResponse2.result) {
+    return next(dbResponse2.error);
   }
 
   await redisDel(`otp:${email}`);
   await redisDel(`pre-register:${email}`);
 
-  const userInfo: User = dbResult2.result;
+  const userInfo: User = dbResponse2.result;
   const sessionData: SessionData = {
     id: userInfo.id,
     name: userInfo.name,

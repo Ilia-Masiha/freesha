@@ -10,6 +10,7 @@ export const usersTable = pgTable("users", {
     .references(() => rolesTable.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  lastLoginAt: timestamp("last_login_at").notNull().defaultNow(),
 });
 
 export const rolesTable = pgTable("roles", {
