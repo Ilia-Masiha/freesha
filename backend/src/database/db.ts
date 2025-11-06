@@ -1,5 +1,5 @@
 import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { Pool } from "pg";
 
 import { rolesTable, usersTable } from "./schema.js";
@@ -107,7 +107,7 @@ export async function getUser(id: number): Promise<DbResponse<User | None>> {
 
     return makeDbResponse<User | None>(result[0], null);
   } catch (error) {
-    return makeDbResponse<null>(null, error as Error);
+    return makeDbResponse(null, error as Error);
   }
 }
 
@@ -131,6 +131,23 @@ export async function getUserByEmail(
 
     return makeDbResponse<User | None>(result[0], null);
   } catch (error) {
-    return makeDbResponse<null>(null, error as Error);
+    return makeDbResponse(null, error as Error);
+  }
+}
+
+export async function updateLastLogin(
+  id: number
+): Promise<DbResponse<true | null>> {
+  try {
+    await db
+      .update(usersTable)
+      .set({
+        lastLoginAt: sql`NOW()`,
+      })
+      .where(eq(usersTable.id, id));
+
+    return makeDbResponse(true, null);
+  } catch (error) {
+    return makeDbResponse(null, error as Error);
   }
 }

@@ -23,12 +23,12 @@ export async function login(
 
   const { email, password } = matchedData(req);
 
-  const dbResult = await db.getUserByEmail(email);
-  if (dbResult.error) {
-    return next(dbResult.error);
+  const dbResponse = await db.getUserByEmail(email);
+  if (dbResponse.error) {
+    return next(dbResponse.error);
   }
 
-  const userInfo: User | None = dbResult.result;
+  const userInfo: User | None = dbResponse.result;
 
   if (!userInfo) {
     const resObj = makeResObj(messages.error401);
@@ -53,6 +53,12 @@ export async function login(
     email: userInfo.email,
     roleName: userInfo.roleName,
   };
+
+  const dbResponse2 = await db.updateLastLogin(userInfo.id);
+  if (dbResponse2.error) {
+    return next(dbResponse2.error);
+  }
+
   await setSessionData(res, randomUUID(), sessionData);
 
   delete userInfo.hashedPassword;
