@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { login } from "@/services/authServices";
+import PasswordInput from "@/components/passwordInput";
 
 const schema = yup
   .object({
@@ -58,14 +59,14 @@ const Signin = () => {
             label="ایمیل"
             name="email"
           />
-          <FormInput
+          <PasswordInput
             register={register}
             errors={errors}
             label="رمز عبور"
             name="password"
-            type="password"
           />
           <button
+            type="submit"
             disabled={!isValid || !isDirty || isSubmitting}
             className="w-full auth rounded-lg py-2 text-white mt-4 cursor-pointer disabled:cursor-not-allowed disabled:opacity-65"
           >
