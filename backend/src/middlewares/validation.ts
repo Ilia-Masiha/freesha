@@ -7,8 +7,8 @@ export const nameValidator = () =>
     .withMessage("نام ضروری است")
     .isString()
     .withMessage("نام باید یک رشته باشد")
-    .isLength({ min: 1, max: 40 })
-    .withMessage("نام نباید بیش از 40 کاراکتر باشد");
+    .isLength({ min: 6, max: 40 })
+    .withMessage("نام کاربری باید بین 6 تا 40 کاراکتر باشد");
 
 export const emailValidator = () =>
   body("email")
@@ -25,13 +25,13 @@ export const emailValidator = () =>
 export const passwordValidator = () =>
   body("password")
     .notEmpty()
-    .withMessage("پسورد ضروری است")
+    .withMessage("رمز عبور ضروری است")
     .isString()
-    .withMessage("پسورد باید یک رشته باشد")
+    .withMessage("رمز عبور باید یک رشته باشد")
     .isLength({ max: 10_000 })
     .withMessage("حالت خوبه؟")
     .isStrongPassword()
-    .withMessage("پسورد ضعیف است");
+    .withMessage("رمز عبور ضعیف است");
 
 export const otpValidator = () =>
   body("otp")
