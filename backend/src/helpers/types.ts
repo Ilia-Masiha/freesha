@@ -37,6 +37,7 @@ export interface SessionData {
 export type Tag = "server" | "database" | "redis";
 export type RoleName = "user" | "admin";
 export type JobPostStatus = "pending" | "accepted" | "cancelled" | "done";
+export type GenderName = "N" | "M" | "F";
 export type None = undefined | null;
 export type DbResult = QueryResult | Object | Object[] | null | undefined;
 export type DbError = Error | None;

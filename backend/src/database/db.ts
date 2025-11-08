@@ -2,7 +2,12 @@ import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
 import { eq, sql } from "drizzle-orm";
 import { Pool } from "pg";
 
-import { jobPostStatusesTable, rolesTable, usersTable } from "./schema.js";
+import {
+  gendersTable,
+  jobPostStatusesTable,
+  rolesTable,
+  usersTable,
+} from "./schema.js";
 import { customLog } from "../helpers/utils.js";
 import {
   DbError,
@@ -46,7 +51,7 @@ export async function seed() {
     customLog("database", "Roles seeded successfully");
   } catch (error) {
     customLog("database", `Seeding roles failed: ${error}`);
-    customLog("database", "Seeding statuses will be terminated");
+    customLog("database", "Seeding process will be terminated");
     process.exit(1);
   }
 
@@ -62,9 +67,27 @@ export async function seed() {
       .onConflictDoNothing();
 
     customLog("database", "Statuses seeded successfully");
-    process.exit(0);
   } catch (error) {
     customLog("database", `Seeding statuses failed: ${error}`);
+    customLog("database", "Seeding process will be terminated");
+    process.exit(1);
+  }
+
+  try {
+    await db
+      .insert(gendersTable)
+      .values([
+        { id: 1, genderName: "N" },
+        { id: 2, genderName: "M" },
+        { id: 3, genderName: "F" },
+      ])
+      .onConflictDoNothing();
+
+    customLog("database", "Genders seeded successfully");
+    process.exit(0);
+  } catch (error) {
+    customLog("database", `Seeding genders failed: ${error}`);
+    customLog("database", "Seeding process will be terminated");
     process.exit(1);
   }
 }

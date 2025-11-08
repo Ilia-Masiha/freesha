@@ -6,7 +6,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { JobPostStatus, RoleName } from "../helpers/types.js";
+import { GenderName, JobPostStatus, RoleName } from "../helpers/types.js";
 
 export const usersTable = pgTable("users", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
@@ -19,6 +19,10 @@ export const usersTable = pgTable("users", {
 
   postalCode: varchar("postal_code", { length: 10 }),
   homeAddress: varchar("home_address", { length: 500 }),
+  genderId: integer("gender_id")
+    .notNull()
+    .references(() => gendersTable.id)
+    .default(1),
 
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -28,6 +32,13 @@ export const usersTable = pgTable("users", {
 export const rolesTable = pgTable("roles", {
   id: integer("id").notNull().unique(),
   roleName: varchar("role_name", { length: 10 }).$type<RoleName>().notNull(),
+});
+
+export const gendersTable = pgTable("genders", {
+  id: integer("id").notNull().unique(),
+  genderName: varchar("gender_name", { length: 1 })
+    .$type<GenderName>()
+    .notNull(),
 });
 
 export const jobPostsTable = pgTable("job_posts", {
