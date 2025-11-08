@@ -2,7 +2,7 @@ import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
 import { eq, sql } from "drizzle-orm";
 import { Pool } from "pg";
 
-import { rolesTable, usersTable } from "./schema.js";
+import { jobPostStatusesTable, rolesTable, usersTable } from "./schema.js";
 import { customLog } from "../helpers/utils.js";
 import {
   DbError,
@@ -44,9 +44,27 @@ export async function seed() {
       .onConflictDoNothing();
 
     customLog("database", "Roles seeded successfully");
+  } catch (error) {
+    customLog("database", `Seeding roles failed: ${error}`);
+    customLog("database", "Seeding statuses will be terminated");
+    process.exit(1);
+  }
+
+  try {
+    await db
+      .insert(jobPostStatusesTable)
+      .values([
+        { id: 1, statusName: "pending" },
+        { id: 2, statusName: "accepted" },
+        { id: 3, statusName: "cancelled" },
+        { id: 4, statusName: "done" },
+      ])
+      .onConflictDoNothing();
+
+    customLog("database", "Statuses seeded successfully");
     process.exit(0);
   } catch (error) {
-    customLog("database", `Seeding failed: ${error}`);
+    customLog("database", `Seeding statuses failed: ${error}`);
     process.exit(1);
   }
 }
