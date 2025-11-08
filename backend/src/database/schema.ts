@@ -1,4 +1,10 @@
-import { integer, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
+import {
+  integer,
+  pgTable,
+  timestamp,
+  uniqueIndex,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable("users", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
@@ -38,3 +44,44 @@ export const jobPostStatusesTable = pgTable("job_post_statuses", {
   id: integer("id").notNull().unique(),
   statusName: varchar("status_name", { length: 20 }).notNull(),
 });
+
+export const offersTable = pgTable(
+  "offers",
+  {
+    id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+    freelancer_id: integer("freelancer_id")
+      .notNull()
+      .references(() => usersTable.id),
+    job_post_id: integer("job_post_id")
+      .notNull()
+      .references(() => jobPostsTable.id),
+    offering_budget: integer("offering_budget").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("freelancer_id_job_post_id_unique_idx").on(
+      table.freelancer_id,
+      table.job_post_id
+    ),
+  ]
+);
+
+export const acceptedOffersTable = pgTable(
+  "accepted_offers",
+  {
+    job_post_id: integer("job_post_id")
+      .notNull()
+      .references(() => jobPostsTable.id),
+    offer_id: integer("offer_id")
+      .notNull()
+      .references(() => offersTable.id),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("job_post_id_offer_id_unique_idx").on(
+      table.job_post_id,
+      table.offer_id
+    ),
+  ]
+);
