@@ -1,4 +1,5 @@
 import {
+  date,
   integer,
   pgTable,
   timestamp,
@@ -23,6 +24,9 @@ export const usersTable = pgTable("users", {
     .notNull()
     .references(() => gendersTable.id)
     .default(1),
+  jobTitle: varchar("job_title", { length: 50 }),
+  bio: varchar("bio", { length: 400 }),
+  birthDate: date("birth_date"),
 
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
