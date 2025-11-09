@@ -114,3 +114,26 @@ export const userSkillsTable = pgTable(
     uniqueIndex("user_id_skill_unique_idx").on(table.userId, table.skill),
   ]
 );
+
+export const userLanguagesTable = pgTable(
+  "user_languages",
+  {
+    userId: integer("user_id")
+      .notNull()
+      .references(() => usersTable.id),
+    languageId: integer("language_id")
+      .notNull()
+      .references(() => languagesTable.id),
+  },
+  (table) => [
+    uniqueIndex("user_id_language_id_unique_idx").on(
+      table.userId,
+      table.languageId
+    ),
+  ]
+);
+
+export const languagesTable = pgTable("languages", {
+  id: integer("id").notNull().unique(),
+  languageName: varchar("language_name", { length: 20 }).notNull(),
+});

@@ -84,12 +84,33 @@ export async function seed() {
       .onConflictDoNothing();
 
     customLog("database", "Genders seeded successfully");
-    process.exit(0);
   } catch (error) {
     customLog("database", `Seeding genders failed: ${error}`);
     customLog("database", "Seeding process will be terminated");
     process.exit(1);
   }
+  /*
+  try {
+    await db
+      .insert(languagesTable)
+      .values([
+        { id: 1, languageName: "انگلیسی" },
+        { id: 2, languageName: "Persian" },
+        { id: 3, languageName: "N" },
+        { id: 4, languageName: "N" },
+        { id: 5, languageName: "N" },
+        { id: 6, languageName: "N" },
+      ])
+      .onConflictDoNothing();
+
+    customLog("database", "Languages seeded successfully");
+    process.exit(0);
+  } catch (error) {
+    customLog("database", `Seeding languages failed: ${error}`);
+    customLog("database", "Seeding process will be terminated");
+    process.exit(1);
+  }
+    */
 }
 
 export async function emailExists(
