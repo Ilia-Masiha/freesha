@@ -86,21 +86,14 @@ export const offersTable = pgTable(
   ]
 );
 
-export const acceptedOffersTable = pgTable(
-  "accepted_offers",
-  {
-    job_post_id: integer("job_post_id")
-      .notNull()
-      .references(() => jobPostsTable.id),
-    offer_id: integer("offer_id")
-      .notNull()
-      .references(() => offersTable.id),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-  },
-  (table) => [
-    uniqueIndex("job_post_id_offer_id_unique_idx").on(
-      table.job_post_id,
-      table.offer_id
-    ),
-  ]
-);
+export const acceptedOffersTable = pgTable("accepted_offers", {
+  job_post_id: integer("job_post_id")
+    .notNull()
+    .unique()
+    .references(() => jobPostsTable.id),
+  offer_id: integer("offer_id")
+    .notNull()
+    .unique()
+    .references(() => offersTable.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
