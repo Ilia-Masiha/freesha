@@ -101,3 +101,16 @@ export const acceptedOffersTable = pgTable("accepted_offers", {
     .references(() => offersTable.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+export const userSkillsTable = pgTable(
+  "user_skills",
+  {
+    userId: integer("user_id")
+      .notNull()
+      .references(() => usersTable.id),
+    skill: varchar("skill", { length: 25 }).notNull(),
+  },
+  (table) => [
+    uniqueIndex("user_id_skill_unique_idx").on(table.userId, table.skill),
+  ]
+);
