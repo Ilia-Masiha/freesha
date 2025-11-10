@@ -1,4 +1,5 @@
 import {
+  date,
   integer,
   pgTable,
   timestamp,
@@ -23,6 +24,9 @@ export const usersTable = pgTable("users", {
     .notNull()
     .references(() => gendersTable.id)
     .default(1),
+  jobTitle: varchar("job_title", { length: 50 }),
+  bio: varchar("bio", { length: 400 }),
+  birthDate: date("birth_date"),
 
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -86,21 +90,54 @@ export const offersTable = pgTable(
   ]
 );
 
-export const acceptedOffersTable = pgTable(
-  "accepted_offers",
+export const acceptedOffersTable = pgTable("accepted_offers", {
+  job_post_id: integer("job_post_id")
+    .notNull()
+    .unique()
+    .references(() => jobPostsTable.id),
+  offer_id: integer("offer_id")
+    .notNull()
+    .unique()
+    .references(() => offersTable.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const userSkillsTable = pgTable(
+  "user_skills",
   {
-    job_post_id: integer("job_post_id")
+    userId: integer("user_id")
       .notNull()
-      .references(() => jobPostsTable.id),
-    offer_id: integer("offer_id")
-      .notNull()
-      .references(() => offersTable.id),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
+      .references(() => usersTable.id),
+    skill: varchar("skill", { length: 25 }).notNull(),
   },
   (table) => [
-    uniqueIndex("job_post_id_offer_id_unique_idx").on(
-      table.job_post_id,
-      table.offer_id
+    uniqueIndex("user_id_skill_unique_idx").on(table.userId, table.skill),
+  ]
+);
+
+export const userLanguagesTable = pgTable(
+  "user_languages",
+  {
+    userId: integer("user_id")
+      .notNull()
+      .references(() => usersTable.id),
+    languageId: integer("language_id")
+      .notNull()
+      .references(() => languagesTable.id),
+  },
+  (table) => [
+    uniqueIndex("user_id_language_id_unique_idx").on(
+      table.userId,
+      table.languageId
     ),
   ]
 );
+
+export const languagesTable = pgTable("languages", {
+  id: integer("id").notNull().unique(),
+  code: varchar("code", { length: 2 }).notNull().unique(),
+  languageName: varchar("language_name", { length: 20 }).notNull().unique(),
+  languageNameFa: varchar("language_name_fa", { length: 20 })
+    .notNull()
+    .unique(),
+});
