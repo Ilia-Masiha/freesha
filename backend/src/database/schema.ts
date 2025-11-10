@@ -135,5 +135,9 @@ export const userLanguagesTable = pgTable(
 
 export const languagesTable = pgTable("languages", {
   id: integer("id").notNull().unique(),
-  languageName: varchar("language_name", { length: 20 }).notNull(),
+  code: varchar("code", { length: 2 }).notNull().unique(),
+  languageName: varchar("language_name", { length: 20 }).notNull().unique(),
+  languageNameFa: varchar("language_name_fa", { length: 20 })
+    .notNull()
+    .unique(),
 });

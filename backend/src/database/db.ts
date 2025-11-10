@@ -2,12 +2,7 @@ import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
 import { eq, sql } from "drizzle-orm";
 import { Pool } from "pg";
 
-import {
-  gendersTable,
-  jobPostStatusesTable,
-  rolesTable,
-  usersTable,
-} from "./schema.js";
+import { rolesTable, usersTable } from "./schema.js";
 import { customLog } from "../helpers/utils.js";
 import {
   DbError,
@@ -18,7 +13,7 @@ import {
   User,
 } from "../helpers/types.js";
 
-let db: NodePgDatabase<Record<string, never>> & {
+export let db: NodePgDatabase<Record<string, never>> & {
   $client: Pool;
 };
 
@@ -36,81 +31,6 @@ export async function disconnectDb() {
 
 function makeDbResponse<T>(result: T, error: DbError): DbResponse<T> {
   return { result, error };
-}
-
-export async function seed() {
-  try {
-    await db
-      .insert(rolesTable)
-      .values([
-        { id: 1, roleName: "user" },
-        { id: 2, roleName: "admin" },
-      ])
-      .onConflictDoNothing();
-
-    customLog("database", "Roles seeded successfully");
-  } catch (error) {
-    customLog("database", `Seeding roles failed: ${error}`);
-    customLog("database", "Seeding process will be terminated");
-    process.exit(1);
-  }
-
-  try {
-    await db
-      .insert(jobPostStatusesTable)
-      .values([
-        { id: 1, statusName: "pending" },
-        { id: 2, statusName: "accepted" },
-        { id: 3, statusName: "cancelled" },
-        { id: 4, statusName: "done" },
-      ])
-      .onConflictDoNothing();
-
-    customLog("database", "Statuses seeded successfully");
-  } catch (error) {
-    customLog("database", `Seeding statuses failed: ${error}`);
-    customLog("database", "Seeding process will be terminated");
-    process.exit(1);
-  }
-
-  try {
-    await db
-      .insert(gendersTable)
-      .values([
-        { id: 1, genderName: "N" },
-        { id: 2, genderName: "M" },
-        { id: 3, genderName: "F" },
-      ])
-      .onConflictDoNothing();
-
-    customLog("database", "Genders seeded successfully");
-  } catch (error) {
-    customLog("database", `Seeding genders failed: ${error}`);
-    customLog("database", "Seeding process will be terminated");
-    process.exit(1);
-  }
-  /*
-  try {
-    await db
-      .insert(languagesTable)
-      .values([
-        { id: 1, languageName: "انگلیسی" },
-        { id: 2, languageName: "Persian" },
-        { id: 3, languageName: "N" },
-        { id: 4, languageName: "N" },
-        { id: 5, languageName: "N" },
-        { id: 6, languageName: "N" },
-      ])
-      .onConflictDoNothing();
-
-    customLog("database", "Languages seeded successfully");
-    process.exit(0);
-  } catch (error) {
-    customLog("database", `Seeding languages failed: ${error}`);
-    customLog("database", "Seeding process will be terminated");
-    process.exit(1);
-  }
-    */
 }
 
 export async function emailExists(
