@@ -7,7 +7,12 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { GenderName, JobPostStatus, RoleName } from "../helpers/types.js";
+import {
+  GenderName,
+  JobPostStatus,
+  LanguageCode,
+  RoleName,
+} from "../helpers/types.js";
 
 export const usersTable = pgTable("users", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
@@ -135,7 +140,7 @@ export const userLanguagesTable = pgTable(
 
 export const languagesTable = pgTable("languages", {
   id: integer("id").notNull().unique(),
-  code: varchar("code", { length: 2 }).notNull().unique(),
+  code: varchar("code", { length: 2 }).$type<LanguageCode>().notNull().unique(),
   languageName: varchar("language_name", { length: 20 }).notNull().unique(),
   languageNameFa: varchar("language_name_fa", { length: 20 })
     .notNull()
