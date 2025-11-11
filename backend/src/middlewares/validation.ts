@@ -42,6 +42,28 @@ export const otpValidator = () =>
     .isLength({ min: 5, max: 5 })
     .withMessage("کد تائید باید دقیقا 5 کاراکتر باشد");
 
+export const postalCodeValidator = () =>
+  body("postalCode")
+    .optional()
+    .notEmpty()
+    .withMessage("کد پستی نمی تواند خالی باشد")
+    .isString()
+    .withMessage("کد پستی باید یک رشته باشد")
+    .isLength({ min: 10, max: 10 })
+    .withMessage("کد پستی باید دقیقا 10 کاراکتر باشد")
+    .isNumeric()
+    .withMessage("کد پستی باید فقط شامل ارقام باشد");
+
+export const homeAddress = () =>
+  body("homeAddress")
+    .optional()
+    .notEmpty()
+    .withMessage("آدرس محل سکونت نمی تواند خالی باشد")
+    .isString()
+    .withMessage("آدرس محل سکونت باید یک رشته باشد")
+    .isLength({ max: 500 })
+    .withMessage("آدرس محل سکونت نباید بیش از 500 کاراکتر باشد");
+
 export const registerValidator = () => [
   nameValidator(),
   emailValidator(),
