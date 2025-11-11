@@ -1,16 +1,25 @@
-const FormInput = ({ register, errors, label, type = "text", name }) => {
+const FormInput = ({
+  register,
+  errors,
+  label,
+  type = "text",
+  name,
+  className = "",
+}) => {
   return (
-    <div className="flex flex-col justify-start gap-y-1 mb-3">
-      <div className="flex justify-between items-center mb-0.5">
+    <div className={`flex flex-col justify-start gap-y-1 mb-3 ${className}`}>
+      <div className="flex justify-between items-center mb-1">
         <label htmlFor={name} className="text-txt text-sm font-semibold">
           {label}
         </label>
-        <span className="text-xs text-error">
-          {errors[name]?.message && errors[name]?.message}
-        </span>
+        {errors && (
+          <span className="text-xs text-error">
+            {errors[name]?.message && errors[name]?.message}
+          </span>
+        )}
       </div>
       <input
-        {...register(name)}
+        {...(register && register(name))}
         type={type}
         id={name}
         name={name}

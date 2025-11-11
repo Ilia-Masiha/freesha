@@ -1,6 +1,7 @@
 import { RiImageAddLine } from "react-icons/ri";
 import { GiRoundStar } from "react-icons/gi";
-import { IoShareSocialOutline } from "react-icons/io5";
+import ShareBtn from "@/components/ShareBtn";
+import PersonalInformation from "@/components/Profile/PersonalInformation";
 
 const Profile = () => {
   return (
@@ -27,14 +28,14 @@ const Profile = () => {
         </div>
         {/* share Profile | see Profile */}
         <div className="flex justify-center items-center gap-x-2">
-          <button className="h-12 w-12 flex justify-center items-center text-xl bg-transparent rounded-lg border-2 border-primary-500 text-primary-500 cursor-pointer">
-            <IoShareSocialOutline />
-          </button>
+          <ShareBtn />
           <button className="h-12 px-3 rounded-lg border-2 border-primary-500 text-primary-500 cursor-pointer">
             مشاهده عمومی پروفایل
           </button>
         </div>
       </article>
+      {/* Personal information */}
+      <PersonalInformation />
     </section>
   );
 };
