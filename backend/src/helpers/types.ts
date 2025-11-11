@@ -42,3 +42,32 @@ export type None = undefined | null;
 export type DbResult = QueryResult | Object | Object[] | null | undefined;
 export type DbError = Error | None;
 export type RedisValue = string | number | null;
+
+export type LanguageCode =
+  | "en"
+  | "fa"
+  | "tr"
+  | "ar"
+  | "zh"
+  | "he"
+  | "es"
+  | "ru"
+  | "de"
+  | "fr"
+  | "it"
+  | "pl"
+  | "pt"
+  | "ja"
+  | "ko"
+  | "ur"
+  | "sv"
+  | "no"
+  | "fi"
+  | "cy"
+  | "hy"
+  | "el"
+  | "da"
+  | "ku"
+  | "hi"
+  | "az"
+  | "eo";
