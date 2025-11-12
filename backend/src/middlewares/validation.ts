@@ -69,6 +69,33 @@ export const genderId = () =>
     .isInt({ gt: 0, lt: 4 })
     .withMessage("جنسیت باید عددی از 1 تا 3 باشد");
 
+export const jobTitle = () =>
+  body("jobTitle")
+    .notEmpty()
+    .withMessage("عنوان شغلی نمی تواند خالی باشد")
+    .isString()
+    .withMessage("عنوان شغلی باید یک رشته باشد")
+    .isLength({ max: 50 })
+    .withMessage("عنوان شغلی نباید بیش از 50 کاراکتر باشد");
+
+export const bio = () =>
+  body("bio")
+    .notEmpty()
+    .withMessage("بیوگرافی نمی تواند خالی باشد")
+    .isString()
+    .withMessage("بیوگرافی باید یک رشته باشد")
+    .isLength({ max: 400 })
+    .withMessage("بیوگرافی نباید بیش از 400 کاراکتر باشد");
+
+export const birthDate = () =>
+  body("birthDate")
+    .notEmpty()
+    .withMessage("تاریخ تولد نمی تواند خالی باشد")
+    .isString()
+    .withMessage("تاریخ تولد باید یک رشته باشد")
+    .isDate({ format: "YYYY-MM-DD", strictMode: true, delimiters: ["-"] })
+    .withMessage("تاریخ تولد باید در فرمت YYYY-MM-DD باشد");
+
 export const registerValidator = () => [
   nameValidator(),
   emailValidator(),
@@ -78,3 +105,12 @@ export const registerValidator = () => [
 export const verifyemailValidator = () => [emailValidator(), otpValidator()];
 
 export const loginValidator = () => [emailValidator(), passwordValidator()];
+
+export const updateUserValidator = () => [
+  postalCodeValidator().optional(),
+  homeAddress().optional(),
+  genderId().optional(),
+  jobTitle().optional(),
+  bio().optional(),
+  birthDate().optional(),
+];
