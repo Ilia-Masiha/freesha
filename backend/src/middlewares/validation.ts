@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 
 export const nameValidator = () =>
   body("name")
@@ -42,9 +42,16 @@ export const otpValidator = () =>
     .isLength({ min: 5, max: 5 })
     .withMessage("کد تائید باید دقیقا 5 کاراکتر باشد");
 
+export const userId = () =>
+  param("userId")
+    .notEmpty()
+    .withMessage("آیدی کاربر ضروری است")
+    .isInt({ min: 1 })
+    .withMessage("آیدی کاربر باید یک عدد صحیح مثبت باشد")
+    .toInt();
+
 export const postalCodeValidator = () =>
   body("postalCode")
-    .optional()
     .notEmpty()
     .withMessage("کد پستی نمی تواند خالی باشد")
     .isString()
@@ -56,13 +63,46 @@ export const postalCodeValidator = () =>
 
 export const homeAddress = () =>
   body("homeAddress")
-    .optional()
     .notEmpty()
     .withMessage("آدرس محل سکونت نمی تواند خالی باشد")
     .isString()
     .withMessage("آدرس محل سکونت باید یک رشته باشد")
     .isLength({ max: 500 })
     .withMessage("آدرس محل سکونت نباید بیش از 500 کاراکتر باشد");
+
+export const genderId = () =>
+  body("genderId")
+    .notEmpty()
+    .withMessage("جنسیت نمی تواند خالی باشد")
+    .isInt({ min: 1, max: 3 })
+    .withMessage("جنسیت باید عددی صحیح از 1 تا 3 باشد");
+
+export const jobTitle = () =>
+  body("jobTitle")
+    .notEmpty()
+    .withMessage("عنوان شغلی نمی تواند خالی باشد")
+    .isString()
+    .withMessage("عنوان شغلی باید یک رشته باشد")
+    .isLength({ max: 50 })
+    .withMessage("عنوان شغلی نباید بیش از 50 کاراکتر باشد");
+
+export const bio = () =>
+  body("bio")
+    .notEmpty()
+    .withMessage("بیوگرافی نمی تواند خالی باشد")
+    .isString()
+    .withMessage("بیوگرافی باید یک رشته باشد")
+    .isLength({ max: 400 })
+    .withMessage("بیوگرافی نباید بیش از 400 کاراکتر باشد");
+
+export const birthDate = () =>
+  body("birthDate")
+    .notEmpty()
+    .withMessage("تاریخ تولد نمی تواند خالی باشد")
+    .isString()
+    .withMessage("تاریخ تولد باید یک رشته باشد")
+    .isDate({ format: "YYYY-MM-DD", strictMode: true, delimiters: ["-"] })
+    .withMessage("تاریخ تولد باید در فرمت YYYY-MM-DD باشد");
 
 export const registerValidator = () => [
   nameValidator(),
@@ -73,3 +113,13 @@ export const registerValidator = () => [
 export const verifyemailValidator = () => [emailValidator(), otpValidator()];
 
 export const loginValidator = () => [emailValidator(), passwordValidator()];
+
+export const updateUserValidator = () => [
+  userId(),
+  postalCodeValidator().optional(),
+  homeAddress().optional(),
+  genderId().optional(),
+  jobTitle().optional(),
+  bio().optional(),
+  birthDate().optional(),
+];
