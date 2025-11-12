@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 
 export const nameValidator = () =>
   body("name")
@@ -42,6 +42,14 @@ export const otpValidator = () =>
     .isLength({ min: 5, max: 5 })
     .withMessage("کد تائید باید دقیقا 5 کاراکتر باشد");
 
+export const userId = () =>
+  param("userId")
+    .notEmpty()
+    .withMessage("آیدی کاربر ضروری است")
+    .isInt({ min: 1 })
+    .withMessage("آیدی کاربر باید یک عدد صحیح مثبت باشد")
+    .toInt();
+
 export const postalCodeValidator = () =>
   body("postalCode")
     .notEmpty()
@@ -66,8 +74,8 @@ export const genderId = () =>
   body("genderId")
     .notEmpty()
     .withMessage("جنسیت نمی تواند خالی باشد")
-    .isInt({ gt: 0, lt: 4 })
-    .withMessage("جنسیت باید عددی از 1 تا 3 باشد");
+    .isInt({ min: 1, max: 3 })
+    .withMessage("جنسیت باید عددی صحیح از 1 تا 3 باشد");
 
 export const jobTitle = () =>
   body("jobTitle")
@@ -107,6 +115,7 @@ export const verifyemailValidator = () => [emailValidator(), otpValidator()];
 export const loginValidator = () => [emailValidator(), passwordValidator()];
 
 export const updateUserValidator = () => [
+  userId(),
   postalCodeValidator().optional(),
   homeAddress().optional(),
   genderId().optional(),
