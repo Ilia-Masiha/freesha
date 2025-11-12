@@ -44,7 +44,6 @@ export const otpValidator = () =>
 
 export const postalCodeValidator = () =>
   body("postalCode")
-    .optional()
     .notEmpty()
     .withMessage("کد پستی نمی تواند خالی باشد")
     .isString()
@@ -56,13 +55,19 @@ export const postalCodeValidator = () =>
 
 export const homeAddress = () =>
   body("homeAddress")
-    .optional()
     .notEmpty()
     .withMessage("آدرس محل سکونت نمی تواند خالی باشد")
     .isString()
     .withMessage("آدرس محل سکونت باید یک رشته باشد")
     .isLength({ max: 500 })
     .withMessage("آدرس محل سکونت نباید بیش از 500 کاراکتر باشد");
+
+export const genderId = () =>
+  body("genderId")
+    .notEmpty()
+    .withMessage("جنسیت نمی تواند خالی باشد")
+    .isInt({ gt: 0, lt: 4 })
+    .withMessage("جنسیت باید عددی از 1 تا 3 باشد");
 
 export const registerValidator = () => [
   nameValidator(),
