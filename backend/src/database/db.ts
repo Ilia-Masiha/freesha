@@ -133,3 +133,19 @@ export async function updateLastLogin(
     return makeDbResponse(null, error as Error);
   }
 }
+
+export async function updateUser(
+  id: number,
+  values: Partial<User>
+): Promise<DbResponse<true | null>> {
+  try {
+    await db
+      .update(usersTable)
+      .set({ ...values, updatedAt: sql`NOW()` })
+      .where(eq(usersTable.id, id));
+
+    return makeDbResponse(true, null);
+  } catch (error) {
+    return makeDbResponse(null, error as Error);
+  }
+}

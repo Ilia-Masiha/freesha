@@ -23,5 +23,8 @@ export async function updateUser(
     return res.status(400).json(resObj);
   }
 
+  const userId: number = validatedData.userId;
+  delete validatedData.userId;
+
   return res.status(200).json({ message: "Yup" });
 }
