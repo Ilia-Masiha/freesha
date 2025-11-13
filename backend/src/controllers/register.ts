@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import { matchedData, validationResult } from "express-validator";
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
 import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 import * as db from "../database/db.js";

@@ -11,6 +11,16 @@ export interface User {
   hashedPassword?: string;
   roleId?: number;
   roleName?: string;
+
+  skills?: string[] | null | unknown;
+  languages?: string[] | null | unknown;
+  postalCode?: string | null;
+  homeAddress?: string | null;
+  genderId?: number;
+  jobTitle?: string | null;
+  bio?: string | null;
+  birthDate?: string | null;
+
   createdAt?: Date;
   updatedAt?: Date;
 }
