@@ -144,7 +144,7 @@ export async function updateLastLogin(
 export async function updateUser(
   id: number,
   values: Partial<User>
-): Promise<DbResponse<User | None>> {
+): Promise<DbResponse<Partial<User> | None>> {
   try {
     const result = await db.transaction(async (tx) => {
       await tx
@@ -152,15 +152,13 @@ export async function updateUser(
         .set({ ...values, updatedAt: sql`NOW()` })
         .where(eq(usersTable.id, id));
 
-      return await tx
+      const user = await tx
         .select({
           id: usersTable.id,
           name: usersTable.name,
           email: usersTable.email,
           roleName: rolesTable.roleName,
 
-          skills: sql`ARRAY_AGG(DISTINCT user_skills.skill)`,
-          languages: sql`ARRAY_AGG(DISTINCT languages.language_name_fa)`,
           postalCode: usersTable.postalCode,
           homeAddress: usersTable.homeAddress,
           genderName: gendersTable.genderName,
@@ -170,22 +168,36 @@ export async function updateUser(
 
           createdAt: usersTable.createdAt,
           updatedAt: usersTable.updatedAt,
+          lastLoginAt: usersTable.lastLoginAt,
         })
         .from(usersTable)
         .innerJoin(rolesTable, eq(usersTable.roleId, rolesTable.id))
-        .innerJoin(userSkillsTable, eq(usersTable.id, userSkillsTable.userId))
-        .innerJoin(
-          userLanguagesTable,
-          eq(usersTable.id, userLanguagesTable.userId)
-        )
-        .innerJoin(
-          languagesTable,
-          eq(userLanguagesTable.languageCode, languagesTable.code)
-        )
         .innerJoin(gendersTable, eq(usersTable.genderId, gendersTable.id))
         .where(eq(usersTable.id, id));
+
+      const [skills, languages] = await Promise.all([
+        tx
+          .select({ skill: userSkillsTable.skill })
+          .from(userSkillsTable)
+          .where(eq(userSkillsTable.userId, id)),
+        tx
+          .select({ language: languagesTable.languageNameFa })
+          .from(userLanguagesTable)
+          .innerJoin(
+            languagesTable,
+            eq(userLanguagesTable.languageCode, languagesTable.code)
+          )
+          .where(eq(userLanguagesTable.userId, id)),
+      ]);
+
+      return {
+        ...user[0],
+        skills: skills.map((s) => s.skill),
+        languages: languages.map((l) => l.language),
+      };
     });
-    return makeDbResponse(result[0], null);
+
+    return makeDbResponse(result, null);
   } catch (error) {
     return makeDbResponse(null, error as Error);
   }

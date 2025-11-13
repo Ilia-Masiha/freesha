@@ -28,9 +28,12 @@ export async function updateUser(
   delete validatedData.userId;
 
   const dbResponse = await db.updateUser(userId, validatedData);
-  if (dbResponse.error) {
+  if (dbResponse.error || !dbResponse.result) {
     return next(dbResponse.error);
   }
 
-  return res.status(200).json({ message: "Yup" });
+  const userInfo = dbResponse.result;
+
+  const resObj = makeResObj(messages.updatedUser, userInfo);
+  return res.status(200).json(resObj);
 }
