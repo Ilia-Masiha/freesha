@@ -1,6 +1,6 @@
 import { body, param } from "express-validator";
 
-export const nameValidator = () =>
+const nameValidator = () =>
   body("name")
     .trim()
     .notEmpty()
@@ -10,7 +10,7 @@ export const nameValidator = () =>
     .isLength({ min: 6, max: 40 })
     .withMessage("نام کاربری باید بین 6 تا 40 کاراکتر باشد");
 
-export const emailValidator = () =>
+const emailValidator = () =>
   body("email")
     .trim()
     .notEmpty()
@@ -22,7 +22,7 @@ export const emailValidator = () =>
     .isEmail()
     .withMessage("ایمیل باید معتبر باشد");
 
-export const passwordValidator = () =>
+const passwordValidator = () =>
   body("password")
     .notEmpty()
     .withMessage("رمز عبور ضروری است")
@@ -33,7 +33,7 @@ export const passwordValidator = () =>
     .isStrongPassword()
     .withMessage("رمز عبور ضعیف است");
 
-export const otpValidator = () =>
+const otpValidator = () =>
   body("otp")
     .notEmpty()
     .withMessage("کد تائید ضروری است")
@@ -42,7 +42,7 @@ export const otpValidator = () =>
     .isLength({ min: 5, max: 5 })
     .withMessage("کد تائید باید دقیقا 5 کاراکتر باشد");
 
-export const userId = () =>
+const userIdValidator = () =>
   param("userId")
     .notEmpty()
     .withMessage("آیدی کاربر ضروری است")
@@ -50,7 +50,7 @@ export const userId = () =>
     .withMessage("آیدی کاربر باید یک عدد صحیح مثبت باشد")
     .toInt();
 
-export const postalCodeValidator = () =>
+const postalCodeValidator = () =>
   body("postalCode")
     .notEmpty()
     .withMessage("کد پستی نمی تواند خالی باشد")
@@ -61,7 +61,7 @@ export const postalCodeValidator = () =>
     .isNumeric()
     .withMessage("کد پستی باید فقط شامل ارقام باشد");
 
-export const homeAddress = () =>
+const homeAddressValidator = () =>
   body("homeAddress")
     .notEmpty()
     .withMessage("آدرس محل سکونت نمی تواند خالی باشد")
@@ -70,14 +70,14 @@ export const homeAddress = () =>
     .isLength({ max: 500 })
     .withMessage("آدرس محل سکونت نباید بیش از 500 کاراکتر باشد");
 
-export const genderId = () =>
+const genderIdValidator = () =>
   body("genderId")
     .notEmpty()
     .withMessage("جنسیت نمی تواند خالی باشد")
     .isInt({ min: 1, max: 3 })
     .withMessage("جنسیت باید عددی صحیح از 1 تا 3 باشد");
 
-export const jobTitle = () =>
+const jobTitleValidator = () =>
   body("jobTitle")
     .notEmpty()
     .withMessage("عنوان شغلی نمی تواند خالی باشد")
@@ -86,7 +86,7 @@ export const jobTitle = () =>
     .isLength({ max: 50 })
     .withMessage("عنوان شغلی نباید بیش از 50 کاراکتر باشد");
 
-export const bio = () =>
+const bioValidator = () =>
   body("bio")
     .notEmpty()
     .withMessage("بیوگرافی نمی تواند خالی باشد")
@@ -95,7 +95,7 @@ export const bio = () =>
     .isLength({ max: 400 })
     .withMessage("بیوگرافی نباید بیش از 400 کاراکتر باشد");
 
-export const birthDate = () =>
+const birthDateValidator = () =>
   body("birthDate")
     .notEmpty()
     .withMessage("تاریخ تولد نمی تواند خالی باشد")
@@ -115,11 +115,11 @@ export const verifyemailValidator = () => [emailValidator(), otpValidator()];
 export const loginValidator = () => [emailValidator(), passwordValidator()];
 
 export const updateUserValidator = () => [
-  userId(),
+  userIdValidator(),
   postalCodeValidator().optional(),
-  homeAddress().optional(),
-  genderId().optional(),
-  jobTitle().optional(),
-  bio().optional(),
-  birthDate().optional(),
+  homeAddressValidator().optional(),
+  genderIdValidator().optional(),
+  jobTitleValidator().optional(),
+  bioValidator().optional(),
+  birthDateValidator().optional(),
 ];

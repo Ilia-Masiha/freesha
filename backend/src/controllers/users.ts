@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import { matchedData, validationResult } from "express-validator";
 
+import * as db from "../database/db.js";
 import { makeResObj } from "../helpers/utils.js";
 import { messages } from "../helpers/messages.js";
 
 export async function updateUser(
   req: Request,
   res: Response,
-  _next: NextFunction
+  next: NextFunction
 ): Promise<Response | void> {
   const validationError = validationResult(req).array()[0];
 
@@ -23,5 +24,16 @@ export async function updateUser(
     return res.status(400).json(resObj);
   }
 
-  return res.status(200).json({ message: "Yup" });
+  const userId: number = validatedData.userId;
+  delete validatedData.userId;
+
+  const dbResponse = await db.updateUser(userId, validatedData);
+  if (dbResponse.error || !dbResponse.result) {
+    return next(dbResponse.error);
+  }
+
+  const userInfo = dbResponse.result;
+
+  const resObj = makeResObj(messages.updatedUser, userInfo);
+  return res.status(200).json(resObj);
 }

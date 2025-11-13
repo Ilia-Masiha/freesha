@@ -1,10 +1,8 @@
 import { QueryResult } from "pg";
 
-export interface PreRegisterInfo {
-  name: string;
-  email: string;
-  hashedPassword: string;
-}
+export type PreRegisterInfo = Required<
+  Pick<User, "name" | "email" | "hashedPassword">
+>;
 
 export interface User {
   id: number;
@@ -13,6 +11,16 @@ export interface User {
   hashedPassword?: string;
   roleId?: number;
   roleName?: string;
+
+  skills?: string[] | null | unknown;
+  languages?: string[] | null | unknown;
+  postalCode?: string | null;
+  homeAddress?: string | null;
+  genderId?: number;
+  jobTitle?: string | null;
+  bio?: string | null;
+  birthDate?: string | null;
+
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -27,12 +35,9 @@ export interface ResObj {
   data: Object;
 }
 
-export interface SessionData {
-  id: number;
-  name: string;
-  email: string;
-  roleName: string;
-}
+export type SessionData = Required<
+  Pick<User, "id" | "name" | "email" | "roleName">
+>;
 
 export type Tag = "server" | "database" | "redis";
 export type RoleName = "user" | "admin";

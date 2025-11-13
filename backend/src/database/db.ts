@@ -2,7 +2,14 @@ import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
 import { eq, sql } from "drizzle-orm";
 import { Pool } from "pg";
 
-import { rolesTable, usersTable } from "./schema.js";
+import {
+  gendersTable,
+  languagesTable,
+  rolesTable,
+  userLanguagesTable,
+  userSkillsTable,
+  usersTable,
+} from "./schema.js";
 import { customLog } from "../helpers/utils.js";
 import {
   DbError,
@@ -129,6 +136,68 @@ export async function updateLastLogin(
       .where(eq(usersTable.id, id));
 
     return makeDbResponse(true, null);
+  } catch (error) {
+    return makeDbResponse(null, error as Error);
+  }
+}
+
+export async function updateUser(
+  id: number,
+  values: Partial<User>
+): Promise<DbResponse<Partial<User> | None>> {
+  try {
+    const result = await db.transaction(async (tx) => {
+      await tx
+        .update(usersTable)
+        .set({ ...values, updatedAt: sql`NOW()` })
+        .where(eq(usersTable.id, id));
+
+      const user = await tx
+        .select({
+          id: usersTable.id,
+          name: usersTable.name,
+          email: usersTable.email,
+          roleName: rolesTable.roleName,
+
+          postalCode: usersTable.postalCode,
+          homeAddress: usersTable.homeAddress,
+          genderName: gendersTable.genderName,
+          jobTitle: usersTable.jobTitle,
+          bio: usersTable.bio,
+          birthDate: usersTable.birthDate,
+
+          createdAt: usersTable.createdAt,
+          updatedAt: usersTable.updatedAt,
+          lastLoginAt: usersTable.lastLoginAt,
+        })
+        .from(usersTable)
+        .innerJoin(rolesTable, eq(usersTable.roleId, rolesTable.id))
+        .innerJoin(gendersTable, eq(usersTable.genderId, gendersTable.id))
+        .where(eq(usersTable.id, id));
+
+      const [skills, languages] = await Promise.all([
+        tx
+          .select({ skill: userSkillsTable.skill })
+          .from(userSkillsTable)
+          .where(eq(userSkillsTable.userId, id)),
+        tx
+          .select({ language: languagesTable.languageNameFa })
+          .from(userLanguagesTable)
+          .innerJoin(
+            languagesTable,
+            eq(userLanguagesTable.languageCode, languagesTable.code)
+          )
+          .where(eq(userLanguagesTable.userId, id)),
+      ]);
+
+      return {
+        ...user[0],
+        skills: skills.map((s) => s.skill),
+        languages: languages.map((l) => l.language),
+      };
+    });
+
+    return makeDbResponse(result, null);
   } catch (error) {
     return makeDbResponse(null, error as Error);
   }
