@@ -1,7 +1,9 @@
+"use client";
 import { RiImageAddLine } from "react-icons/ri";
 import { GiRoundStar } from "react-icons/gi";
 import ShareBtn from "@/components/ShareBtn";
 import PersonalInformation from "@/components/Profile/PersonalInformation";
+import Biography from "@/components/Profile/Biography";
 
 const Profile = () => {
   return (
@@ -36,8 +38,10 @@ const Profile = () => {
       </article>
       {/* Personal information */}
       <PersonalInformation />
+      {/* Biography */}
+      <Biography/>
     </section>
   );
-};
+}
 
 export default Profile;
