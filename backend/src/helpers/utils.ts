@@ -23,3 +23,7 @@ export function generateOtp(length = 5): string {
 export function makeResObj(message: string, data: Object = {}): ResObj {
   return { message, data };
 }
+
+export function isNone(value: any): value is None {
+  return value === null || value === undefined;
+}

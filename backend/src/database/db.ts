@@ -10,7 +10,7 @@ import {
   userSkillsTable,
   usersTable,
 } from "./schema.js";
-import { customLog } from "../helpers/utils.js";
+import { customLog, isNone } from "../helpers/utils.js";
 import {
   DbError,
   DbResponse,
@@ -216,7 +216,7 @@ async function insertSkills(
   id: number,
   skills: string[] | None
 ): Promise<void> {
-  if (!skills) {
+  if (isNone(skills)) {
     return;
   }
 
@@ -225,7 +225,13 @@ async function insertSkills(
     skillsObjects.push({ userId: id, skill: skill });
   }
 
-  await tx.insert(userSkillsTable).values(skillsObjects).onConflictDoNothing();
+  await tx.delete(userSkillsTable).where(eq(userSkillsTable.userId, id));
+
+  if (skills.length === 0) {
+    return;
+  }
+
+  await tx.insert(userSkillsTable).values(skillsObjects);
 }
 
 async function insertLanguages(
@@ -233,7 +239,7 @@ async function insertLanguages(
   id: number,
   languages: string[] | None
 ): Promise<void> {
-  if (!languages) {
+  if (isNone(languages)) {
     return;
   }
 
@@ -242,8 +248,11 @@ async function insertLanguages(
     languagesObjects.push({ userId: id, languageCode: language });
   }
 
-  await tx
-    .insert(userLanguagesTable)
-    .values(languagesObjects)
-    .onConflictDoNothing();
+  await tx.delete(userLanguagesTable).where(eq(userLanguagesTable.userId, id));
+
+  if (languages.length === 0) {
+    return;
+  }
+
+  await tx.insert(userLanguagesTable).values(languagesObjects);
 }
