@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import "../globals.css";
+import SideBar from "@/components/Profile/SideBar";
 
 export const metadata = {
   title: "Create Next App",
@@ -9,9 +10,13 @@ export const metadata = {
 export default function Layout({ children }) {
   return (
     <html lang="fa" dir="rtl">
-      <body className={`antialiased`}>
-        <Header/>
-        <main className="flex justify-center">{children}</main>
+      <body className={`antialiased bg-bg-primary`}>
+        <main className="grid grid-cols-12 overflow-x-hidden">
+          <section className="col-span-3 h-screen">
+            <SideBar/>
+          </section>
+          <section className="col-span-9">{children}</section>
+        </main>
       </body>
     </html>
   );

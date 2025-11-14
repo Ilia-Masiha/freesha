@@ -120,7 +120,7 @@ const Signup = () => {
   if (step === 1)
     return (
       <section className="flex justify-center pt-4">
-        <article className="w-[35%] my-5 rounded-lg bg-bg px-8 py-6 flex flex-col items-center">
+        <article className="w-[35%] my-5 rounded-lg bg-bg-primary px-8 py-6 flex flex-col items-center">
           <h1 className="text-4xl font-bold">فریشا</h1>
           <h3 className="w-full mt-8 text-start text-xl font-semibold">
             ثبت نام
@@ -166,7 +166,7 @@ const Signup = () => {
     );
   return (
     <section className="flex justify-center pt-4">
-      <article className="w-[35%] my-5 rounded-lg bg-bg px-8 py-6 flex flex-col items-center">
+      <article className="w-[35%] my-5 rounded-lg bg-bg-primary px-8 py-6 flex flex-col items-center">
         <h1 className="text-4xl font-bold">فریشا</h1>
         <div className="w-full mt-8 flex justify-between items-center">
           <h3 className="text-xl font-semibold">کد تایید</h3>

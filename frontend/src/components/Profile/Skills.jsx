@@ -1,8 +1,12 @@
 "use client";
 import Title from "@/common/Title";
 import { useState } from "react";
-import Select from "react-select";
 import { PiCodeDuotone } from "react-icons/pi";
+import dynamic from "next/dynamic";
+const ReactSelect = dynamic(() => import("react-select"), {
+  ssr: false,
+});
+
 
 const options = [
   { value: "react.js", label: "react.js" },
@@ -16,7 +20,7 @@ const Skills = () => {
     <article className="mt-16">
       <Title text="مهارت ها" icon={<PiCodeDuotone className="text-2xl" />} />
       <form className="mt-10">
-        <Select
+        <ReactSelect
           isMulti
           defaultValue={skills}
           onChange={setSkills}

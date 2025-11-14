@@ -22,7 +22,7 @@ const PasswordInput = ({ register, errors, label, name }) => {
           id={name}
           name={name}
           autoComplete="off"
-          className="outline-none p-2 text-txt w-[90%]"
+          className="outline-none p-2 text-primary w-[90%]"
         />
         <button
           type="button"

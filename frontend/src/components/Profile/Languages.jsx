@@ -2,7 +2,10 @@
 import Title from "@/common/Title";
 import { useState } from "react";
 import { PiTranslateDuotone } from "react-icons/pi";
-import Select from "react-select";
+import dynamic from "next/dynamic";
+const ReactSelect = dynamic(() => import("react-select"), {
+  ssr: false,
+});
 
 const options = [
   { value: "اسپانیایی", label: "اسپانیایی" },
@@ -19,7 +22,7 @@ const Languages = () => {
         icon={<PiTranslateDuotone className="text-2xl" />}
       />
       <form className="mt-10">
-        <Select
+        <ReactSelect
           isMulti
           defaultValue={languages}
           onChange={setLanguages}
