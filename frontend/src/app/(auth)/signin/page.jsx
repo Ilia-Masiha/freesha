@@ -68,14 +68,14 @@ const Signin = () => {
           <button
             type="submit"
             disabled={!isValid || !isDirty || isSubmitting}
-            className="w-full auth rounded-lg py-2 text-white mt-4 cursor-pointer disabled:cursor-not-allowed disabled:opacity-65"
+            className="w-full bg-secondary rounded-lg py-2 text-white mt-4 cursor-pointer disabled:cursor-not-allowed disabled:opacity-65"
           >
             ورود
           </button>
         </form>
-        <Link href="/signup" className="text-sm text-secondary-700 mt-4">
+        <Link href="/signup" className="text-sm text-secondary mt-4">
           هنوز ثبت نام نکرده اید؟
-          <span className="text-primary-500"> ثبت نام</span>
+          <span className="text-primary font-semibold"> ثبت نام</span>
         </Link>
       </article>
     </section>

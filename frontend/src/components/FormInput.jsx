@@ -24,7 +24,7 @@ const FormInput = ({
         id={name}
         name={name}
         autoComplete="off"
-        className="bg-bg outline-none p-2 rounded-lg text-txt border border-secondary-400"
+        className="bg-bg outline-none p-2 rounded-lg text-txt border border-tertiary"
       />
     </div>
   );

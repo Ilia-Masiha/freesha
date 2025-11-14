@@ -15,7 +15,7 @@ const PasswordInput = ({ register, errors, label, name }) => {
           {errors[name]?.message && errors[name]?.message}
         </span>
       </div>
-      <div className="flex items-center w-full bg-bg rounded-lg border border-secondary-400 overflow-hidden">
+      <div className="flex items-center w-full bg-bg rounded-lg border border-tertiary overflow-hidden">
         <input
           {...register(name)}
           type={showPassword ? "text" : "password"}
@@ -26,7 +26,7 @@ const PasswordInput = ({ register, errors, label, name }) => {
         />
         <button
           type="button"
-          className="w-[10%] h-full p-2 text-lg"
+          className="w-[10%] h-full p-2 text-lg text-primary"
           onClick={() => setShowPassword((prev) => !prev)}
         >
           {showPassword ? <LuEye /> : <LuEyeClosed />}

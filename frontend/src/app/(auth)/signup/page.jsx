@@ -152,14 +152,14 @@ const Signup = () => {
             />
             <button
               disabled={!isValid || !isDirty || isSubmitting}
-              className="w-full auth rounded-lg py-2 text-white mt-4 cursor-pointer disabled:cursor-not-allowed disabled:opacity-65"
+              className="w-full bg-secondary rounded-lg py-2 text-white mt-4 cursor-pointer disabled:cursor-not-allowed disabled:opacity-65"
             >
               ثبت نام
             </button>
           </form>
-          <Link href="/signin" className="text-sm text-secondary-700 mt-4">
+          <Link href="/signin" className="text-sm text-secondary mt-4">
             قبلا ثبت نام کرده اید ؟
-            <span className="text-primary-500">ورود </span>
+            <span className="text-primary font-semibold">ورود </span>
           </Link>
         </article>
       </section>
@@ -172,7 +172,7 @@ const Signup = () => {
           <h3 className="text-xl font-semibold">کد تایید</h3>
           <button
             onClick={() => setStep(1)}
-            className="w-10 h-10 rounded-lg bg-primary-300 text-primary-800 cursor-pointer text-lg flex justify-center items-center"
+            className="w-10 h-10 rounded-lg bg-primary text-secondary cursor-pointer text-lg flex justify-center items-center"
           >
             <FaArrowLeftLong />
           </button>
@@ -183,22 +183,22 @@ const Signup = () => {
             value={otp}
             onChange={setOtp}
             numInputs={5}
-            renderSeparator={<span className="text-primary-600">-</span>}
+            renderSeparator={<span className="text-primary">-</span>}
             renderInput={(props) => (
               <input {...props} style={{ width: "2.5rem" }} />
             )}
-            inputStyle="inline-block border-2 border-primary-600 rounded-lg outline-none h-10 mx-4 text-center text-lg font-semibold"
+            inputStyle="inline-block border-2 border-secondary text-primary rounded-lg outline-none h-10 mx-4 text-center text-lg font-semibold"
             containerStyle="flex flex-row-reverse"
           />
         </div>
         {!isExpired ? (
           <p className="w-full text-start my-5 text-sm font-semibold mr-2">
-            <span className="text-primary-600">{formattedTime}</span> ثانیه تا
+            <span className="text-secondary">{formattedTime}</span> ثانیه تا
             ارسال مجدد کد
           </p>
         ) : (
           <p
-            className="w-full text-start my-5 text-sm font-semibold mr-2 cursor-pointer"
+            className="w-full text-start my-5 text-sm font-semibold mr-2 cursor-pointer text-primary"
             onClick={handleResendCode}
           >
             ارسال مجدد کد تایید
@@ -207,7 +207,7 @@ const Signup = () => {
         <button
           type="submit"
           onClick={emailVerificationHandler}
-          className="w-full auth rounded-lg py-2 text-white cursor-pointer"
+          className="w-full bg-secondary rounded-lg py-2 text-white cursor-pointer"
         >
           تایید
         </button>
