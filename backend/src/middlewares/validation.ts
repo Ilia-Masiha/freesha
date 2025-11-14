@@ -1,4 +1,4 @@
-import { body, param } from "express-validator";
+import { body } from "express-validator";
 
 const nameValidator = () =>
   body("name")
@@ -42,13 +42,13 @@ const otpValidator = () =>
     .isLength({ min: 5, max: 5 })
     .withMessage("کد تائید باید دقیقا 5 کاراکتر باشد");
 
-const userIdValidator = () =>
+/*const userIdValidator = () =>
   param("userId")
     .notEmpty()
     .withMessage("آیدی کاربر ضروری است")
     .isInt({ min: 1 })
     .withMessage("آیدی کاربر باید یک عدد صحیح مثبت باشد")
-    .toInt();
+    .toInt();*/
 
 const postalCodeValidator = () =>
   body("postalCode")
@@ -104,6 +104,28 @@ const birthDateValidator = () =>
     .isDate({ format: "YYYY-MM-DD", strictMode: true, delimiters: ["-"] })
     .withMessage("تاریخ تولد باید در فرمت YYYY-MM-DD باشد");
 
+const skillsValidator = () =>
+  body("skills").isArray({ min: 0 }).withMessage("مهارت ها باید یک آرایه باشد");
+
+const skillsItemsValidator = () =>
+  body("skills.*")
+    .isString()
+    .withMessage("درایه های مهارت ها باید رشته باشند")
+    .isLength({ max: 25 })
+    .withMessage("درایه های مهارت ها نباید بیش از 25 کاراکتر باشند");
+
+const languagesValidator = () =>
+  body("languages")
+    .isArray({ min: 0 })
+    .withMessage("زبان ها باید یک آرایه باشد");
+
+const languagesItemsValidator = () =>
+  body("languages.*")
+    .isString()
+    .withMessage("درایه های زبان ها باید رشته باشند")
+    .isLength({ min: 2, max: 2 })
+    .withMessage("درایه های زبان ها باید دقیقا 2 کاراکتر باشند");
+
 export const registerValidator = () => [
   nameValidator(),
   emailValidator(),
@@ -115,11 +137,15 @@ export const verifyemailValidator = () => [emailValidator(), otpValidator()];
 export const loginValidator = () => [emailValidator(), passwordValidator()];
 
 export const updateUserValidator = () => [
-  userIdValidator(),
   postalCodeValidator().optional(),
   homeAddressValidator().optional(),
   genderIdValidator().optional(),
   jobTitleValidator().optional(),
   bioValidator().optional(),
   birthDateValidator().optional(),
+
+  skillsValidator().optional(),
+  skillsItemsValidator().optional(),
+  languagesValidator().optional(),
+  languagesItemsValidator().optional(),
 ];

@@ -19,13 +19,12 @@ export async function updateUser(
 
   const validatedData = matchedData(req);
 
-  if (Object.keys(validatedData).length < 2) {
+  if (Object.keys(validatedData).length < 1) {
     const resObj = makeResObj(messages.emptyReqBody);
     return res.status(400).json(resObj);
   }
 
-  const userId: number = validatedData.userId;
-  delete validatedData.userId;
+  const userId: number = req.sessionData?.id!;
 
   const dbResponse = await db.updateUser(userId, validatedData);
   if (dbResponse.error || !dbResponse.result) {

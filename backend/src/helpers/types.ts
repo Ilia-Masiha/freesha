@@ -1,3 +1,6 @@
+import { ExtractTablesWithRelations } from "drizzle-orm";
+import { NodePgQueryResultHKT } from "drizzle-orm/node-postgres";
+import { PgTransaction } from "drizzle-orm/pg-core";
 import { QueryResult } from "pg";
 
 export type PreRegisterInfo = Required<
@@ -12,8 +15,8 @@ export interface User {
   roleId?: number;
   roleName?: string;
 
-  skills?: string[] | null | unknown;
-  languages?: string[] | null | unknown;
+  skills?: string[] | null;
+  languages?: string[] | null;
   postalCode?: string | null;
   homeAddress?: string | null;
   genderId?: number;
@@ -47,6 +50,11 @@ export type None = undefined | null;
 export type DbResult = QueryResult | Object | Object[] | null | undefined;
 export type DbError = Error | None;
 export type RedisValue = string | number | null;
+export type Transaction = PgTransaction<
+  NodePgQueryResultHKT,
+  Record<string, never>,
+  ExtractTablesWithRelations<Record<string, never>>
+>;
 
 export type LanguageCode =
   | "en"

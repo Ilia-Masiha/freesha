@@ -10,13 +10,14 @@ import {
   userSkillsTable,
   usersTable,
 } from "./schema.js";
-import { customLog } from "../helpers/utils.js";
+import { customLog, isNone } from "../helpers/utils.js";
 import {
   DbError,
   DbResponse,
   DbResult,
   None,
   PreRegisterInfo,
+  Transaction,
   User,
 } from "../helpers/types.js";
 
@@ -146,11 +147,18 @@ export async function updateUser(
   values: Partial<User>
 ): Promise<DbResponse<Partial<User> | None>> {
   try {
-    const result = await db.transaction(async (tx) => {
+    const { skills, languages } = values;
+    delete values.skills;
+    delete values.languages;
+
+    const result = await db.transaction(async (tx: Transaction) => {
       await tx
         .update(usersTable)
         .set({ ...values, updatedAt: sql`NOW()` })
         .where(eq(usersTable.id, id));
+
+      await insertSkills(tx, id, skills);
+      await insertLanguages(tx, id, languages);
 
       const user = await tx
         .select({
@@ -175,7 +183,7 @@ export async function updateUser(
         .innerJoin(gendersTable, eq(usersTable.genderId, gendersTable.id))
         .where(eq(usersTable.id, id));
 
-      const [skills, languages] = await Promise.all([
+      const [userSkills, userLanguages] = await Promise.all([
         tx
           .select({ skill: userSkillsTable.skill })
           .from(userSkillsTable)
@@ -192,8 +200,8 @@ export async function updateUser(
 
       return {
         ...user[0],
-        skills: skills.map((s) => s.skill),
-        languages: languages.map((l) => l.language),
+        skills: userSkills.map((s) => s.skill),
+        languages: userLanguages.map((l) => l.language),
       };
     });
 
@@ -201,4 +209,50 @@ export async function updateUser(
   } catch (error) {
     return makeDbResponse(null, error as Error);
   }
+}
+
+async function insertSkills(
+  tx: Transaction,
+  id: number,
+  skills: string[] | None
+): Promise<void> {
+  if (isNone(skills)) {
+    return;
+  }
+
+  const skillsObjects = [];
+  for (const skill of skills) {
+    skillsObjects.push({ userId: id, skill: skill });
+  }
+
+  await tx.delete(userSkillsTable).where(eq(userSkillsTable.userId, id));
+
+  if (skills.length === 0) {
+    return;
+  }
+
+  await tx.insert(userSkillsTable).values(skillsObjects);
+}
+
+async function insertLanguages(
+  tx: Transaction,
+  id: number,
+  languages: string[] | None
+): Promise<void> {
+  if (isNone(languages)) {
+    return;
+  }
+
+  const languagesObjects = [];
+  for (const language of languages) {
+    languagesObjects.push({ userId: id, languageCode: language });
+  }
+
+  await tx.delete(userLanguagesTable).where(eq(userLanguagesTable.userId, id));
+
+  if (languages.length === 0) {
+    return;
+  }
+
+  await tx.insert(userLanguagesTable).values(languagesObjects);
 }
