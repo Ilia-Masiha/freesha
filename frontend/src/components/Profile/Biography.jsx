@@ -2,6 +2,7 @@
 import Title from "@/common/Title";
 import TextArea from "../TextArea";
 import Btn from "@/common/Btn";
+import { PiInfoDuotone } from "react-icons/pi";
 
 const Biography = () => {
   return (

@@ -4,6 +4,8 @@ import { GiRoundStar } from "react-icons/gi";
 import ShareBtn from "@/components/ShareBtn";
 import PersonalInformation from "@/components/Profile/PersonalInformation";
 import Biography from "@/components/Profile/Biography";
+import Languages from "@/components/Profile/Languages";
+import Skills from "@/components/Profile/Skills";
 
 const Profile = () => {
   return (
@@ -39,9 +41,13 @@ const Profile = () => {
       {/* Personal information */}
       <PersonalInformation />
       {/* Biography */}
-      <Biography/>
+      <Biography />
+      {/* languages */}
+      <Languages />
+      {/* skills */}
+      <Skills />
     </section>
   );
-}
+};
 
 export default Profile;
