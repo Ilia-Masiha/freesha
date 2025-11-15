@@ -137,6 +137,8 @@ export const verifyemailValidator = () => [emailValidator(), otpValidator()];
 export const loginValidator = () => [emailValidator(), passwordValidator()];
 
 export const updateUserValidator = () => [
+  nameValidator().optional(),
+
   postalCodeValidator().optional(),
   homeAddressValidator().optional(),
   genderIdValidator().optional(),
