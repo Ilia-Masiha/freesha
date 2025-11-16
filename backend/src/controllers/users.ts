@@ -19,12 +19,16 @@ export async function updateUser(
 
   const validatedData = matchedData(req);
 
-  if (Object.keys(validatedData).length < 1) {
+  if (Object.keys(validatedData).length < 2) {
     const resObj = makeResObj(messages.emptyReqBody);
     return res.status(400).json(resObj);
   }
 
-  const userId: number = req.sessionData?.id!;
+  const { userId } = validatedData;
+  if (userId !== req.sessionData?.id && req.sessionData?.roleName === "user") {
+    const resObj = makeResObj(messages.error403);
+    return res.status(403).json(resObj);
+  }
 
   const dbResponse = await db.updateUser(userId, validatedData);
   if (dbResponse.error || !dbResponse.result) {

@@ -138,7 +138,8 @@ Every response has a `message` and `data` property:
       "email": "john@doe.com",
       "roleName": "user",
       "createdAt": "2025-10-02T11:52:24.977Z",
-      "updatedAt": "2025-10-02T11:52:24.977Z"
+      "updatedAt": "2025-10-02T11:52:24.977Z",
+      "lastLoginAt": "2025-10-03T21:23:51.735Z"
     }
   }
   ```
@@ -147,10 +148,10 @@ Every response has a `message` and `data` property:
   - `401`: Bad credentials.
   - `200`: Successfully logged in.
 
-- `PATCH /users` (Protected):  
-  This endpoint is used for editing a user's information. Send information in the request body in this format:  
+- `PATCH /users/:userId` (Protected):  
+  This endpoint is used for editing a user's information. Put user's id instead of `:userId`. Send information in the request body in this format:  
   ```json
-  REQUEST BODY
+  PATCH /users/5
   {
     "name": "John Doe",
     "postalCode": "0123456789",
@@ -203,4 +204,5 @@ Every response has a `message` and `data` property:
   These status codes are expected:  
   - `400`: Validation error. More information in `message`.
   - `401`: Invalid session key.
+  - `403`: Forbidden.
   - `200`: Successfully updated user information.

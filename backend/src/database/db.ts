@@ -114,6 +114,7 @@ export async function getUserByEmail(
         roleName: rolesTable.roleName,
         createdAt: usersTable.createdAt,
         updatedAt: usersTable.updatedAt,
+        lastLoginAt: usersTable.lastLoginAt,
       })
       .from(usersTable)
       .innerJoin(rolesTable, eq(usersTable.roleId, rolesTable.id))

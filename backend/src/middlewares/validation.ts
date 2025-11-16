@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 
 const nameValidator = () =>
   body("name")
@@ -42,13 +42,13 @@ const otpValidator = () =>
     .isLength({ min: 5, max: 5 })
     .withMessage("کد تائید باید دقیقا 5 کاراکتر باشد");
 
-/*const userIdValidator = () =>
+const userIdValidator = () =>
   param("userId")
     .notEmpty()
     .withMessage("آیدی کاربر ضروری است")
     .isInt({ min: 1 })
     .withMessage("آیدی کاربر باید یک عدد صحیح مثبت باشد")
-    .toInt();*/
+    .toInt();
 
 const postalCodeValidator = () =>
   body("postalCode")
@@ -137,6 +137,8 @@ export const verifyemailValidator = () => [emailValidator(), otpValidator()];
 export const loginValidator = () => [emailValidator(), passwordValidator()];
 
 export const updateUserValidator = () => [
+  userIdValidator(),
+
   nameValidator().optional(),
 
   postalCodeValidator().optional(),
