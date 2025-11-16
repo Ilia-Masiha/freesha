@@ -114,17 +114,17 @@ const skillsItemsValidator = () =>
     .isLength({ max: 25 })
     .withMessage("درایه های مهارت ها نباید بیش از 25 کاراکتر باشند");
 
-const languagesValidator = () =>
-  body("languages")
+const languageCodesValidator = () =>
+  body("languageCodes")
     .isArray({ min: 0 })
-    .withMessage("زبان ها باید یک آرایه باشد");
+    .withMessage("کد زبان ها باید یک آرایه باشد");
 
-const languagesItemsValidator = () =>
-  body("languages.*")
+const languageCodesItemsValidator = () =>
+  body("languageCodes.*")
     .isString()
-    .withMessage("درایه های زبان ها باید رشته باشند")
+    .withMessage("درایه های کد زبان ها باید رشته باشند")
     .isLength({ min: 2, max: 2 })
-    .withMessage("درایه های زبان ها باید دقیقا 2 کاراکتر باشند");
+    .withMessage("درایه های کد زبان ها باید دقیقا 2 کاراکتر باشند");
 
 export const registerValidator = () => [
   nameValidator(),
@@ -148,6 +148,6 @@ export const updateUserValidator = () => [
 
   skillsValidator().optional(),
   skillsItemsValidator().optional(),
-  languagesValidator().optional(),
-  languagesItemsValidator().optional(),
+  languageCodesValidator().optional(),
+  languageCodesItemsValidator().optional(),
 ];

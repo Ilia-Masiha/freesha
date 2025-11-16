@@ -147,9 +147,9 @@ export async function updateUser(
   values: Partial<User>
 ): Promise<DbResponse<Partial<User> | None>> {
   try {
-    const { skills, languages } = values;
+    const { skills, languageCodes } = values;
     delete values.skills;
-    delete values.languages;
+    delete values.languageCodes;
 
     const result = await db.transaction(async (tx: Transaction) => {
       await tx
@@ -158,7 +158,7 @@ export async function updateUser(
         .where(eq(usersTable.id, id));
 
       await insertSkills(tx, id, skills);
-      await insertLanguages(tx, id, languages);
+      await insertLanguages(tx, id, languageCodes);
 
       const user = await tx
         .select({
@@ -237,22 +237,22 @@ async function insertSkills(
 async function insertLanguages(
   tx: Transaction,
   id: number,
-  languages: string[] | None
+  languageCodes: string[] | None
 ): Promise<void> {
-  if (isNone(languages)) {
+  if (isNone(languageCodes)) {
     return;
   }
 
-  const languagesObjects = [];
-  for (const language of languages) {
-    languagesObjects.push({ userId: id, languageCode: language });
+  const userLanguages = [];
+  for (const languageCode of languageCodes) {
+    userLanguages.push({ userId: id, languageCode: languageCode });
   }
 
   await tx.delete(userLanguagesTable).where(eq(userLanguagesTable.userId, id));
 
-  if (languages.length === 0) {
+  if (languageCodes.length === 0) {
     return;
   }
 
-  await tx.insert(userLanguagesTable).values(languagesObjects);
+  await tx.insert(userLanguagesTable).values(userLanguages);
 }
