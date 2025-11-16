@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 
 const nameValidator = () =>
   body("name")
@@ -42,13 +42,13 @@ const otpValidator = () =>
     .isLength({ min: 5, max: 5 })
     .withMessage("کد تائید باید دقیقا 5 کاراکتر باشد");
 
-/*const userIdValidator = () =>
+const userIdValidator = () =>
   param("userId")
     .notEmpty()
     .withMessage("آیدی کاربر ضروری است")
     .isInt({ min: 1 })
     .withMessage("آیدی کاربر باید یک عدد صحیح مثبت باشد")
-    .toInt();*/
+    .toInt();
 
 const postalCodeValidator = () =>
   body("postalCode")
@@ -114,17 +114,17 @@ const skillsItemsValidator = () =>
     .isLength({ max: 25 })
     .withMessage("درایه های مهارت ها نباید بیش از 25 کاراکتر باشند");
 
-const languagesValidator = () =>
-  body("languages")
+const languageCodesValidator = () =>
+  body("languageCodes")
     .isArray({ min: 0 })
-    .withMessage("زبان ها باید یک آرایه باشد");
+    .withMessage("کد زبان ها باید یک آرایه باشد");
 
-const languagesItemsValidator = () =>
-  body("languages.*")
+const languageCodesItemsValidator = () =>
+  body("languageCodes.*")
     .isString()
-    .withMessage("درایه های زبان ها باید رشته باشند")
+    .withMessage("درایه های کد زبان ها باید رشته باشند")
     .isLength({ min: 2, max: 2 })
-    .withMessage("درایه های زبان ها باید دقیقا 2 کاراکتر باشند");
+    .withMessage("درایه های کد زبان ها باید دقیقا 2 کاراکتر باشند");
 
 export const registerValidator = () => [
   nameValidator(),
@@ -137,6 +137,8 @@ export const verifyemailValidator = () => [emailValidator(), otpValidator()];
 export const loginValidator = () => [emailValidator(), passwordValidator()];
 
 export const updateUserValidator = () => [
+  userIdValidator(),
+
   nameValidator().optional(),
 
   postalCodeValidator().optional(),
@@ -148,6 +150,6 @@ export const updateUserValidator = () => [
 
   skillsValidator().optional(),
   skillsItemsValidator().optional(),
-  languagesValidator().optional(),
-  languagesItemsValidator().optional(),
+  languageCodesValidator().optional(),
+  languageCodesItemsValidator().optional(),
 ];

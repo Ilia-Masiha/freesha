@@ -6,6 +6,6 @@ import { verifyUser } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-router.patch("/", verifyUser, updateUserValidator(), updateUser);
+router.patch("/:userId", verifyUser, updateUserValidator(), updateUser);
 
 export default router;

@@ -17,11 +17,12 @@ export interface User {
 
   skills?: string[] | null;
   languages?: string[] | null;
-  postalCode?: string | null;
-  homeAddress?: string | null;
+  languageCodes?: string[] | null;
+  postalCode?: string;
+  homeAddress?: string;
   genderId?: number;
-  jobTitle?: string | null;
-  bio?: string | null;
+  jobTitle?: string;
+  bio?: string;
   birthDate?: string | null;
 
   createdAt?: Date;

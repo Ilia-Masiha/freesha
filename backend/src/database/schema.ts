@@ -23,14 +23,14 @@ export const usersTable = pgTable("users", {
     .notNull()
     .references(() => rolesTable.id),
 
-  postalCode: varchar("postal_code", { length: 10 }),
-  homeAddress: varchar("home_address", { length: 500 }),
+  postalCode: varchar("postal_code", { length: 10 }).notNull().default(""),
+  homeAddress: varchar("home_address", { length: 500 }).notNull().default(""),
   genderId: integer("gender_id")
     .notNull()
     .references(() => gendersTable.id)
     .default(1),
-  jobTitle: varchar("job_title", { length: 50 }),
-  bio: varchar("bio", { length: 400 }),
+  jobTitle: varchar("job_title", { length: 50 }).notNull().default(""),
+  bio: varchar("bio", { length: 400 }).notNull().default(""),
   birthDate: date("birth_date"),
 
   createdAt: timestamp("created_at").notNull().defaultNow(),

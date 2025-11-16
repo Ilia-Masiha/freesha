@@ -74,7 +74,7 @@ Every response has a `message` and `data` property:
 ## Endpoints
 
 - `POST /register`:  
-  The endpoint is used for registering a new user. This endpoint can also be used to resend the OTP. Send user information in the request body in this format:  
+  This endpoint is used for registering a new user. This endpoint can also be used to resend the OTP. Send user information in the request body in this format:  
   ```json
   REQUEST BODY
   {
@@ -90,7 +90,7 @@ Every response has a `message` and `data` property:
   - `200`: OK. OTP is sent to the email for verification.
 
 - `POST /verifyemail`:  
-  The endpoint is used for verifying your email using the OTP that was sent to it. Send information in the request body in this format:  
+  This endpoint is used for verifying your email using the OTP that was sent to it. Send information in the request body in this format:  
   ```json
   REQUEST BODY
   {
@@ -119,7 +119,7 @@ Every response has a `message` and `data` property:
   - `201`: Successfully verified the OTP and created the user in database.
 
 - `POST /login`:  
-  The endpoint is used for logging in. Send information in the request body in this format:  
+  This endpoint is used for logging in. Send information in the request body in this format:  
   ```json
   REQUEST BODY
   {
@@ -138,7 +138,8 @@ Every response has a `message` and `data` property:
       "email": "john@doe.com",
       "roleName": "user",
       "createdAt": "2025-10-02T11:52:24.977Z",
-      "updatedAt": "2025-10-02T11:52:24.977Z"
+      "updatedAt": "2025-10-02T11:52:24.977Z",
+      "lastLoginAt": "2025-10-03T21:23:51.735Z"
     }
   }
   ```
@@ -146,3 +147,62 @@ Every response has a `message` and `data` property:
   - `400`: Validation error. More information in `message`.
   - `401`: Bad credentials.
   - `200`: Successfully logged in.
+
+- `PATCH /users/:userId` (Protected):  
+  This endpoint is used for editing a user's information. Put user's id instead of `:userId`. Send information in the request body in this format:  
+  ```json
+  PATCH /users/5
+  {
+    "name": "John Doe",
+    "postalCode": "0123456789",
+    "homeAddress": "221B Baker St. London",
+    "genderId": 2,
+    "jobTitle": "Front-End Web Developer",
+    "bio": "Hi. This is some information about me",
+    "birthDate": "1999-01-20",
+    "skills": [
+      "Cooking",
+      "Coding"
+    ],
+    "languageCodes": [
+      "fa",
+      "en"
+    ]
+  }
+  ```
+  All of the properties are optional, but the request body must contain at least one property. Including a property but leaving it empty (`""` or `[]`) is the equivalent of removing that record from the user's profile. `birthDate` can't set to be `""`.  
+  Response body will contain a `message` about the result of your request. If successful, `data` will also contain information about the updated user. Response body will be in this format (If status code is `200`):  
+  ```json
+  RESPONSE BODY
+  {
+    "message": "اطلاعات کاربر با موفقیت بروزرسانی شد",
+    "data": {
+      "id": 5,
+      "name": "John Doe",
+      "email": "john@doe.com",
+      "roleName": "user",
+      "postalCode": "0123456789",
+      "homeAddress": "221B Baker St. London",
+      "genderName": "M",
+      "jobTitle": "Hello brother",
+      "bio": "Hi. This is some information about me",
+      "birthDate": "1999-01-20",
+      "createdAt": "2025-10-02T11:52:24.977Z",
+      "updatedAt": "2025-10-17T18:40:02.152Z",
+      "lastLoginAt": "2025-10-17T18:39:37.428Z",
+      "skills": [
+        "Cooking",
+        "Coding"
+      ],
+      "languages": [
+        "فارسی",
+        "انگلیسی"
+      ]
+    }
+  }
+  ```
+  These status codes are expected:  
+  - `400`: Validation error. More information in `message`.
+  - `401`: Invalid session key.
+  - `403`: Forbidden.
+  - `200`: Successfully updated user information.
