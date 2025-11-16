@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import "../globals.css";
 import SideBar from "@/components/Profile/SideBar";
 
@@ -10,12 +9,17 @@ export const metadata = {
 export default function Layout({ children }) {
   return (
     <html lang="fa" dir="rtl">
-      <body className={`antialiased bg-bg-primary`}>
-        <main className="grid grid-cols-12 overflow-x-hidden">
+      <body className={`antialiased bg-primary`}>
+        <main className="grid grid-cols-12 overflow-hidden">
           <section className="col-span-3 h-screen">
-            <SideBar/>
+            <SideBar />
           </section>
-          <section className="col-span-9">{children}</section>
+          <section className="col-span-9">
+            <header className="w-full h-10 bg-primary"></header>
+            <main className="w-full h-full rounded-tr-2xl bg-bg-primary p-5">
+              {children}
+            </main>
+          </section>
         </main>
       </body>
     </html>
