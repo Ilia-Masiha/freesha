@@ -52,19 +52,18 @@ const userIdValidator = () =>
 
 const postalCodeValidator = () =>
   body("postalCode")
-    .notEmpty()
-    .withMessage("کد پستی نمی تواند خالی باشد")
+    .trim()
     .isString()
     .withMessage("کد پستی باید یک رشته باشد")
     .isLength({ min: 10, max: 10 })
-    .withMessage("کد پستی باید دقیقا 10 کاراکتر باشد")
+    .custom((value: string) => value.length === 0 || value.length === 10)
+    .withMessage("کد پستی باید 10 یا 0 کاراکتر باشد")
     .isNumeric()
     .withMessage("کد پستی باید فقط شامل ارقام باشد");
 
 const homeAddressValidator = () =>
   body("homeAddress")
-    .notEmpty()
-    .withMessage("آدرس محل سکونت نمی تواند خالی باشد")
+    .trim()
     .isString()
     .withMessage("آدرس محل سکونت باید یک رشته باشد")
     .isLength({ max: 500 })
@@ -79,8 +78,7 @@ const genderIdValidator = () =>
 
 const jobTitleValidator = () =>
   body("jobTitle")
-    .notEmpty()
-    .withMessage("عنوان شغلی نمی تواند خالی باشد")
+    .trim()
     .isString()
     .withMessage("عنوان شغلی باید یک رشته باشد")
     .isLength({ max: 50 })
@@ -88,8 +86,7 @@ const jobTitleValidator = () =>
 
 const bioValidator = () =>
   body("bio")
-    .notEmpty()
-    .withMessage("بیوگرافی نمی تواند خالی باشد")
+    .trim()
     .isString()
     .withMessage("بیوگرافی باید یک رشته باشد")
     .isLength({ max: 400 })
@@ -111,8 +108,8 @@ const skillsItemsValidator = () =>
   body("skills.*")
     .isString()
     .withMessage("درایه های مهارت ها باید رشته باشند")
-    .isLength({ max: 25 })
-    .withMessage("درایه های مهارت ها نباید بیش از 25 کاراکتر باشند");
+    .isLength({ min: 1, max: 25 })
+    .withMessage("درایه های مهارت ها باید بین 1 تا 25 کاراکتر باشند");
 
 const languageCodesValidator = () =>
   body("languageCodes")
