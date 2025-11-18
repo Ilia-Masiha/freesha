@@ -27,3 +27,15 @@ export function makeResObj(message: string, data: Object = {}): ResObj {
 export function isNone(value: any): value is None {
   return value === null || value === undefined;
 }
+
+export function isArrayUnique(items: any[]): boolean {
+  const itemsLength = items.length;
+
+  for (let i = 0; i < itemsLength; i++) {
+    for (let j = i + 1; j < itemsLength; j++) {
+      if (items[i] === items[j]) return false;
+    }
+  }
+
+  return true;
+}
