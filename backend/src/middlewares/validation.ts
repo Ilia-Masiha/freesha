@@ -1,5 +1,7 @@
 import { body, param } from "express-validator";
 
+import { isArrayUnique } from "../helpers/utils.js";
+
 const nameValidator = () =>
   body("name")
     .trim()
@@ -102,7 +104,11 @@ const birthDateValidator = () =>
     .withMessage("تاریخ تولد باید در فرمت YYYY-MM-DD باشد");
 
 const skillsValidator = () =>
-  body("skills").isArray({ min: 0 }).withMessage("مهارت ها باید یک آرایه باشد");
+  body("skills")
+    .isArray({ min: 0 })
+    .withMessage("مهارت ها باید یک آرایه باشد")
+    .custom(isArrayUnique)
+    .withMessage("مهارت ها نباید تکراری باشند");
 
 const skillsItemsValidator = () =>
   body("skills.*")
@@ -114,7 +120,9 @@ const skillsItemsValidator = () =>
 const languageCodesValidator = () =>
   body("languageCodes")
     .isArray({ min: 0 })
-    .withMessage("کد زبان ها باید یک آرایه باشد");
+    .withMessage("کد زبان ها باید یک آرایه باشد")
+    .custom(isArrayUnique)
+    .withMessage("کد زبان ها نباید تکراری باشند");
 
 const languageCodesItemsValidator = () =>
   body("languageCodes.*")
