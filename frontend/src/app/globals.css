@@ -20,3 +20,80 @@
   -ms-user-select: none;
   user-select: none;
 }
+
+/* DateInput.css */
+.custom-date-picker {
+  --rmdp-primary: var(--color-primary) !important;
+  --rmdp-secondary: var(--color-secondary) !important;
+  --rmdp-selected: var(--color-secondary) !important;
+  --rmdp-hover: var(--color-secondary) !important;
+}
+
+.custom-date-picker,
+.custom-date-picker .rmdp-day span,
+.custom-date-picker .rmdp-header-values span,
+.custom-date-picker .rmdp-week-day,
+.custom-date-picker .rmdp-panel-header,
+.custom-date-picker .rmdp-time-picker input,
+.custom-date-picker .rmdp-year-picker .rmdp-day span,
+.custom-date-picker .rmdp-month-picker .rmdp-day span {
+  color: var(--color-primary) !important;
+}
+
+.custom-date-picker .rmdp-day.rmdp-selected span {
+  background-color: var(--color-secondary) !important;
+  color: white !important;
+}
+
+.custom-date-picker .rmdp-day:hover span {
+  background-color: var(--color-secondary) !important;
+  color: white !important;
+}
+
+.custom-date-picker .rmdp-day.rmdp-today span {
+  background-color: var(--color-primary) !important;
+  color: white !important;
+}
+
+.custom-date-picker .rmdp-arrow {
+  border-color: var(--color-primary) !important;
+}
+
+.custom-date-picker .rmdp-arrow-container:hover {
+  background-color: var(--color-secondary) !important;
+}
+
+.custom-date-picker .rmdp-button {
+  background-color: var(--color-primary) !important;
+  color: white !important;
+}
+
+.custom-date-picker .rmdp-button:hover {
+  background-color: var(--color-secondary) !important;
+}
+
+.custom-date-picker .rmdp-wrapper {
+  border-color: var(--color-primary) !important;
+}
+
+.custom-date-picker input {
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+}
+
+.custom-date-picker .rmdp-year-picker .rmdp-day:hover span,
+.custom-date-picker .rmdp-month-picker .rmdp-day:hover span {
+  background-color: var(--color-secondary) !important;
+  color: white !important;
+}
+
+.custom-date-picker .rmdp-year-picker .rmdp-day.rmdp-selected span,
+.custom-date-picker .rmdp-month-picker .rmdp-day.rmdp-selected span {
+  background-color: var(--color-secondary) !important;
+  color: white !important;
+}
+
+.custom-date-picker .rmdp-day:focus span {
+  background-color: var(--color-secondary) !important;
+  color: white !important;
+}

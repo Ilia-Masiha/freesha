@@ -16,7 +16,7 @@ export default function Layout({ children }) {
           </section>
           <section className="col-span-9">
             <header className="w-full h-10 bg-primary"></header>
-            <main className="w-full h-full rounded-tr-2xl bg-bg-primary p-5">
+            <main className="w-full h-full rounded-tr-2xl bg-bg-primary p-5 px-6">
               {children}
             </main>
           </section>
