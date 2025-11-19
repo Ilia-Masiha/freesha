@@ -47,7 +47,15 @@ const PersonalInformation = () => {
               placeholder="جنسیت..."
             />
           </div>
-          <TextArea className="col-span-7" label="آدرس" name="address" />
+          <FormInput
+            className="col-span-3"
+            label="کد پستی"
+            name="postalCode"
+            type="number"
+          />
+
+          <TextArea className="col-span-7" label="آدرس" name="homeAddress" />
+          <TextArea className="col-span-7" label="بیوگرافی" name="bio" />
           <div className="col-span-9">
             <Btn text="به روزرسانی" type="submit" />
           </div>

@@ -8,7 +8,7 @@ const TextArea = ({ label, name, className = "" }) => {
         id={name}
         name={name}
         autoComplete="off"
-        className="bg-bg outline-none p-2 rounded-lg text-txt-primaryprimary border border-tertiary"
+        className="bg-bg outline-none p-2 rounded-lg text-txt-primaryprimary border border-tertiary min-h-28"
       ></textarea>
     </div>
   );

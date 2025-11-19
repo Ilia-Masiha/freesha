@@ -21,6 +21,17 @@
   user-select: none;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 /* DateInput.css */
 .custom-date-picker {
   --rmdp-primary: var(--color-primary) !important;
