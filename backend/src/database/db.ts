@@ -6,19 +6,23 @@ import {
   gendersTable,
   languagesTable,
   rolesTable,
+  userEducationDegreesTable,
   userLanguagesTable,
   userSkillsTable,
   usersTable,
+  userWorkExperiencesTable,
 } from "./schema.js";
 import { customLog, isNone } from "../helpers/utils.js";
 import {
   DbError,
   DbResponse,
   DbResult,
+  educationDegree,
   None,
   PreRegisterInfo,
   Transaction,
   User,
+  workExperience,
 } from "../helpers/types.js";
 
 export let db: NodePgDatabase<Record<string, never>> & {
@@ -148,9 +152,11 @@ export async function updateUser(
   values: Partial<User>
 ): Promise<DbResponse<Partial<User> | None>> {
   try {
-    const { skills, languageCodes } = values;
+    const { skills, languageCodes, educationDegrees, workExperiences } = values;
     delete values.skills;
     delete values.languageCodes;
+    delete values.educationDegrees;
+    delete values.workExperiences;
 
     const result = await db.transaction(async (tx: Transaction) => {
       await tx
@@ -160,6 +166,8 @@ export async function updateUser(
 
       await insertSkills(tx, id, skills);
       await insertLanguages(tx, id, languageCodes);
+      await insertEducationDegrees(tx, id, educationDegrees);
+      await insertWorkExperiences(tx, id, workExperiences);
 
       const user = await tx
         .select({
@@ -246,4 +254,44 @@ async function insertLanguages(
   }
 
   await tx.insert(userLanguagesTable).values(userLanguages);
+}
+
+async function insertEducationDegrees(
+  tx: Transaction,
+  id: number,
+  educationDegrees: educationDegree[] | None
+): Promise<void> {
+  if (isNone(educationDegrees)) {
+    return;
+  }
+
+  await tx
+    .delete(userEducationDegreesTable)
+    .where(eq(userEducationDegreesTable.userId, id));
+
+  if (educationDegrees.length === 0) {
+    return;
+  }
+
+  await tx.insert(userEducationDegreesTable).values(educationDegrees);
+}
+
+async function insertWorkExperiences(
+  tx: Transaction,
+  id: number,
+  workExperiences: workExperience[] | None
+): Promise<void> {
+  if (isNone(workExperiences)) {
+    return;
+  }
+
+  await tx
+    .delete(userWorkExperiencesTable)
+    .where(eq(userWorkExperiencesTable.userId, id));
+
+  if (workExperiences.length === 0) {
+    return;
+  }
+
+  await tx.insert(userWorkExperiencesTable).values(workExperiences);
 }

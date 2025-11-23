@@ -146,8 +146,8 @@ export const languagesTable = pgTable("languages", {
     .unique(),
 });
 
-export const educationDegrees = pgTable(
-  "education_degrees",
+export const userEducationDegreesTable = pgTable(
+  "user_education_degrees",
   {
     userId: integer("user_id")
       .notNull()
@@ -161,8 +161,8 @@ export const educationDegrees = pgTable(
   ]
 );
 
-export const workExperiences = pgTable(
-  "work_experiences",
+export const userWorkExperiencesTable = pgTable(
+  "user_work_experiences",
   {
     userId: integer("user_id")
       .notNull()
