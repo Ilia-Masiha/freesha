@@ -168,42 +168,32 @@ export async function updateUser(
           email: usersTable.email,
           roleName: rolesTable.roleName,
 
+          skills: sql<string[]>`(
+      SELECT ARRAY_AGG(DISTINCT ${userSkillsTable.skill})
+      FROM ${userSkillsTable}
+      WHERE ${userSkillsTable.userId} = ${usersTable.id}
+    )`,
+          languages: sql<string[]>`(
+      SELECT ARRAY_AGG(DISTINCT ${languagesTable.languageNameFa})
+      FROM ${userLanguagesTable}
+      INNER JOIN ${languagesTable} ON ${userLanguagesTable.languageCode} = ${languagesTable.code}
+      WHERE ${userLanguagesTable.userId} = ${usersTable.id}
+    )`,
           postalCode: usersTable.postalCode,
           homeAddress: usersTable.homeAddress,
           genderName: gendersTable.genderName,
           jobTitle: usersTable.jobTitle,
           bio: usersTable.bio,
           birthDate: usersTable.birthDate,
-
           createdAt: usersTable.createdAt,
           updatedAt: usersTable.updatedAt,
-          lastLoginAt: usersTable.lastLoginAt,
         })
         .from(usersTable)
         .innerJoin(rolesTable, eq(usersTable.roleId, rolesTable.id))
         .innerJoin(gendersTable, eq(usersTable.genderId, gendersTable.id))
         .where(eq(usersTable.id, id));
 
-      const [userSkills, userLanguages] = await Promise.all([
-        tx
-          .select({ skill: userSkillsTable.skill })
-          .from(userSkillsTable)
-          .where(eq(userSkillsTable.userId, id)),
-        tx
-          .select({ language: languagesTable.languageNameFa })
-          .from(userLanguagesTable)
-          .innerJoin(
-            languagesTable,
-            eq(userLanguagesTable.languageCode, languagesTable.code)
-          )
-          .where(eq(userLanguagesTable.userId, id)),
-      ]);
-
-      return {
-        ...user[0],
-        skills: userSkills.map((s) => s.skill),
-        languages: userLanguages.map((l) => l.language),
-      };
+      return user[0];
     });
 
     return makeDbResponse(result, null);

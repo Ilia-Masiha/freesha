@@ -145,3 +145,13 @@ export const languagesTable = pgTable("languages", {
     .notNull()
     .unique(),
 });
+
+export const educationDegrees = pgTable("education_degrees", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => usersTable.id),
+  title: varchar("title", { length: 50 }).notNull(),
+  startDate: date("start_date").notNull(),
+  endDate: date("end_date"),
+});
