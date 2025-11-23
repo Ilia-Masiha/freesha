@@ -146,12 +146,37 @@ export const languagesTable = pgTable("languages", {
     .unique(),
 });
 
-export const educationDegrees = pgTable("education_degrees", {
-  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  userId: integer("user_id")
-    .notNull()
-    .references(() => usersTable.id),
-  title: varchar("title", { length: 50 }).notNull(),
-  startDate: date("start_date").notNull(),
-  endDate: date("end_date"),
-});
+export const educationDegrees = pgTable(
+  "education_degrees",
+  {
+    userId: integer("user_id")
+      .notNull()
+      .references(() => usersTable.id),
+    title: varchar("title", { length: 50 }).notNull(),
+    startDate: date("start_date").notNull(),
+    endDate: date("end_date"),
+  },
+  (table) => [
+    uniqueIndex("user_id_title_unique_idx").on(table.userId, table.title),
+  ]
+);
+
+export const workExperiences = pgTable(
+  "work_experiences",
+  {
+    userId: integer("user_id")
+      .notNull()
+      .references(() => usersTable.id),
+    jobTitle: varchar("job_title", { length: 50 }).notNull(),
+    company: varchar("company", { length: 50 }).notNull(),
+    startDate: date("start_date").notNull(),
+    endDate: date("end_date"),
+  },
+  (table) => [
+    uniqueIndex("user_id_job_title_company_unique_idx").on(
+      table.userId,
+      table.jobTitle,
+      table.company
+    ),
+  ]
+);
