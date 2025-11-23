@@ -1,6 +1,10 @@
 import { body, param } from "express-validator";
 
-import { isArrayUnique } from "../helpers/utils.js";
+import {
+  isArrayUnique,
+  isEducationDegree,
+  isWorkExperience,
+} from "../helpers/utils.js";
 
 const nameValidator = () =>
   body("name")
@@ -131,6 +135,26 @@ const languageCodesItemsValidator = () =>
     .isLength({ min: 2, max: 2 })
     .withMessage("درایه های کد زبان ها باید دقیقا 2 کاراکتر باشند");
 
+const educationDegreesValidator = () =>
+  body("educationDegrees")
+    .isArray({ min: 0 })
+    .withMessage("مدارک تحصیلی باید یک آرایه باشد");
+
+const educationDegreesItemsValidator = () =>
+  body("educationDegrees.*")
+    .custom(isEducationDegree)
+    .withMessage("درایه های مدارک تحصیلی باید معتبر باشند");
+
+const workExperiencesValidator = () =>
+  body("workExperiences")
+    .isArray({ min: 0 })
+    .withMessage("سوابق شغلی باید یک آرایه باشد");
+
+const workExperiencesItemsValidator = () =>
+  body("workExperiences.*")
+    .custom(isWorkExperience)
+    .withMessage("درایه های سوابق شفلی باید معتبر باشند");
+
 export const registerValidator = () => [
   nameValidator(),
   emailValidator(),
@@ -157,4 +181,9 @@ export const updateUserValidator = () => [
   skillsItemsValidator().optional(),
   languageCodesValidator().optional(),
   languageCodesItemsValidator().optional(),
+
+  educationDegreesValidator().optional(),
+  educationDegreesItemsValidator().optional(),
+  workExperiencesValidator().optional(),
+  workExperiencesItemsValidator().optional(),
 ];
