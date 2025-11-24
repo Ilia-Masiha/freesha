@@ -9,14 +9,14 @@ export const metadata = {
 export default function Layout({ children }) {
   return (
     <html lang="fa" dir="rtl">
-      <body className={`antialiased bg-primary`}>
+      <body className={`antialiased bg-primary overflow-hidden`}>
         <main className="grid grid-cols-12 overflow-hidden">
           <section className="col-span-3 h-screen">
             <SideBar />
           </section>
           <section className="col-span-9">
             <header className="w-full h-10 bg-primary"></header>
-            <main className="w-full h-full rounded-tr-2xl bg-bg-primary p-5 px-6">
+            <main className="w-full h-screen rounded-tr-2xl bg-bg-primary p-5 px-6 overflow-y-auto pb-20">
               {children}
             </main>
           </section>

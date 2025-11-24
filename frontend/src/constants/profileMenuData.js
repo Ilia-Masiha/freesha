@@ -5,6 +5,7 @@ import {
   PiNotepadDuotone,
   PiCodeDuotone,
   PiPhoneDuotone,
+  PiFilesDuotone
 } from "react-icons/pi";
 
 export const profileMenuData = [
@@ -22,24 +23,30 @@ export const profileMenuData = [
   },
   {
     id: 3,
+    title: "رزومه کاری",
+    link : "/profile/resume",
+    icon: <PiFilesDuotone />,
+  },
+  {
+    id: 4,
     title: "سوابق کاری",
     link : "/profile/work-history",
     icon: <PiClockUserDuotone />,
   },
   {
-    id: 4,
+    id: 5,
     title: "تحصیلات",
     link : "/profile/education",
     icon: <PiNotepadDuotone />,
   },
   {
-    id: 5,
+    id: 6,
     title: "نمونه کارها",
     link : "/profile/Portfolio",
     icon: <PiCodeDuotone />,
   },
   {
-    id: 6,
+    id: 7,
     title: "اطلاعات تماس",
     link : "/profile/contact-information",
     icon: <PiPhoneDuotone />,
