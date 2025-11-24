@@ -6,19 +6,23 @@ import {
   gendersTable,
   languagesTable,
   rolesTable,
+  userEducationDegreesTable,
   userLanguagesTable,
   userSkillsTable,
   usersTable,
+  userWorkExperiencesTable,
 } from "./schema.js";
 import { customLog, isNone } from "../helpers/utils.js";
 import {
   DbError,
   DbResponse,
   DbResult,
+  EducationDegree,
   None,
   PreRegisterInfo,
   Transaction,
   User,
+  WorkExperience,
 } from "../helpers/types.js";
 
 export let db: NodePgDatabase<Record<string, never>> & {
@@ -149,8 +153,19 @@ export async function updateUser(
 ): Promise<DbResponse<Partial<User> | None>> {
   try {
     const { skills, languageCodes } = values;
+    let { educationDegrees, workExperiences } = values;
+
     delete values.skills;
     delete values.languageCodes;
+    delete values.educationDegrees;
+    delete values.workExperiences;
+
+    educationDegrees = educationDegrees?.map(
+      (value) => ((value.userId = id), value)
+    );
+    workExperiences = workExperiences?.map(
+      (value) => ((value.userId = id), value)
+    );
 
     const result = await db.transaction(async (tx: Transaction) => {
       await tx
@@ -160,6 +175,16 @@ export async function updateUser(
 
       await insertSkills(tx, id, skills);
       await insertLanguages(tx, id, languageCodes);
+      await insertEducationDegrees(
+        tx,
+        id,
+        educationDegrees as Required<EducationDegree>[]
+      );
+      await insertWorkExperiences(
+        tx,
+        id,
+        workExperiences as Required<WorkExperience>[]
+      );
 
       const user = await tx
         .select({
@@ -168,42 +193,63 @@ export async function updateUser(
           email: usersTable.email,
           roleName: rolesTable.roleName,
 
+          skills: sql<string[]>`(
+      SELECT ARRAY_AGG(DISTINCT ${userSkillsTable.skill})
+      FROM ${userSkillsTable}
+      WHERE ${userSkillsTable.userId} = ${usersTable.id}
+    )`,
+          languages: sql<string[]>`(
+      SELECT ARRAY_AGG(DISTINCT ${languagesTable.languageNameFa})
+      FROM ${userLanguagesTable}
+      INNER JOIN ${languagesTable} ON ${userLanguagesTable.languageCode} = ${languagesTable.code}
+      WHERE ${userLanguagesTable.userId} = ${usersTable.id}
+    )`,
+
+          educationDegrees: sql<Omit<EducationDegree, "userId">[]>`(
+      SELECT COALESCE(
+        JSON_AGG(
+          JSON_BUILD_OBJECT(
+            'title', "title", 
+            'startDate', "start_date",
+            'endDate', "end_date"
+          )
+        ),
+        '[]'::json
+      )
+      FROM ${userEducationDegreesTable}
+      WHERE ${userEducationDegreesTable.userId} = ${usersTable.id}
+    )`,
+          workExperiences: sql<Omit<WorkExperience, "userId">[]>`(
+      SELECT COALESCE(
+        JSON_AGG(
+          JSON_BUILD_OBJECT(
+            'jobTitle', "job_title", 
+            'company', "company", 
+            'startDate', "start_date",
+            'endDate', "end_date"
+          )
+        ),
+        '[]'::json
+      )
+      FROM ${userWorkExperiencesTable}
+      WHERE ${userWorkExperiencesTable.userId} = ${usersTable.id}
+    )`,
+
           postalCode: usersTable.postalCode,
           homeAddress: usersTable.homeAddress,
           genderName: gendersTable.genderName,
           jobTitle: usersTable.jobTitle,
           bio: usersTable.bio,
           birthDate: usersTable.birthDate,
-
           createdAt: usersTable.createdAt,
           updatedAt: usersTable.updatedAt,
-          lastLoginAt: usersTable.lastLoginAt,
         })
         .from(usersTable)
         .innerJoin(rolesTable, eq(usersTable.roleId, rolesTable.id))
         .innerJoin(gendersTable, eq(usersTable.genderId, gendersTable.id))
         .where(eq(usersTable.id, id));
 
-      const [userSkills, userLanguages] = await Promise.all([
-        tx
-          .select({ skill: userSkillsTable.skill })
-          .from(userSkillsTable)
-          .where(eq(userSkillsTable.userId, id)),
-        tx
-          .select({ language: languagesTable.languageNameFa })
-          .from(userLanguagesTable)
-          .innerJoin(
-            languagesTable,
-            eq(userLanguagesTable.languageCode, languagesTable.code)
-          )
-          .where(eq(userLanguagesTable.userId, id)),
-      ]);
-
-      return {
-        ...user[0],
-        skills: userSkills.map((s) => s.skill),
-        languages: userLanguages.map((l) => l.language),
-      };
+      return user[0];
     });
 
     return makeDbResponse(result, null);
@@ -256,4 +302,44 @@ async function insertLanguages(
   }
 
   await tx.insert(userLanguagesTable).values(userLanguages);
+}
+
+async function insertEducationDegrees(
+  tx: Transaction,
+  id: number,
+  educationDegrees: Required<EducationDegree>[] | None
+): Promise<void> {
+  if (isNone(educationDegrees)) {
+    return;
+  }
+
+  await tx
+    .delete(userEducationDegreesTable)
+    .where(eq(userEducationDegreesTable.userId, id));
+
+  if (educationDegrees.length === 0) {
+    return;
+  }
+
+  await tx.insert(userEducationDegreesTable).values(educationDegrees);
+}
+
+async function insertWorkExperiences(
+  tx: Transaction,
+  id: number,
+  workExperiences: Required<WorkExperience>[] | None
+): Promise<void> {
+  if (isNone(workExperiences)) {
+    return;
+  }
+
+  await tx
+    .delete(userWorkExperiencesTable)
+    .where(eq(userWorkExperiencesTable.userId, id));
+
+  if (workExperiences.length === 0) {
+    return;
+  }
+
+  await tx.insert(userWorkExperiencesTable).values(workExperiences);
 }

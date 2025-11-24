@@ -1,4 +1,5 @@
 import { body, param } from "express-validator";
+import validator from "validator";
 
 import { isArrayUnique } from "../helpers/utils.js";
 
@@ -131,6 +132,99 @@ const languageCodesItemsValidator = () =>
     .isLength({ min: 2, max: 2 })
     .withMessage("درایه های کد زبان ها باید دقیقا 2 کاراکتر باشند");
 
+const educationDegreesValidator = () =>
+  body("educationDegrees")
+    .isArray({ min: 0 })
+    .withMessage("مدارک تحصیلی باید یک آرایه باشد");
+
+const educationDegreesItemsValidator = () =>
+  body("educationDegrees.*")
+    .custom((value) => value.title)
+    .withMessage("درایه های مدارک تحصیلی باید عنوان داشته باشند")
+    .custom((value) => typeof value.title === "string")
+    .withMessage("عنوان درایه های مدارک تحصیلی باید رشته باشد")
+    .custom((value) => value.title.length <= 50)
+    .withMessage("طول عنوان درایه های مدارک تحصیلی باید حداکثر 50 کاراکتر باشد")
+
+    .custom((value) => value.startDate)
+    .withMessage("درایه های مدارک تحصیلی باید تاریخ شروع داشته باشند")
+    .custom((value) => typeof value.startDate === "string")
+    .withMessage("تاریخ شروع درایه های مدارک تحصیلی باید رشته باشد")
+    .custom((value) =>
+      validator.isDate(value.startDate, {
+        format: "YYYY-MM-DD",
+        strictMode: true,
+        delimiters: ["-"],
+      })
+    )
+    .withMessage(
+      "تاریخ شروع درایه های مدارک تحصیلی باید در فرمت YYYY-MM-DD باشد"
+    )
+
+    .custom((value) => {
+      if (value.endDate === null) return true;
+      if (typeof value.endDate !== "string") return false;
+      return validator.isDate(value.endDate, {
+        format: "YYYY-MM-DD",
+        strictMode: true,
+        delimiters: ["-"],
+      });
+    })
+    .withMessage(
+      "تاریخ پایان درایه های مدارک تحصیلی یا باید نال باشد یا در فرمت YYYY-MM-DD باشد"
+    );
+
+const workExperiencesValidator = () =>
+  body("workExperiences")
+    .isArray({ min: 0 })
+    .withMessage("سوابق شغلی باید یک آرایه باشد");
+
+const workExperiencesItemsValidator = () =>
+  body("workExperiences.*")
+    .custom((value) => value.jobTitle)
+    .withMessage("درایه های سوابق شفلی باید عنوان شفلی داشته باشند")
+    .custom((value) => typeof value.jobTitle === "string")
+    .withMessage("عنوان شفلی درایه های سوابق شفلی باید رشته باشد")
+    .custom((value) => value.jobTitle.length <= 50)
+    .withMessage(
+      "طول عنوان شفلی درایه های سوابق شفلی باید حداکثر 50 کاراکتر باشد"
+    )
+
+    .custom((value) => value.company)
+    .withMessage("درایه های سوابق شفلی باید نام شرکت داشته باشند")
+    .custom((value) => typeof value.company === "string")
+    .withMessage("نام شرکت درایه های سوابق شفلی باید رشته باشد")
+    .custom((value) => value.company.length <= 50)
+    .withMessage(
+      "طول نام شرکت درایه های سوابق شفلی باید حداکثر 50 کاراکتر باشد"
+    )
+
+    .custom((value) => value.startDate)
+    .withMessage("درایه های سوابق شفلی باید تاریخ شروع داشته باشند")
+    .custom((value) => typeof value.startDate === "string")
+    .withMessage("تاریخ شروع درایه های سوابق شفلی باید رشته باشد")
+    .custom((value) =>
+      validator.isDate(value.startDate, {
+        format: "YYYY-MM-DD",
+        strictMode: true,
+        delimiters: ["-"],
+      })
+    )
+    .withMessage("تاریخ شروع درایه های سوابق شفلی باید در فرمت YYYY-MM-DD باشد")
+
+    .custom((value) => {
+      if (value.endDate === null) return true;
+      if (typeof value.endDate !== "string") return false;
+      return validator.isDate(value.endDate, {
+        format: "YYYY-MM-DD",
+        strictMode: true,
+        delimiters: ["-"],
+      });
+    })
+    .withMessage(
+      "تاریخ پایان درایه های سوابق شفلی یا باید نال باشد یا در فرمت YYYY-MM-DD باشد"
+    );
+
 export const registerValidator = () => [
   nameValidator(),
   emailValidator(),
@@ -157,4 +251,9 @@ export const updateUserValidator = () => [
   skillsItemsValidator().optional(),
   languageCodesValidator().optional(),
   languageCodesItemsValidator().optional(),
+
+  educationDegreesValidator().optional(),
+  educationDegreesItemsValidator().optional(),
+  workExperiencesValidator().optional(),
+  workExperiencesItemsValidator().optional(),
 ];

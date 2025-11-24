@@ -3,9 +3,12 @@ import { NodePgQueryResultHKT } from "drizzle-orm/node-postgres";
 import { PgTransaction } from "drizzle-orm/pg-core";
 import { QueryResult } from "pg";
 
-export type PreRegisterInfo = Required<
-  Pick<User, "name" | "email" | "hashedPassword">
->;
+import {
+  userEducationDegreesTable,
+  userWorkExperiencesTable,
+} from "../database/schema.js";
+
+type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
 export interface User {
   id: number;
@@ -25,6 +28,9 @@ export interface User {
   bio?: string;
   birthDate?: string | null;
 
+  educationDegrees?: EducationDegree[];
+  workExperiences?: WorkExperience[];
+
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -39,6 +45,10 @@ export interface ResObj {
   data: Object;
 }
 
+export type PreRegisterInfo = Required<
+  Pick<User, "name" | "email" | "hashedPassword">
+>;
+
 export type SessionData = Required<
   Pick<User, "id" | "name" | "email" | "roleName">
 >;
@@ -51,6 +61,14 @@ export type None = undefined | null;
 export type DbResult = QueryResult | Object | Object[] | null | undefined;
 export type DbError = Error | None;
 export type RedisValue = string | number | null;
+export type EducationDegree = Optional<
+  typeof userEducationDegreesTable.$inferSelect,
+  "userId"
+>;
+export type WorkExperience = Optional<
+  typeof userWorkExperiencesTable.$inferSelect,
+  "userId"
+>;
 export type Transaction = PgTransaction<
   NodePgQueryResultHKT,
   Record<string, never>,
