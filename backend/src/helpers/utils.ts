@@ -1,4 +1,4 @@
-import { Tag, None, ResObj, educationDegree, workExperience } from "./types.js";
+import { Tag, None, ResObj, EducationDegree, WorkExperience } from "./types.js";
 
 export function timeNow(): string {
   return new Date().toTimeString().split(" ")[0]!;
@@ -28,7 +28,7 @@ export function isNone(value: any): value is None {
   return value === null || value === undefined;
 }
 
-export function isEducationDegree(value: any): value is educationDegree {
+export function isEducationDegree(value: any): value is EducationDegree {
   if (typeof value !== "object") return false;
 
   if (value.userId === undefined) return false;
@@ -44,7 +44,7 @@ export function isEducationDegree(value: any): value is educationDegree {
   return Object.keys(value).length === 4;
 }
 
-export function isWorkExperience(value: any): value is workExperience {
+export function isWorkExperience(value: any): value is WorkExperience {
   if (typeof value !== "object") return false;
 
   if (value.userId === undefined) return false;

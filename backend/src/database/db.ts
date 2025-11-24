@@ -17,12 +17,12 @@ import {
   DbError,
   DbResponse,
   DbResult,
-  educationDegree,
+  EducationDegree,
   None,
   PreRegisterInfo,
   Transaction,
   User,
-  workExperience,
+  WorkExperience,
 } from "../helpers/types.js";
 
 export let db: NodePgDatabase<Record<string, never>> & {
@@ -152,11 +152,20 @@ export async function updateUser(
   values: Partial<User>
 ): Promise<DbResponse<Partial<User> | None>> {
   try {
-    const { skills, languageCodes, educationDegrees, workExperiences } = values;
+    const { skills, languageCodes } = values;
+    let { educationDegrees, workExperiences } = values;
+
     delete values.skills;
     delete values.languageCodes;
     delete values.educationDegrees;
     delete values.workExperiences;
+
+    educationDegrees = educationDegrees?.map(
+      (value) => ((value.userId = id), value)
+    );
+    workExperiences = workExperiences?.map(
+      (value) => ((value.userId = id), value)
+    );
 
     const result = await db.transaction(async (tx: Transaction) => {
       await tx
@@ -166,8 +175,16 @@ export async function updateUser(
 
       await insertSkills(tx, id, skills);
       await insertLanguages(tx, id, languageCodes);
-      await insertEducationDegrees(tx, id, educationDegrees);
-      await insertWorkExperiences(tx, id, workExperiences);
+      await insertEducationDegrees(
+        tx,
+        id,
+        educationDegrees as Required<EducationDegree>[]
+      );
+      await insertWorkExperiences(
+        tx,
+        id,
+        workExperiences as Required<WorkExperience>[]
+      );
 
       const user = await tx
         .select({
@@ -187,6 +204,37 @@ export async function updateUser(
       INNER JOIN ${languagesTable} ON ${userLanguagesTable.languageCode} = ${languagesTable.code}
       WHERE ${userLanguagesTable.userId} = ${usersTable.id}
     )`,
+
+          educationDegrees: sql<Omit<EducationDegree, "userId">[]>`(
+      SELECT COALESCE(
+        JSON_AGG(
+          JSON_BUILD_OBJECT(
+            'title', "title", 
+            'startDate', "start_date",
+            'endDate', "end_date"
+          )
+        ),
+        '[]'::json
+      )
+      FROM ${userEducationDegreesTable}
+      WHERE ${userEducationDegreesTable.userId} = ${usersTable.id}
+    )`,
+          workExperiences: sql<Omit<WorkExperience, "userId">[]>`(
+      SELECT COALESCE(
+        JSON_AGG(
+          JSON_BUILD_OBJECT(
+            'jobTitle', "job_title", 
+            'company', "company", 
+            'startDate', "start_date",
+            'endDate', "end_date"
+          )
+        ),
+        '[]'::json
+      )
+      FROM ${userWorkExperiencesTable}
+      WHERE ${userWorkExperiencesTable.userId} = ${usersTable.id}
+    )`,
+
           postalCode: usersTable.postalCode,
           homeAddress: usersTable.homeAddress,
           genderName: gendersTable.genderName,
@@ -259,7 +307,7 @@ async function insertLanguages(
 async function insertEducationDegrees(
   tx: Transaction,
   id: number,
-  educationDegrees: educationDegree[] | None
+  educationDegrees: Required<EducationDegree>[] | None
 ): Promise<void> {
   if (isNone(educationDegrees)) {
     return;
@@ -279,7 +327,7 @@ async function insertEducationDegrees(
 async function insertWorkExperiences(
   tx: Transaction,
   id: number,
-  workExperiences: workExperience[] | None
+  workExperiences: Required<WorkExperience>[] | None
 ): Promise<void> {
   if (isNone(workExperiences)) {
     return;

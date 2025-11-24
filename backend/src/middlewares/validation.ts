@@ -1,7 +1,7 @@
 import { body, param } from "express-validator";
 import validator from "validator";
 
-import { isArrayUnique, isWorkExperience } from "../helpers/utils.js";
+import { isArrayUnique } from "../helpers/utils.js";
 
 const nameValidator = () =>
   body("name")
@@ -181,8 +181,49 @@ const workExperiencesValidator = () =>
 
 const workExperiencesItemsValidator = () =>
   body("workExperiences.*")
-    .custom(isWorkExperience)
-    .withMessage("درایه های سوابق شفلی باید معتبر باشند");
+    .custom((value) => value.jobTitle)
+    .withMessage("درایه های سوابق شفلی باید عنوان شفلی داشته باشند")
+    .custom((value) => typeof value.jobTitle === "string")
+    .withMessage("عنوان شفلی درایه های سوابق شفلی باید رشته باشد")
+    .custom((value) => value.jobTitle.length <= 50)
+    .withMessage(
+      "طول عنوان شفلی درایه های سوابق شفلی باید حداکثر 50 کاراکتر باشد"
+    )
+
+    .custom((value) => value.company)
+    .withMessage("درایه های سوابق شفلی باید نام شرکت داشته باشند")
+    .custom((value) => typeof value.company === "string")
+    .withMessage("نام شرکت درایه های سوابق شفلی باید رشته باشد")
+    .custom((value) => value.company.length <= 50)
+    .withMessage(
+      "طول نام شرکت درایه های سوابق شفلی باید حداکثر 50 کاراکتر باشد"
+    )
+
+    .custom((value) => value.startDate)
+    .withMessage("درایه های سوابق شفلی باید تاریخ شروع داشته باشند")
+    .custom((value) => typeof value.startDate === "string")
+    .withMessage("تاریخ شروع درایه های سوابق شفلی باید رشته باشد")
+    .custom((value) =>
+      validator.isDate(value.startDate, {
+        format: "YYYY-MM-DD",
+        strictMode: true,
+        delimiters: ["-"],
+      })
+    )
+    .withMessage("تاریخ شروع درایه های سوابق شفلی باید در فرمت YYYY-MM-DD باشد")
+
+    .custom((value) => {
+      if (value.endDate === null) return true;
+      if (typeof value.endDate !== "string") return false;
+      return validator.isDate(value.endDate, {
+        format: "YYYY-MM-DD",
+        strictMode: true,
+        delimiters: ["-"],
+      });
+    })
+    .withMessage(
+      "تاریخ پایان درایه های سوابق شفلی یا باید نال باشد یا در فرمت YYYY-MM-DD باشد"
+    );
 
 export const registerValidator = () => [
   nameValidator(),
