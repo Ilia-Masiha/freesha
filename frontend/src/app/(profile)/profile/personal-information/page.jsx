@@ -57,7 +57,7 @@ const PersonalInformation = () => {
           <TextArea className="col-span-7" label="آدرس" name="homeAddress" />
           <TextArea className="col-span-7" label="بیوگرافی" name="bio" />
           <div className="col-span-9">
-            <Btn text="به روزرسانی" type="submit" />
+            <Btn text="به روزرسانی" type="submit"/>
           </div>
         </form>
       </article>

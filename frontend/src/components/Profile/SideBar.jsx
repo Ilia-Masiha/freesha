@@ -21,7 +21,7 @@ const SideBar = () => {
       </div>
       {/* menu */}
       <div className="w-full mt-10">
-        <ul className="flex flex-col gap-y-4 pr-3">
+        <ul className="flex flex-col gap-y-3 pr-3">
           {profileMenuData.map((item) => {
             return (
               <Link

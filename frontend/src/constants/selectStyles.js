@@ -43,7 +43,7 @@ export const SelectStyles = {
     ...baseStyles,
     color: "var(--color-primary)",
     backgroundColor: "var(--color-bg-primary)",
-    maxHeight: "130px",
+    maxHeight: "auto",
     overflowY: "auto",
     position: "absolute",
     zIndex: 60,
