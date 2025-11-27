@@ -214,6 +214,21 @@ Every response has a `message` and `data` property:
       "languages": [
         "فارسی",
         "انگلیسی"
+      ],
+      "educationDegrees": [
+        {
+          "title": "Bachelor of Architecture",
+          "startDate":"2000-12-12",
+          "endDate": null
+        }
+      ],
+      "workExperiences": [
+        {
+          "jobTitle": "Architect",
+          "company": "Example LTD",
+          "startDate": "2005-01-17",
+          "endDate": "2007-09-11"
+        }
       ]
     }
   }
