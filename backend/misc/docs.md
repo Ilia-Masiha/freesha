@@ -152,6 +152,8 @@ Every response has a `message` and `data` property:
   This endpoint is used for editing a user's information. Put user's id instead of `:userId`. Send information in the request body in this format:  
   ```json
   PATCH /users/5
+
+  REQUEST BODY
   {
     "name": "John Doe",
     "postalCode": "0123456789",
@@ -167,10 +169,25 @@ Every response has a `message` and `data` property:
     "languageCodes": [
       "fa",
       "en"
+    ],
+    "educationDegrees": [
+      {
+        "title": "Bachelor of Architecture",
+        "startDate":"2000-12-12",
+        "endDate": null
+      }
+    ],
+    "workExperiences": [
+      {
+        "jobTitle": "Architect",
+        "company": "Example LTD",
+        "startDate": "2005-01-17",
+        "endDate": "2007-09-11"
+      }
     ]
   }
   ```
-  All of the properties are optional, but the request body must contain at least one property. Including a property but leaving it empty (`""` or `[]`) is the equivalent of removing that record from the user's profile. `birthDate` can't set to be `""`.  
+  All of the properties are optional, but the request body must contain at least one property. Including a property but leaving it empty (`""` or `[]`) is the equivalent of removing that record from the user's profile. Dates like `birthDate` can't set to be `""`, instead you have to set it as `null`. No `startDate` can be null but any `endDate` can be null. Dates must be in the `YYYY-MM-DD` format.  
   Response body will contain a `message` about the result of your request. If successful, `data` will also contain information about the updated user. Response body will be in this format (If status code is `200`):  
   ```json
   RESPONSE BODY
@@ -201,8 +218,49 @@ Every response has a `message` and `data` property:
     }
   }
   ```
+  Take notice that `genderId` in request body is converted to `genderName` in response body and `languageCodes` is converted to `languages`. These relationships are explained in the next section of the documentation (Data relationships).  
   These status codes are expected:  
   - `400`: Validation error. More information in `message`.
   - `401`: Invalid session key.
   - `403`: Forbidden.
   - `200`: Successfully updated user information.
+
+## Data relationships
+
+- Genders:  
+  | genderId | genderName | Meaning |
+  |----------|------------|---------|
+  | 1        | N          | None    |
+  | 2        | M          | Male    |
+  | 3        | F          | Female  |
+
+- Languages:  
+  | languageCodes | languages (English) | languages (Persian) |
+  |---------------|---------------------|---------------------|
+  | en            | English             | انگلیسی             |
+  | fa            | Persian             | فارسی               |
+  | tr            | Turkish             | ترکی                |
+  | ar            | Arabic              | عربی                |
+  | zh            | Chinese             | چینی                |
+  | he            | Hebrew              | عبری                |
+  | es            | Spanish             | اسپانیایی           |
+  | ru            | Russian             | روسی                |
+  | de            | German              | آلمانی              |
+  | fr            | French              | فرانسوی             |
+  | it            | Italian             | ایتالیایی           |
+  | pl            | Polish              | لهستانی             |
+  | pt            | Portuguese          | پرتغالی             |
+  | ja            | Japanese            | ژاپنی               |
+  | ko            | Korean              | کره ای              |
+  | ur            | Urdu                | اردو                |
+  | sv            | Swedish             | سوئدی               |
+  | no            | Norwegian           | نروژی               |
+  | fi            | Finnish             | فنلاندی             |
+  | cy            | Welsh               | ولزی                |
+  | hy            | Armenian            | ارمنی               |
+  | el            | Greek               | یونانی              |
+  | da            | Danish              | دانمارکی            |
+  | ku            | Kurdish             | کوردی               |
+  | hi            | Hindi               | هندی                |
+  | az            | Azerbaijani         | آذری                |
+  | eo            | Esperanto           | اسپرانتو            |
