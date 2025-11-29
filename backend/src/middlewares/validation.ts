@@ -143,8 +143,15 @@ const socialLinksItemsValidator = () =>
   body("socialLinks.*")
     .isString()
     .withMessage("درایه های لینک های اجتماعی باید رشته باشند")
-    .isLength({ min: 4, max: 100 })
-    .withMessage("درایه های لینک های اجتماعی باید بین 4 تا 100 کاراکتر باشند");
+    .isLength({ max: 100 })
+    .withMessage("درایه های لینک های اجتماعی نباید بیش از 100 کاراکتر باشند")
+    .isURL({
+      protocols: ["http", "https"],
+      require_protocol: true,
+      require_valid_protocol: true,
+      disallow_auth: true,
+    })
+    .withMessage("درایه های لینک های اجتماعی باید معتبر باشند");
 
 const educationDegreesValidator = () =>
   body("educationDegrees")

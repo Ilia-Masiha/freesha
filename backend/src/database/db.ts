@@ -9,6 +9,7 @@ import {
   userEducationDegreesTable,
   userLanguagesTable,
   userSkillsTable,
+  userSocialLinksTable,
   usersTable,
   userWorkExperiencesTable,
 } from "./schema.js";
@@ -152,11 +153,12 @@ export async function updateUser(
   values: Partial<User>
 ): Promise<DbResponse<Partial<User> | None>> {
   try {
-    const { skills, languageCodes } = values;
+    const { skills, languageCodes, socialLinks } = values;
     let { educationDegrees, workExperiences } = values;
 
     delete values.skills;
     delete values.languageCodes;
+    delete values.socialLinks;
     delete values.educationDegrees;
     delete values.workExperiences;
 
@@ -175,6 +177,7 @@ export async function updateUser(
 
       await insertSkills(tx, id, skills);
       await insertLanguages(tx, id, languageCodes);
+      await insertSocialLinks(tx, id, socialLinks);
       await insertEducationDegrees(
         tx,
         id,
@@ -194,15 +197,21 @@ export async function updateUser(
           roleName: rolesTable.roleName,
 
           skills: sql<string[]>`(
-      SELECT ARRAY_AGG(DISTINCT ${userSkillsTable.skill})
+      SELECT COALESCE(ARRAY_AGG(DISTINCT ${userSkillsTable.skill}), '{}')
       FROM ${userSkillsTable}
       WHERE ${userSkillsTable.userId} = ${usersTable.id}
     )`,
           languages: sql<string[]>`(
-      SELECT ARRAY_AGG(DISTINCT ${languagesTable.languageNameFa})
+      SELECT COALESCE(ARRAY_AGG(DISTINCT ${languagesTable.languageNameFa}), '{}')
       FROM ${userLanguagesTable}
       INNER JOIN ${languagesTable} ON ${userLanguagesTable.languageCode} = ${languagesTable.code}
       WHERE ${userLanguagesTable.userId} = ${usersTable.id}
+    )`,
+
+          socialLinks: sql<string[]>`(
+      SELECT COALESCE(ARRAY_AGG(DISTINCT ${userSocialLinksTable.link}), '{}')
+      FROM ${userSocialLinksTable}
+      WHERE ${userSocialLinksTable.userId} = ${usersTable.id}
     )`,
 
           educationDegrees: sql<Omit<EducationDegree, "userId">[]>`(
@@ -302,6 +311,31 @@ async function insertLanguages(
   }
 
   await tx.insert(userLanguagesTable).values(userLanguages);
+}
+
+async function insertSocialLinks(
+  tx: Transaction,
+  id: number,
+  socialLinks: string[] | None
+): Promise<void> {
+  if (isNone(socialLinks)) {
+    return;
+  }
+
+  const socialLinksObjects = [];
+  for (const socialLink of socialLinks) {
+    socialLinksObjects.push({ userId: id, link: socialLink });
+  }
+
+  await tx
+    .delete(userSocialLinksTable)
+    .where(eq(userSocialLinksTable.userId, id));
+
+  if (socialLinks.length === 0) {
+    return;
+  }
+
+  await tx.insert(userSocialLinksTable).values(socialLinksObjects);
 }
 
 async function insertEducationDegrees(
