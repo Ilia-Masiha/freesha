@@ -180,3 +180,16 @@ export const userWorkExperiencesTable = pgTable(
     ),
   ]
 );
+
+export const userSocialLinksTable = pgTable(
+  "user_social_links",
+  {
+    userId: integer("user_id")
+      .notNull()
+      .references(() => usersTable.id),
+    link: varchar("link", { length: 100 }).notNull(),
+  },
+  (table) => [
+    uniqueIndex("user_id_link_unique_idx").on(table.userId, table.link),
+  ]
+);
