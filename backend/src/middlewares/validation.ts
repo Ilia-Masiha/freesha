@@ -132,6 +132,20 @@ const languageCodesItemsValidator = () =>
     .isLength({ min: 2, max: 2 })
     .withMessage("درایه های کد زبان ها باید دقیقا 2 کاراکتر باشند");
 
+const socialLinksValidator = () =>
+  body("socialLinks")
+    .isArray({ min: 0 })
+    .withMessage("لینک های اجتماعی باید یک آرایه باشد")
+    .custom(isArrayUnique)
+    .withMessage("لینک های اجتماعی نباید تکراری باشند");
+
+const socialLinksItemsValidator = () =>
+  body("socialLinks.*")
+    .isString()
+    .withMessage("درایه های لینک های اجتماعی باید رشته باشند")
+    .isLength({ min: 4, max: 100 })
+    .withMessage("درایه های لینک های اجتماعی باید بین 4 تا 100 کاراکتر باشند");
+
 const educationDegreesValidator = () =>
   body("educationDegrees")
     .isArray({ min: 0 })
@@ -251,6 +265,8 @@ export const updateUserValidator = () => [
   skillsItemsValidator().optional(),
   languageCodesValidator().optional(),
   languageCodesItemsValidator().optional(),
+  socialLinksValidator().optional(),
+  socialLinksItemsValidator().optional(),
 
   educationDegreesValidator().optional(),
   educationDegreesItemsValidator().optional(),
