@@ -18,15 +18,17 @@ export interface User {
   roleId?: number;
   roleName?: string;
 
-  skills?: string[] | null;
-  languages?: string[] | null;
-  languageCodes?: string[] | null;
   postalCode?: string;
   homeAddress?: string;
   genderId?: number;
   jobTitle?: string;
   bio?: string;
   birthDate?: string | null;
+
+  skills?: string[];
+  languages?: string[];
+  languageCodes?: string[];
+  socialLinks?: string[];
 
   educationDegrees?: EducationDegree[];
   workExperiences?: WorkExperience[];
