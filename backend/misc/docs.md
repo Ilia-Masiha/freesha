@@ -170,6 +170,9 @@ Every response has a `message` and `data` property:
       "fa",
       "en"
     ],
+    "socialLinks": [
+      "http://example.com"
+    ],
     "educationDegrees": [
       {
         "title": "Bachelor of Architecture",
@@ -214,6 +217,9 @@ Every response has a `message` and `data` property:
       "languages": [
         "فارسی",
         "انگلیسی"
+      ],
+      "socialLinks": [
+        "http://example.com"
       ],
       "educationDegrees": [
         {
