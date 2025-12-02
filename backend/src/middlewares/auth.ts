@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express-serve-static-core";
 import { makeResObj } from "../helpers/utils.js";
 import { messages } from "../helpers/messages.js";
 import { None, SessionData } from "../helpers/types.js";
-import { redisGet, redisSet } from "../database/redis.js";
+import { redisDel, redisGet, redisSet } from "../database/redis.js";
 
 export async function verifyUser(
   req: Request,
@@ -43,6 +43,17 @@ export async function setSessionData(
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     maxAge: 24 * 60 * 60 * 1000,
+    path: "/",
+  });
+}
+
+export async function clearSessionData(res: Response, sessionKey: string) {
+  await redisDel(`session:${sessionKey}`);
+
+  res.clearCookie("sessionKey", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
     path: "/",
   });
 }
