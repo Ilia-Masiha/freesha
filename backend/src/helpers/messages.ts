@@ -4,6 +4,7 @@ export const messages = {
   invalidOtp: "کد تائید نامعتبر است",
   successfulRegister: "ثبت نام با موفقیت انجام شد",
   successfulLogin: "شما با موفقیت وارد شدید",
+  successfulLogout: "شما با موفقیت خارج شدید",
   error500: "خطایی در سرور رخ داده است",
   error404: "منبع مورد نظر پیدا نشد",
   error401: "احراز هویت ناموفق بود",
