@@ -73,6 +73,10 @@ Every response has a `message` and `data` property:
 
 ## Endpoints
 
+These status codes are always expected from any endpoint, so I will not include them in any endpoint's description:  
+  - `429`: Too many requests.
+  - `500`: Something went wrong on the server, Not your fault.
+
 - `POST /register`:  
   This endpoint is used for registering a new user. This endpoint can also be used to resend the OTP. Send user information in the request body in this format:  
   ```json
@@ -83,7 +87,7 @@ Every response has a `message` and `data` property:
     "password": "verySecure!123"
   }
   ```
-  Response body will contain a `message` about the result of your request. These status codes are expected:  
+  Response body will contain a `message` about the result of your request. Expected status codes:  
   - `400`: Validation error. More information in `message`.
   - `409`: Duplicate email. The email that you are trying to register with, already exists in the database.
   - `429`: Too many OTP requests. Wait some more time before sending an OTP request again.
@@ -113,7 +117,7 @@ Every response has a `message` and `data` property:
     }
   }
   ```
-  If status code is `201`, a session key will be sent as an `httponly` cookie. These status codes are expected:  
+  If status code is `201`, a session key will be sent as an `httponly` cookie. Expected status codes:  
   - `400`: Validation error. More information in `message`.
   - `401`: Invalid OTP.
   - `201`: Successfully verified the OTP and created the user in database.
@@ -143,7 +147,7 @@ Every response has a `message` and `data` property:
     }
   }
   ```
-  If status code is `200`, a session key will be sent as an `httponly` cookie. These status codes are expected:  
+  If status code is `200`, a session key will be sent as an `httponly` cookie. Expected status codes:  
   - `400`: Validation error. More information in `message`.
   - `401`: Bad credentials.
   - `200`: Successfully logged in.
@@ -160,6 +164,8 @@ Every response has a `message` and `data` property:
     }
   }
   ```
+  Expected status codes:  
+  - `200`: Successfully logged in.
 
 - `PATCH /users/:userId` (Protected):  
   This endpoint is used for editing a user's information. Put user's id instead of `:userId`. Send information in the request body in this format:  
@@ -253,7 +259,7 @@ Every response has a `message` and `data` property:
   }
   ```
   Take notice that `genderId` in request body is converted to `genderName` in response body and `languageCodes` is converted to `languages`. These relationships are explained in the next section of the documentation (Data relationships).  
-  These status codes are expected:  
+  Expected status codes:  
   - `400`: Validation error. More information in `message`.
   - `401`: Invalid session key.
   - `403`: Forbidden.
@@ -289,7 +295,7 @@ Every response has a `message` and `data` property:
   | ur            | Urdu                | اردو                |
   | sv            | Swedish             | سوئدی               |
   | no            | Norwegian           | نروژی               |
-  | fi            | Finnish             | فنلاندی             |
+  | fi            | Finnish             | فنلاندی              |
   | cy            | Welsh               | ولزی                |
   | hy            | Armenian            | ارمنی               |
   | el            | Greek               | یونانی              |
