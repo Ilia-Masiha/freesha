@@ -148,6 +148,19 @@ Every response has a `message` and `data` property:
   - `401`: Bad credentials.
   - `200`: Successfully logged in.
 
+- `POST /logout`:  
+  This endpoint is used for logging out. Request body should be empty. Status code will always be `200` unless something goes wrong in the server (`500`) or you reach your limit (`429`).  
+  Response body contains `data` which has a `alreadyLoggedOut` property. This property is `false` when you have an active session and try to log out. If you are already logged out and use this endpoint, `data.alreadyLoggedOut` will be `true`. Example of response body:  
+  ```json
+  RESPONSE BODY
+  {
+    "message": "شما با موفقیت خارج شدید",
+    "data": {
+      "alreadyLoggedOut": false
+    }
+  }
+  ```
+
 - `PATCH /users/:userId` (Protected):  
   This endpoint is used for editing a user's information. Put user's id instead of `:userId`. Send information in the request body in this format:  
   ```json
@@ -190,7 +203,7 @@ Every response has a `message` and `data` property:
     ]
   }
   ```
-  All of the properties are optional, but the request body must contain at least one property. Including a property but leaving it empty (`""` or `[]`) is the equivalent of removing that record from the user's profile. Dates like `birthDate` can't set to be `""`, instead you have to set it as `null`. No `startDate` can be null but any `endDate` can be null. Dates must be in the `YYYY-MM-DD` format.  
+  All of the properties are optional, but the request body must contain at least one property. Including a property but leaving it empty (`""` or `[]`) is the equivalent of removing that record from the user's profile. Dates like `birthDate` can't set to be `""`, instead you have to set it as `null`. No `startDate` can be `null` but any `endDate` can be `null`. Dates must be in the `YYYY-MM-DD` format.  
   Response body will contain a `message` about the result of your request. If successful, `data` will also contain information about the updated user. Response body will be in this format (If status code is `200`):  
   ```json
   RESPONSE BODY
