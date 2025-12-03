@@ -21,6 +21,10 @@
   user-select: none;
 }
 
+html , body {
+  scrollbar-width: none;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;

@@ -8,13 +8,13 @@ export const metadata = {
 
 export default function Layout({ children }) {
   return (
-    <html lang="fa" dir="rtl">
-      <body className={`antialiased bg-primary overflow-hidden`}>
-        <main className="grid grid-cols-12 overflow-hidden">
-          <section className="col-span-3 h-screen">
+    <html lang="fa" dir="rtl" className="sticky top-0 overflow-y-hidden">
+      <body className={`antialiased bg-primary overflow-y-hidden`}>
+        <main className="grid grid-cols-12 overflow-y-hidden">
+          <section className="col-span-3 h-screen sticky top-0">
             <SideBar />
           </section>
-          <section className="col-span-9">
+          <section className="col-span-9 h-screen sticky top-0">
             <header className="w-full h-10 bg-primary"></header>
             <main className="sticky top-10 left-0 w-full h-screen rounded-tr-2xl bg-bg-primary p-5 px-6 overflow-y-auto pb-20">
               {children}
