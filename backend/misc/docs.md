@@ -185,9 +185,9 @@ These status codes are always expected from any endpoint, so I will not include 
       "Cooking",
       "Coding"
     ],
-    "languageCodes": [
-      "fa",
-      "en"
+    "languageNames": [
+      "Persian",
+      "English"
     ],
     "socialLinks": [
       "http://example.com"
@@ -233,9 +233,9 @@ These status codes are always expected from any endpoint, so I will not include 
         "Cooking",
         "Coding"
       ],
-      "languages": [
-        "فارسی",
-        "انگلیسی"
+      "languageNames": [
+        "Persian",
+        "English"
       ],
       "socialLinks": [
         "http://example.com"
@@ -258,7 +258,7 @@ These status codes are always expected from any endpoint, so I will not include 
     }
   }
   ```
-  Take notice that `genderId` in request body is converted to `genderName` in response body and `languageCodes` is converted to `languages`. These relationships are explained in the next section of the documentation (Data relationships).  
+  Take notice that `genderId` in request body is converted to `genderName` in response body. Data relationships are explained in the next section of the documentation (Data relationships).  
   Expected status codes:  
   - `400`: Validation error. More information in `message`.
   - `401`: Invalid session key.
@@ -273,34 +273,3 @@ These status codes are always expected from any endpoint, so I will not include 
   | 1        | N          | None    |
   | 2        | M          | Male    |
   | 3        | F          | Female  |
-
-- Languages:  
-  | languageCodes | languages (English) | languages (Persian) |
-  |---------------|---------------------|---------------------|
-  | en            | English             | انگلیسی             |
-  | fa            | Persian             | فارسی               |
-  | tr            | Turkish             | ترکی                |
-  | ar            | Arabic              | عربی                |
-  | zh            | Chinese             | چینی                |
-  | he            | Hebrew              | عبری                |
-  | es            | Spanish             | اسپانیایی           |
-  | ru            | Russian             | روسی                |
-  | de            | German              | آلمانی              |
-  | fr            | French              | فرانسوی             |
-  | it            | Italian             | ایتالیایی           |
-  | pl            | Polish              | لهستانی             |
-  | pt            | Portuguese          | پرتغالی             |
-  | ja            | Japanese            | ژاپنی               |
-  | ko            | Korean              | کره ای              |
-  | ur            | Urdu                | اردو                |
-  | sv            | Swedish             | سوئدی               |
-  | no            | Norwegian           | نروژی               |
-  | fi            | Finnish             | فنلاندی              |
-  | cy            | Welsh               | ولزی                |
-  | hy            | Armenian            | ارمنی               |
-  | el            | Greek               | یونانی              |
-  | da            | Danish              | دانمارکی            |
-  | ku            | Kurdish             | کوردی               |
-  | hi            | Hindi               | هندی                |
-  | az            | Azerbaijani         | آذری                |
-  | eo            | Esperanto           | اسپرانتو            |

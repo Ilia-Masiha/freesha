@@ -1,7 +1,7 @@
 import { body, param } from "express-validator";
 import validator from "validator";
 
-import { isArrayUnique } from "../helpers/utils.js";
+import { capitalize, isArrayUnique } from "../helpers/utils.js";
 
 const nameValidator = () =>
   body("name")
@@ -118,19 +118,20 @@ const skillsItemsValidator = () =>
     .isLength({ min: 1, max: 25 })
     .withMessage("درایه های مهارت ها باید بین 1 تا 25 کاراکتر باشند");
 
-const languageCodesValidator = () =>
-  body("languageCodes")
+const languageNamesValidator = () =>
+  body("languageNames")
     .isArray({ min: 0 })
-    .withMessage("کد زبان ها باید یک آرایه باشد")
+    .withMessage("نام زبان ها باید یک آرایه باشد")
     .custom(isArrayUnique)
-    .withMessage("کد زبان ها نباید تکراری باشند");
+    .withMessage("نام زبان ها نباید تکراری باشند");
 
-const languageCodesItemsValidator = () =>
-  body("languageCodes.*")
+const languageNamesItemsValidator = () =>
+  body("languageNames.*")
     .isString()
-    .withMessage("درایه های کد زبان ها باید رشته باشند")
-    .isLength({ min: 2, max: 2 })
-    .withMessage("درایه های کد زبان ها باید دقیقا 2 کاراکتر باشند");
+    .withMessage("درایه های نام زبان ها باید رشته باشند")
+    .isLength({ max: 20 })
+    .withMessage("درایه های نام زبان ها نباید بیش از 20 کاراکتر باشند")
+    .customSanitizer(capitalize);
 
 const socialLinksValidator = () =>
   body("socialLinks")
@@ -270,8 +271,8 @@ export const updateUserValidator = () => [
 
   skillsValidator().optional(),
   skillsItemsValidator().optional(),
-  languageCodesValidator().optional(),
-  languageCodesItemsValidator().optional(),
+  languageNamesValidator().optional(),
+  languageNamesItemsValidator().optional(),
   socialLinksValidator().optional(),
   socialLinksItemsValidator().optional(),
 
