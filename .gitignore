@@ -1,6 +1,8 @@
 # Custom
 backend/add
 backend/commit
+backend/package-lock.json
+frontend/package-lock.json
 
 # Drizzle
 backend/drizzle/
