@@ -4,7 +4,6 @@ import { Pool } from "pg";
 
 import {
   gendersTable,
-  languagesTable,
   rolesTable,
   userEducationDegreesTable,
   userLanguagesTable,

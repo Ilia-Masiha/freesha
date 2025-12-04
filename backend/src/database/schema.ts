@@ -139,7 +139,7 @@ export const userLanguagesTable = pgTable(
 );
 
 export const languagesTable = pgTable("languages", {
-  code: varchar("code", { length: 2 }).$type<LanguageCode>().notNull().unique(),
+  code: varchar("code", { length: 3 }).$type<LanguageCode>().notNull().unique(),
   languageName: varchar("language_name", { length: 20 }).notNull().unique(),
   languageNameFa: varchar("language_name_fa", { length: 20 })
     .notNull()

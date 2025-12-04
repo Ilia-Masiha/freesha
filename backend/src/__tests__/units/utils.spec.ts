@@ -1,4 +1,4 @@
-import { isArrayUnique } from "../../helpers/utils.js";
+import { capitalize, isArrayUnique } from "../../helpers/utils.js";
 
 describe("testing isArrayUnique", () => {
   it("should return false for non-unique arrays", () => {
@@ -19,5 +19,21 @@ describe("testing isArrayUnique", () => {
     expect(isArrayUnique(unique1)).toStrictEqual(true);
     expect(isArrayUnique(unique2)).toStrictEqual(true);
     expect(isArrayUnique(unique3)).toStrictEqual(true);
+  });
+});
+
+describe("testing capitalize", () => {
+  it("should capitalize these words", () => {
+    expect(capitalize("hello")).toStrictEqual("Hello");
+    expect(capitalize("ALLCAPS")).toStrictEqual("Allcaps");
+    expect(capitalize("iNVERSE")).toStrictEqual("Inverse");
+    expect(capitalize("rANdoM")).toStrictEqual("Random");
+    expect(capitalize("a")).toStrictEqual("A");
+  });
+
+  it("should keep these words as is", () => {
+    expect(capitalize("Capitalized")).toStrictEqual("Capitalized");
+    expect(capitalize("Test")).toStrictEqual("Test");
+    expect(capitalize("E")).toStrictEqual("E");
   });
 });
