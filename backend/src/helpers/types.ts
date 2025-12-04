@@ -26,8 +26,7 @@ export interface User {
   birthDate?: string | null;
 
   skills?: string[];
-  languages?: string[];
-  languageCodes?: string[];
+  languageNames?: string[];
   socialLinks?: string[];
 
   educationDegrees?: EducationDegree[];

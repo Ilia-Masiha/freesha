@@ -73,3 +73,7 @@ export function isArrayUnique(items: any[]): boolean {
 
   return true;
 }
+
+export function capitalize(value: string): string {
+  return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+}

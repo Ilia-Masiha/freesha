@@ -126,14 +126,14 @@ export const userLanguagesTable = pgTable(
     userId: integer("user_id")
       .notNull()
       .references(() => usersTable.id),
-    languageCode: varchar("language_code", { length: 2 })
+    languageName: varchar("language_name", { length: 20 })
       .notNull()
-      .references(() => languagesTable.code),
+      .references(() => languagesTable.languageName),
   },
   (table) => [
-    uniqueIndex("user_id_language_id_unique_idx").on(
+    uniqueIndex("user_id_language_name_unique_idx").on(
       table.userId,
-      table.languageCode
+      table.languageName
     ),
   ]
 );

@@ -153,11 +153,11 @@ export async function updateUser(
   values: Partial<User>
 ): Promise<DbResponse<Partial<User> | None>> {
   try {
-    const { skills, languageCodes, socialLinks } = values;
+    const { skills, languageNames, socialLinks } = values;
     let { educationDegrees, workExperiences } = values;
 
     delete values.skills;
-    delete values.languageCodes;
+    delete values.languageNames;
     delete values.socialLinks;
     delete values.educationDegrees;
     delete values.workExperiences;
@@ -176,7 +176,7 @@ export async function updateUser(
         .where(eq(usersTable.id, id));
 
       await insertSkills(tx, id, skills);
-      await insertLanguages(tx, id, languageCodes);
+      await insertLanguages(tx, id, languageNames);
       await insertSocialLinks(tx, id, socialLinks);
       await insertEducationDegrees(
         tx,
@@ -201,10 +201,9 @@ export async function updateUser(
       FROM ${userSkillsTable}
       WHERE ${userSkillsTable.userId} = ${usersTable.id}
     )`,
-          languages: sql<string[]>`(
-      SELECT COALESCE(ARRAY_AGG(DISTINCT ${languagesTable.languageNameFa}), '{}')
+          languageNames: sql<string[]>`(
+      SELECT COALESCE(ARRAY_AGG(DISTINCT ${userLanguagesTable.languageName}), '{}')
       FROM ${userLanguagesTable}
-      INNER JOIN ${languagesTable} ON ${userLanguagesTable.languageCode} = ${languagesTable.code}
       WHERE ${userLanguagesTable.userId} = ${usersTable.id}
     )`,
 
@@ -293,20 +292,20 @@ async function insertSkills(
 async function insertLanguages(
   tx: Transaction,
   id: number,
-  languageCodes: string[] | None
+  languageNames: string[] | None
 ): Promise<void> {
-  if (isNone(languageCodes)) {
+  if (isNone(languageNames)) {
     return;
   }
 
   const userLanguages = [];
-  for (const languageCode of languageCodes) {
-    userLanguages.push({ userId: id, languageCode: languageCode });
+  for (const languageName of languageNames) {
+    userLanguages.push({ userId: id, languageName: languageName });
   }
 
   await tx.delete(userLanguagesTable).where(eq(userLanguagesTable.userId, id));
 
-  if (languageCodes.length === 0) {
+  if (languageNames.length === 0) {
     return;
   }
 
