@@ -1,7 +1,7 @@
 import { body, param } from "express-validator";
 import validator from "validator";
 
-import { capitalize, isArrayUnique } from "../helpers/utils.js";
+import { capitalize, isArrayUnique, isNone } from "../helpers/utils.js";
 
 const nameValidator = () =>
   body("name")
@@ -194,7 +194,10 @@ const educationDegreesItemsValidator = () =>
     })
     .withMessage(
       "تاریخ پایان درایه های مدارک تحصیلی یا باید نال باشد یا در فرمت YYYY-MM-DD باشد"
-    );
+    )
+
+    .custom((value) => Object.keys(value).length === 3)
+    .withMessage("درایه های مدارک تحصیلی باید دقیقا 3 کلید داشته باشند");
 
 const workExperiencesValidator = () =>
   body("workExperiences")
@@ -221,6 +224,15 @@ const workExperiencesItemsValidator = () =>
       "طول نام شرکت درایه های سوابق شفلی باید حداکثر 50 کاراکتر باشد"
     )
 
+    .custom((value) => !isNone(value.description))
+    .withMessage("درایه های سوابق شفلی باید توضیحات داشته باشند")
+    .custom((value) => typeof value.description === "string")
+    .withMessage("توضیحات درایه های سوابق شفلی باید رشته باشد")
+    .custom((value) => value.description.length <= 500)
+    .withMessage(
+      "طول توضیحات درایه های سوابق شفلی باید حداکثر 500 کاراکتر باشد"
+    )
+
     .custom((value) => value.startDate)
     .withMessage("درایه های سوابق شفلی باید تاریخ شروع داشته باشند")
     .custom((value) => typeof value.startDate === "string")
@@ -245,7 +257,10 @@ const workExperiencesItemsValidator = () =>
     })
     .withMessage(
       "تاریخ پایان درایه های سوابق شفلی یا باید نال باشد یا در فرمت YYYY-MM-DD باشد"
-    );
+    )
+
+    .custom((value) => Object.keys(value).length === 5)
+    .withMessage("درایه های سوابق شغلی باید دقیقا 5 کلید داشته باشند");
 
 export const registerValidator = () => [
   nameValidator(),

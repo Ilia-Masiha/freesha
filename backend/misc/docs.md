@@ -203,6 +203,7 @@ These status codes are always expected from any endpoint, so I will not include 
       {
         "jobTitle": "Architect",
         "company": "Example LTD",
+        "description": "Some description about my job experience",
         "startDate": "2005-01-17",
         "endDate": "2007-09-11"
       }
@@ -251,6 +252,7 @@ These status codes are always expected from any endpoint, so I will not include 
         {
           "jobTitle": "Architect",
           "company": "Example LTD",
+          "description": "Some description about my job experience",
           "startDate": "2005-01-17",
           "endDate": "2007-09-11"
         }
