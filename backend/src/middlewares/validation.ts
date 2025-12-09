@@ -1,7 +1,7 @@
 import { body, param } from "express-validator";
 import validator from "validator";
 
-import { capitalize, isArrayUnique } from "../helpers/utils.js";
+import { capitalize, isArrayUnique, isNone } from "../helpers/utils.js";
 
 const nameValidator = () =>
   body("name")
@@ -224,7 +224,7 @@ const workExperiencesItemsValidator = () =>
       "طول نام شرکت درایه های سوابق شفلی باید حداکثر 50 کاراکتر باشد"
     )
 
-    .custom((value) => value.description)
+    .custom((value) => !isNone(value.description))
     .withMessage("درایه های سوابق شفلی باید توضیحات داشته باشند")
     .custom((value) => typeof value.description === "string")
     .withMessage("توضیحات درایه های سوابق شفلی باید رشته باشد")
