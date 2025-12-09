@@ -74,7 +74,7 @@ const ResumeUploader = () => {
   };
 
   return (
-    <div className="w-full mx-auto p-4">
+    <div className="w-full mx-auto">
       {/* drag & drop zone */}
       {!uploadedFile && !isUploading && !uploadCompleted && (
         <div

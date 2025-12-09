@@ -1,3 +1,4 @@
+import Btn from "@/common/Btn";
 import Title from "@/common/Title";
 import LanguagesSelector from "@/components/Profile/LanguagesSelector";
 import ResumeUploader from "@/components/Profile/ResumeUploader";
@@ -16,6 +17,9 @@ const Resume = () => {
         <SkillsSelector />
         <LanguagesSelector />
         <ResumeUploader />
+        <div>
+          <Btn text="به روزرسانی" type="submit" />
+        </div>
       </article>
     </section>
   );
