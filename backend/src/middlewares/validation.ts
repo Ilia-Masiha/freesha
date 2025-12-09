@@ -221,6 +221,15 @@ const workExperiencesItemsValidator = () =>
       "طول نام شرکت درایه های سوابق شفلی باید حداکثر 50 کاراکتر باشد"
     )
 
+    .custom((value) => value.description)
+    .withMessage("درایه های سوابق شفلی باید توضیحات داشته باشند")
+    .custom((value) => typeof value.description === "string")
+    .withMessage("توضیحات درایه های سوابق شفلی باید رشته باشد")
+    .custom((value) => value.description.length <= 500)
+    .withMessage(
+      "طول توضیحات درایه های سوابق شفلی باید حداکثر 500 کاراکتر باشد"
+    )
+
     .custom((value) => value.startDate)
     .withMessage("درایه های سوابق شفلی باید تاریخ شروع داشته باشند")
     .custom((value) => typeof value.startDate === "string")

@@ -169,6 +169,7 @@ export const userWorkExperiencesTable = pgTable(
       .references(() => usersTable.id),
     jobTitle: varchar("job_title", { length: 50 }).notNull(),
     company: varchar("company", { length: 50 }).notNull(),
+    description: varchar("description", { length: 500 }).notNull().default(""),
     startDate: date("start_date").notNull(),
     endDate: date("end_date"),
   },
