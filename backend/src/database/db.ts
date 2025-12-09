@@ -230,8 +230,9 @@ export async function updateUser(
       SELECT COALESCE(
         JSON_AGG(
           JSON_BUILD_OBJECT(
-            'jobTitle', "job_title", 
-            'company', "company", 
+            'jobTitle', "job_title",
+            'company', "company",
+            'description', "description",
             'startDate', "start_date",
             'endDate', "end_date"
           )

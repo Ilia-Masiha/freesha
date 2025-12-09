@@ -194,7 +194,10 @@ const educationDegreesItemsValidator = () =>
     })
     .withMessage(
       "تاریخ پایان درایه های مدارک تحصیلی یا باید نال باشد یا در فرمت YYYY-MM-DD باشد"
-    );
+    )
+
+    .custom((value) => Object.keys(value).length === 3)
+    .withMessage("درایه های مدارک تحصیلی باید دقیقا 3 کلید داشته باشند");
 
 const workExperiencesValidator = () =>
   body("workExperiences")
@@ -254,7 +257,10 @@ const workExperiencesItemsValidator = () =>
     })
     .withMessage(
       "تاریخ پایان درایه های سوابق شفلی یا باید نال باشد یا در فرمت YYYY-MM-DD باشد"
-    );
+    )
+
+    .custom((value) => Object.keys(value).length === 5)
+    .withMessage("درایه های سوابق شغلی باید دقیقا 5 کلید داشته باشند");
 
 export const registerValidator = () => [
   nameValidator(),
