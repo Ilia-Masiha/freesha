@@ -24,6 +24,13 @@ import {
   User,
   WorkExperience,
 } from "../helpers/types.js";
+import {
+  educationDegreesQuery,
+  languageNamesQuery,
+  skillsQuery,
+  socialLinksQuery,
+  workExperiencesQuery,
+} from "./queries.js";
 
 export let db: NodePgDatabase<Record<string, never>> & {
   $client: Pool;
@@ -147,6 +154,53 @@ export async function updateLastLogin(
   }
 }
 
+export async function getUserCustom(
+  id: number,
+  fields: string[]
+): Promise<DbResponse<Partial<User> | None>> {
+  const columns: any = {
+    id: usersTable.id,
+    roleName: rolesTable.roleName,
+  };
+
+  if (fields.includes("name")) columns.name = usersTable.name;
+  if (fields.includes("email")) columns.email = usersTable.email;
+
+  if (fields.includes("skills")) columns.skills = skillsQuery;
+  if (fields.includes("languageNames"))
+    columns.languageNames = languageNamesQuery;
+  if (fields.includes("socialLinks")) columns.socialLinks = socialLinksQuery;
+
+  if (fields.includes("educationDegrees"))
+    columns.educationDegrees = educationDegreesQuery;
+  if (fields.includes("workExperiences"))
+    columns.workExperiences = workExperiencesQuery;
+
+  if (fields.includes("postalCode")) columns.postalCode = usersTable.postalCode;
+  if (fields.includes("homeAddress"))
+    columns.homeAddress = usersTable.homeAddress;
+  if (fields.includes("genderName"))
+    columns.genderName = gendersTable.genderName;
+  if (fields.includes("jobTitle")) columns.jobTitle = usersTable.jobTitle;
+  if (fields.includes("bio")) columns.bio = usersTable.bio;
+  if (fields.includes("birthDate")) columns.birthDate = usersTable.birthDate;
+  if (fields.includes("createdAt")) columns.createdAt = usersTable.createdAt;
+  if (fields.includes("updatedAt")) columns.updatedAt = usersTable.updatedAt;
+
+  try {
+    const result = await db
+      .select(columns)
+      .from(usersTable)
+      .innerJoin(rolesTable, eq(usersTable.roleId, rolesTable.id))
+      .innerJoin(gendersTable, eq(usersTable.genderId, gendersTable.id))
+      .where(eq(usersTable.id, id));
+
+    return makeDbResponse<User | None>(result[0] as unknown as User, null);
+  } catch (error) {
+    return makeDbResponse(null, error as Error);
+  }
+}
+
 export async function updateUser(
   id: number,
   values: Partial<User>
@@ -195,53 +249,12 @@ export async function updateUser(
           email: usersTable.email,
           roleName: rolesTable.roleName,
 
-          skills: sql<string[]>`(
-      SELECT COALESCE(ARRAY_AGG(DISTINCT ${userSkillsTable.skill}), '{}')
-      FROM ${userSkillsTable}
-      WHERE ${userSkillsTable.userId} = ${usersTable.id}
-    )`,
-          languageNames: sql<string[]>`(
-      SELECT COALESCE(ARRAY_AGG(DISTINCT ${userLanguagesTable.languageName}), '{}')
-      FROM ${userLanguagesTable}
-      WHERE ${userLanguagesTable.userId} = ${usersTable.id}
-    )`,
+          skills: skillsQuery,
+          languageNames: languageNamesQuery,
+          socialLinks: socialLinksQuery,
 
-          socialLinks: sql<string[]>`(
-      SELECT COALESCE(ARRAY_AGG(DISTINCT ${userSocialLinksTable.link}), '{}')
-      FROM ${userSocialLinksTable}
-      WHERE ${userSocialLinksTable.userId} = ${usersTable.id}
-    )`,
-
-          educationDegrees: sql<Omit<EducationDegree, "userId">[]>`(
-      SELECT COALESCE(
-        JSON_AGG(
-          JSON_BUILD_OBJECT(
-            'title', "title", 
-            'startDate', "start_date",
-            'endDate', "end_date"
-          )
-        ),
-        '[]'::json
-      )
-      FROM ${userEducationDegreesTable}
-      WHERE ${userEducationDegreesTable.userId} = ${usersTable.id}
-    )`,
-          workExperiences: sql<Omit<WorkExperience, "userId">[]>`(
-      SELECT COALESCE(
-        JSON_AGG(
-          JSON_BUILD_OBJECT(
-            'jobTitle', "job_title",
-            'company', "company",
-            'description', "description",
-            'startDate', "start_date",
-            'endDate', "end_date"
-          )
-        ),
-        '[]'::json
-      )
-      FROM ${userWorkExperiencesTable}
-      WHERE ${userWorkExperiencesTable.userId} = ${usersTable.id}
-    )`,
+          educationDegrees: educationDegreesQuery,
+          workExperiences: workExperiencesQuery,
 
           postalCode: usersTable.postalCode,
           homeAddress: usersTable.homeAddress,
