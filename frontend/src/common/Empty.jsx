@@ -1,14 +1,14 @@
 import Image from "next/image";
 
-const Empty = ({ text, size }) => {
+const Empty = ({ text }) => {
   return (
     <div className="w-full flex flex-col justify-center items-center gap-y-5">
-      <div className={`relative w-${size} h-${size}`}>
+      <div className={`relative w-56 h-56`}>
         <Image
           src="/images/empty.svg"
           alt="empty"
           fill
-          className="object-contain"
+          className="absolute object-contain"
           priority={false}
         />
       </div>
