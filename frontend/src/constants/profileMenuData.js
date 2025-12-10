@@ -42,7 +42,7 @@ export const profileMenuData = [
   {
     id: 6,
     title: "نمونه کارها",
-    link : "/profile/Portfolio",
+    link : "/profile/portfolio",
     icon: <PiCodeDuotone />,
   },
   {
