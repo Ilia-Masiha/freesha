@@ -262,6 +262,17 @@ const workExperiencesItemsValidator = () =>
     .custom((value) => Object.keys(value).length === 5)
     .withMessage("درایه های سوابق شغلی باید دقیقا 5 کلید داشته باشند");
 
+const fieldsValidator = () =>
+  body("fields").isArray({ min: 0 }).withMessage("فیلد ها باید یک آرایه باشد");
+
+const fieldsItemsValidator = () =>
+  body("fields.*")
+    .trim()
+    .notEmpty()
+    .withMessage("درایه های فیلد ها نباید خالی باشند")
+    .isString()
+    .withMessage("درایه های فیلد ها باید رشته باشند");
+
 export const registerValidator = () => [
   nameValidator(),
   emailValidator(),
@@ -295,4 +306,11 @@ export const updateUserValidator = () => [
   educationDegreesItemsValidator().optional(),
   workExperiencesValidator().optional(),
   workExperiencesItemsValidator().optional(),
+];
+
+export const getUserValidator = () => [
+  userIdValidator(),
+
+  fieldsValidator(),
+  fieldsItemsValidator(),
 ];
