@@ -68,6 +68,6 @@ export async function getUser(
 
   const userInfo = dbResponse.result;
 
-  const resObj = makeResObj(messages.gotData, userInfo);
+  const resObj = makeResObj(messages.gotUser, userInfo);
   return res.status(200).json(resObj);
 }

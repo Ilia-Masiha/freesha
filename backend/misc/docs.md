@@ -167,6 +167,38 @@ These status codes are always expected from any endpoint, so I will not include 
   Expected status codes:  
   - `200`: Successfully logged in.
 
+- `GET /users/:userId` (Protected):  
+  This endpoint is used for getting a user's information. Put user's id instead of `:userId`. Specify your requested fields in the query parameter:  
+  ```json
+  GET /users/5?fields=email,birthDate,workExperiences
+
+  RESPONSE BODY
+  {
+    "message": "اطلاعات کاربر با موفقیت دریافت شد",
+    "data": {
+      "id": 5,
+      "roleName": "user",
+      "email": "john@doe.com",
+      "workExperiences": [
+        {
+          "jobTitle": "Architect",
+          "company": "Example LTD",
+          "description": "Some description about my job experience",
+          "startDate": "2005-01-17",
+          "endDate": "2007-09-11"
+        }
+      ],
+      "birthDate": "1999-01-20"
+    }
+  }
+  ```
+  `id` and `roleName` will always be included. The values of `fields` in query is case-sensitive. `genderId` can't be requested, use `genderName` instead.  
+  Expected status codes:  
+  - `400`: Validation error. More information in `message`.
+  - `401`: Invalid session key.
+  - `403`: Forbidden.
+  - `200`: Successfully got user information.
+
 - `PATCH /users/:userId` (Protected):  
   This endpoint is used for editing a user's information. Put user's id instead of `:userId`. Send information in the request body in this format:  
   ```json
