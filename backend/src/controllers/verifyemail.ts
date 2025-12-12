@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import * as db from "../database/db.js";
 import { redisDel, redisGet } from "../database/redis.js";
 import { messages } from "../helpers/messages.js";
-import { PreRegisterInfo, SessionData, User } from "../helpers/types.js";
+import { PreRegisterInfo, SessionData } from "../helpers/types.js";
 import { makeResObj } from "../helpers/utils.js";
 import { setSessionData } from "../middlewares/auth.js";
 

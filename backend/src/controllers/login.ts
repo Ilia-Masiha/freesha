@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import * as db from "../database/db.js";
 import { makeResObj } from "../helpers/utils.js";
 import { messages } from "../helpers/messages.js";
-import { None, SessionData, User } from "../helpers/types.js";
+import { SessionData } from "../helpers/types.js";
 import { setSessionData } from "../middlewares/auth.js";
 
 export async function login(

@@ -113,7 +113,8 @@ These status codes are always expected from any endpoint, so I will not include 
       "email": "john@doe.com",
       "roleName": "user",
       "createdAt": "2025-10-02T11:52:24.977Z",
-      "updatedAt": "2025-10-02T11:52:24.977Z"
+      "updatedAt": "2025-10-02T11:52:24.977Z",
+      "lastLoginAt": "2025-10-02T11:52:24.977Z"
     }
   }
   ```
