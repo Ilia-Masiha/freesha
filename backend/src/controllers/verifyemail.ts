@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import * as db from "../database/db.js";
 import { redisDel, redisGet } from "../database/redis.js";
 import { messages } from "../helpers/messages.js";
-import { PreRegisterInfo, SessionData, User } from "../helpers/types.js";
+import { PreRegisterInfo, SessionData } from "../helpers/types.js";
 import { makeResObj } from "../helpers/utils.js";
 import { setSessionData } from "../middlewares/auth.js";
 
@@ -53,7 +53,7 @@ export async function verifyemail(
 
   const id: number = dbResponse.result as number;
 
-  const dbResponse2 = await db.getUser(id);
+  const dbResponse2 = await db.getUser(id, db.defaultFields, false);
   if (dbResponse2.error || !dbResponse2.result) {
     return next(dbResponse2.error);
   }
@@ -61,11 +61,11 @@ export async function verifyemail(
   await redisDel(`otp:${email}`);
   await redisDel(`pre-register:${email}`);
 
-  const userInfo: User = dbResponse2.result;
+  const userInfo = dbResponse2.result;
   const sessionData: SessionData = {
-    id: userInfo.id,
-    name: userInfo.name,
-    email: userInfo.email,
+    id: userInfo.id!,
+    name: userInfo.name!,
+    email: userInfo.email!,
     roleName: userInfo.roleName!,
   };
   await setSessionData(res, randomUUID(), sessionData);

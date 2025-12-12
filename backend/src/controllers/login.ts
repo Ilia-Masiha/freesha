@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import * as db from "../database/db.js";
 import { makeResObj } from "../helpers/utils.js";
 import { messages } from "../helpers/messages.js";
-import { None, SessionData, User } from "../helpers/types.js";
+import { SessionData } from "../helpers/types.js";
 import { setSessionData } from "../middlewares/auth.js";
 
 export async function login(
@@ -23,12 +23,12 @@ export async function login(
 
   const { email, password } = matchedData(req);
 
-  const dbResponse = await db.getUserByEmail(email);
+  const dbResponse = await db.getUser(email, db.defaultFields, true);
   if (dbResponse.error) {
     return next(dbResponse.error);
   }
 
-  const userInfo: User | None = dbResponse.result;
+  const userInfo = dbResponse.result;
 
   if (!userInfo) {
     const resObj = makeResObj(messages.error401);
@@ -48,13 +48,13 @@ export async function login(
   }
 
   const sessionData: SessionData = {
-    id: userInfo.id,
-    name: userInfo.name,
-    email: userInfo.email,
-    roleName: userInfo.roleName,
+    id: userInfo.id!,
+    name: userInfo.name!,
+    email: userInfo.email!,
+    roleName: userInfo.roleName!,
   };
 
-  const dbResponse2 = await db.updateLastLogin(userInfo.id);
+  const dbResponse2 = await db.updateLastLogin(userInfo.id!);
   if (dbResponse2.error) {
     return next(dbResponse2.error);
   }
