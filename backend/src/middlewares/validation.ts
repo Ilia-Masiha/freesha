@@ -1,4 +1,4 @@
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
 import validator from "validator";
 
 import { capitalize, isArrayUnique, isNone } from "../helpers/utils.js";
@@ -263,15 +263,15 @@ const workExperiencesItemsValidator = () =>
     .withMessage("درایه های سوابق شغلی باید دقیقا 5 کلید داشته باشند");
 
 const fieldsValidator = () =>
-  body("fields").isArray({ min: 0 }).withMessage("فیلد ها باید یک آرایه باشد");
-
-const fieldsItemsValidator = () =>
-  body("fields.*")
+  query("fields")
     .trim()
-    .notEmpty()
-    .withMessage("درایه های فیلد ها نباید خالی باشند")
     .isString()
-    .withMessage("درایه های فیلد ها باید رشته باشند");
+    .withMessage("فیلد ها باید یک رشته باشد")
+    .custom((value) => !isNone(value))
+    .withMessage("حداقل یک فیلد باید تعیین شود")
+    .customSanitizer((value: string) =>
+      value.split(",").map((value) => value.trim())
+    );
 
 export const registerValidator = () => [
   nameValidator(),
@@ -308,9 +308,4 @@ export const updateUserValidator = () => [
   workExperiencesItemsValidator().optional(),
 ];
 
-export const getUserValidator = () => [
-  userIdValidator(),
-
-  fieldsValidator(),
-  fieldsItemsValidator(),
-];
+export const getUserValidator = () => [userIdValidator(), fieldsValidator()];
