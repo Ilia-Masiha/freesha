@@ -61,7 +61,7 @@ export async function getUser(
     return res.status(403).json(resObj);
   }
 
-  const dbResponse = await db.getUserCustom(userId, validatedData.fields);
+  const dbResponse = await db.getUser(userId, validatedData.fields, false);
   if (dbResponse.error || !dbResponse.result) {
     return next(dbResponse.error);
   }

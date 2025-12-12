@@ -32,6 +32,14 @@ import {
   workExperiencesQuery,
 } from "./queries.js";
 
+export const defaultFields = [
+  "name",
+  "email",
+  "createdAt",
+  "updatedAt",
+  "lastLoginAt",
+];
+
 export let db: NodePgDatabase<Record<string, never>> & {
   $client: Pool;
 };
@@ -91,52 +99,6 @@ export async function insertUser(
   }
 }
 
-export async function getUser(id: number): Promise<DbResponse<User | None>> {
-  try {
-    const result = await db
-      .select({
-        id: usersTable.id,
-        name: usersTable.name,
-        email: usersTable.email,
-        roleName: rolesTable.roleName,
-        createdAt: usersTable.createdAt,
-        updatedAt: usersTable.updatedAt,
-      })
-      .from(usersTable)
-      .innerJoin(rolesTable, eq(usersTable.roleId, rolesTable.id))
-      .where(eq(usersTable.id, id));
-
-    return makeDbResponse<User | None>(result[0], null);
-  } catch (error) {
-    return makeDbResponse(null, error as Error);
-  }
-}
-
-export async function getUserByEmail(
-  email: string
-): Promise<DbResponse<User | None>> {
-  try {
-    const result = await db
-      .select({
-        id: usersTable.id,
-        name: usersTable.name,
-        email: usersTable.email,
-        hashedPassword: usersTable.password,
-        roleName: rolesTable.roleName,
-        createdAt: usersTable.createdAt,
-        updatedAt: usersTable.updatedAt,
-        lastLoginAt: usersTable.lastLoginAt,
-      })
-      .from(usersTable)
-      .innerJoin(rolesTable, eq(usersTable.roleId, rolesTable.id))
-      .where(eq(usersTable.email, email));
-
-    return makeDbResponse<User | None>(result[0], null);
-  } catch (error) {
-    return makeDbResponse(null, error as Error);
-  }
-}
-
 export async function updateLastLogin(
   id: number
 ): Promise<DbResponse<true | null>> {
@@ -154,17 +116,23 @@ export async function updateLastLogin(
   }
 }
 
-export async function getUserCustom(
-  id: number,
-  fields: string[]
+export async function getUser(
+  idOrEmail: number,
+  fields: string[],
+  getPassword: boolean = false
 ): Promise<DbResponse<Partial<User> | None>> {
   const columns: any = {
     id: usersTable.id,
     roleName: rolesTable.roleName,
   };
 
+  let equality;
+  if (typeof idOrEmail === "number") equality = eq(usersTable.id, idOrEmail);
+  if (typeof idOrEmail === "string") equality = eq(usersTable.email, idOrEmail);
+
   if (fields.includes("name")) columns.name = usersTable.name;
   if (fields.includes("email")) columns.email = usersTable.email;
+  if (getPassword) columns.hashedPassword = usersTable.password;
 
   if (fields.includes("skills")) columns.skills = skillsQuery;
   if (fields.includes("languageNames"))
@@ -193,7 +161,7 @@ export async function getUserCustom(
       .from(usersTable)
       .innerJoin(rolesTable, eq(usersTable.roleId, rolesTable.id))
       .innerJoin(gendersTable, eq(usersTable.genderId, gendersTable.id))
-      .where(eq(usersTable.id, id));
+      .where(equality);
 
     return makeDbResponse<User | None>(result[0] as unknown as User, null);
   } catch (error) {
