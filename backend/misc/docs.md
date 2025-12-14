@@ -166,7 +166,7 @@ These status codes are always expected from any endpoint, so I will not include 
   }
   ```
   Expected status codes:  
-  - `200`: Successfully logged in.
+  - `200`: Successfully logged out.
 
 - `GET /users/:userId` (Protected):  
   This endpoint is used for getting a user's information. Put user's id instead of `:userId`. Specify your requested fields in the query parameter:  
@@ -300,6 +300,40 @@ These status codes are always expected from any endpoint, so I will not include 
   - `403`: Forbidden.
   - `200`: Successfully updated user information.
 
+- `POST /job_posts` (Protected):  
+  This endpoint is used for creating a job post. Send information in the request body in this format:  
+  ```json
+  REQUEST BODY
+  {
+    "title": "Designing the database of an online shop",
+    "description": "I'm currently giving you a lot of information about this project",
+    "budgetLow": 500000,
+    "budgetHigh": 1000000
+  }
+  ```
+  Response body will contain a `message` about the result of your request. If successful, `data` will also contain information about the created job post. Response body will be in this format (If status code is `201`):  
+  ```json
+  RESPONSE BODY
+  {
+    "message": "آگهی کار با موفقیت ایجاد شد",
+    "data": {
+      "clientId": 5,
+      "statusId": 1,
+      "title": "Designing the database of an online shop",
+      "description": "I'm currently giving you a lot of information about this project",
+      "budget_low": 500000,
+      "budget_high": 1000000,
+      "id": 1,
+      "createdAt": "2025-12-06T17:39:01.244Z",
+      "updatedAt": "2025-12-06T17:39:01.244Z"
+    }
+  }
+  ```
+  Expected status codes:  
+  - `400`: Validation error. More information in `message`.
+  - `401`: Invalid session key.
+  - `201`: Successfully created the job post.
+
 ## Data relationships
 
 - Genders:  
@@ -308,3 +342,11 @@ These status codes are always expected from any endpoint, so I will not include 
   | 1        | N          | None    |
   | 2        | M          | Male    |
   | 3        | F          | Female  |
+
+- Job post statuses:  
+  | statusId | statusName |
+  |----------|------------|
+  | 1        | Pending    |
+  | 2        | Accepted   |
+  | 3        | Cancelled  |
+  | 4        | Done       |
