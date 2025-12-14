@@ -15,7 +15,7 @@ const Profile = () => {
             <PiFlagCheckeredDuotone />
           </div>
           <div className="flex flex-col gap-y-2">
-            <h3 className="text-lg text-white">پروژه های انجام شده</h3>
+            <h3 className="text-lg text-white">پروژه‌های انجام شده</h3>
             <p className="text-secondary">9</p>
           </div>
         </div>
@@ -24,7 +24,7 @@ const Profile = () => {
             <PiCodeDuotone />
           </div>
           <div className="flex flex-col gap-y-2">
-            <h3 className="text-lg text-white">پروژه های فعال</h3>
+            <h3 className="text-lg text-white">پروژه‌های فعال</h3>
             <p className="text-secondary">9</p>
           </div>
         </div>

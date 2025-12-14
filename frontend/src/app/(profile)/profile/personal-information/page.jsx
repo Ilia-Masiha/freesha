@@ -37,6 +37,13 @@ const PersonalInformation = () => {
             label="تاریخ تولد"
             name="birthDate"
           />
+          <FormInput
+            className="col-span-3"
+            label="شماره همراه"
+            name="phoneNmber"
+            type="number"
+          />
+
           <div className="col-span-3">
             <Select
               name="gender"
@@ -57,7 +64,7 @@ const PersonalInformation = () => {
           <TextArea className="col-span-7" label="آدرس" name="homeAddress" />
           <TextArea className="col-span-7" label="بیوگرافی" name="bio" />
           <div className="col-span-9">
-            <Btn text="به روزرسانی" type="submit"/>
+            <Btn text="به روزرسانی" type="submit" />
           </div>
         </form>
       </article>
