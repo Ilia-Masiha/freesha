@@ -294,24 +294,26 @@ const descriptionValidator = () =>
     .withMessage("طول توضیحات باید بین 30 تا 5000 کاراکتر باشد");
 
 const budgetLowValidator = () =>
-  body("budget_low")
+  body("budgetLow")
     .trim()
     .notEmpty()
     .withMessage("کف بودجه نباید خالی باشد")
     .isInt({ min: 500_000, max: 1_000_000_000 })
     .withMessage(
       "کف بودجه باید عددی بین 500،000 ریال تا 1،000،000،000 ریال باشد"
-    );
+    )
+    .toInt();
 
 const budgetHighValidator = () =>
-  body("budget_high")
+  body("budgetHigh")
     .trim()
     .notEmpty()
     .withMessage("سقف بودجه نباید خالی باشد")
     .isInt({ min: 500_000, max: 1_000_000_000 })
     .withMessage(
       "سقف بودجه باید عددی بین 500،000 ریال تا 1،000،000،000 ریال باشد"
-    );
+    )
+    .toInt();
 
 export const registerValidator = () => [
   nameValidator(),
@@ -349,3 +351,10 @@ export const updateUserValidator = () => [
 ];
 
 export const getUserValidator = () => [userIdValidator(), fieldsValidator()];
+
+export const createJobPostValidator = () => [
+  titleValidator(),
+  descriptionValidator(),
+  budgetLowValidator(),
+  budgetHighValidator(),
+];

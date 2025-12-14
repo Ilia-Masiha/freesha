@@ -20,14 +20,19 @@ export async function createJobPost(
   }
 
   const validatedData = matchedData(req);
+  if (validatedData.budgetLow > validatedData.budgetHigh) {
+    const resObj = makeResObj(messages.budgetLowHigh);
+    return res.status(400).json(resObj);
+  }
+
   const userId = req.sessionData!.id;
   const jobPost: JobPost = {
     clientId: userId,
     statusId: JobPostStatusIds.Pending,
     title: validatedData.title,
     description: validatedData.description,
-    budget_low: validatedData.budget_low,
-    budget_high: validatedData.budget_high,
+    budget_low: validatedData.budgetLow,
+    budget_high: validatedData.budgetHigh,
   };
 
   const dbResponse = await db.insertJobPost(jobPost);
