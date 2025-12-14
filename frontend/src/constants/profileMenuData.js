@@ -4,8 +4,8 @@ import {
   PiClockUserDuotone,
   PiNotepadDuotone,
   PiCodeDuotone,
-  PiPhoneDuotone,
-  PiFilesDuotone
+  PiFilesDuotone,
+  PiTelegramLogoDuotone 
 } from "react-icons/pi";
 
 export const profileMenuData = [
@@ -47,8 +47,8 @@ export const profileMenuData = [
   },
   {
     id: 7,
-    title: "اطلاعات تماس",
-    link : "/profile/contact-information",
-    icon: <PiPhoneDuotone />,
+    title: "شبکه‌های اجتماعی",
+    link : "/profile/social-media",
+    icon: <PiTelegramLogoDuotone />,
   },
 ];
