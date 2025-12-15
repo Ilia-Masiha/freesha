@@ -4,6 +4,7 @@ import { Pool } from "pg";
 
 import {
   gendersTable,
+  jobPostsTable,
   rolesTable,
   userEducationDegreesTable,
   userLanguagesTable,
@@ -18,6 +19,7 @@ import {
   DbResponse,
   DbResult,
   EducationDegree,
+  JobPost,
   None,
   PreRegisterInfo,
   Transaction,
@@ -356,4 +358,20 @@ async function insertWorkExperiences(
   }
 
   await tx.insert(userWorkExperiencesTable).values(workExperiences);
+}
+
+export async function insertJobPost(
+  jobPost: JobPost
+): Promise<DbResponse<DbResult>> {
+  try {
+    const result = await db.insert(jobPostsTable).values(jobPost).returning({
+      id: jobPostsTable.id,
+      createdAt: jobPostsTable.createdAt,
+      updatedAt: jobPostsTable.updatedAt,
+    });
+
+    return makeDbResponse(result[0], null);
+  } catch (error) {
+    return makeDbResponse(null, error as Error);
+  }
 }
