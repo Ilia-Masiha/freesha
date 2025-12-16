@@ -7,6 +7,7 @@ import loginRouter from "./login.js";
 import logoutRouter from "./logout.js";
 import usersRouter from "./users.js";
 import jobPostsRouter from "./job_posts.js";
+import authRouter from "./auth.js";
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ router.use("/login", loginRouter);
 router.use("/logout", logoutRouter);
 router.use("/users", usersRouter);
 router.use("/job_posts", jobPostsRouter);
+router.use("/auth", authRouter);
 
 router.all("/{*anything}", error404Middleware);
 

@@ -158,6 +158,8 @@ export async function getUser(
   if (fields.includes("birthDate")) columns.birthDate = usersTable.birthDate;
   if (fields.includes("createdAt")) columns.createdAt = usersTable.createdAt;
   if (fields.includes("updatedAt")) columns.updatedAt = usersTable.updatedAt;
+  if (fields.includes("lastLoginAt"))
+    columns.lastLoginAt = usersTable.lastLoginAt;
 
   try {
     const result = await db

@@ -4,7 +4,7 @@ import * as db from "../database/db.js";
 import { makeResObj } from "../helpers/utils.js";
 import { messages } from "../helpers/messages.js";
 
-export async function createJobPost(
+export async function me(
   req: Request,
   res: Response,
   next: NextFunction
