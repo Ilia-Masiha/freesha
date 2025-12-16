@@ -23,7 +23,11 @@ export async function login(
 
   const { email, password } = matchedData(req);
 
-  const dbResponse = await db.getUser(email, db.defaultFields, true);
+  const dbResponse = await db.getUser(
+    email,
+    [...db.defaultFields, "hashedPassword"],
+    true
+  );
   if (dbResponse.error) {
     return next(dbResponse.error);
   }

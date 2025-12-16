@@ -35,6 +35,7 @@ import {
 } from "./queries.js";
 
 export const defaultFields = [
+  // "id" and "roleName" are hard-coded
   "name",
   "email",
   "createdAt",
@@ -134,7 +135,8 @@ export async function getUser(
 
   if (fields.includes("name")) columns.name = usersTable.name;
   if (fields.includes("email")) columns.email = usersTable.email;
-  if (getPassword) columns.hashedPassword = usersTable.password;
+  if (getPassword && fields.includes("hashedPassword"))
+    columns.hashedPassword = usersTable.password;
 
   if (fields.includes("skills")) columns.skills = skillsQuery;
   if (fields.includes("languageNames"))
