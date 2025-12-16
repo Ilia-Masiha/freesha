@@ -144,7 +144,7 @@ These status codes are always expected from any endpoint, so I will not include 
       "roleName": "user",
       "createdAt": "2025-10-02T11:52:24.977Z",
       "updatedAt": "2025-10-02T11:52:24.977Z",
-      "lastLoginAt": "2025-10-03T21:23:51.735Z"
+      "lastLoginAt": "2025-10-17T19:39:37.428Z"
     }
   }
   ```
@@ -261,8 +261,8 @@ These status codes are always expected from any endpoint, so I will not include 
       "bio": "Hi. This is some information about me",
       "birthDate": "1999-01-20",
       "createdAt": "2025-10-02T11:52:24.977Z",
-      "updatedAt": "2025-10-17T18:40:02.152Z",
-      "lastLoginAt": "2025-10-17T18:39:37.428Z",
+      "updatedAt": "2025-10-15T18:40:02.152Z",
+      "lastLoginAt": "2025-10-17T19:39:37.428Z",
       "skills": [
         "Cooking",
         "Coding"
@@ -299,6 +299,27 @@ These status codes are always expected from any endpoint, so I will not include 
   - `401`: Invalid session key.
   - `403`: Forbidden.
   - `200`: Successfully updated user information.
+
+- `GET /auth/me` (Protected):  
+  This endpoint is used to make sure that you are logged in and can also be used for getting the basic information of the currently logged in user, based on the session key which is provided in a cookie. Request body will not be checked and should be empty. Response body will contain a `message` about the result of your request. If successful, `data` will also contain information about the logged in user. Response body will be in this format (If status code is `200`):  
+  ```json
+  RESPONSE BODY
+  {
+    "message": "احراز هویت موفقیت آمیز بود",
+    "data": {
+      "id": 5,
+      "roleName": "user",
+      "name": "John Doe",
+      "email": "john@doe.com",
+      "createdAt": "2025-10-02T11:52:24.977Z",
+      "updatedAt": "2025-10-15T18:40:02.152Z",
+      "lastLoginAt": "2025-10-17T19:39:37.428Z"
+    }
+  }
+  ```
+  Expected status codes:  
+  - `401`: Invalid session key.
+  - `200`: Successfully authenticated the user.
 
 - `POST /job_posts` (Protected):  
   This endpoint is used for creating a job post. Send information in the request body in this format:  
