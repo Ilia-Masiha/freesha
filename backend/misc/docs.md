@@ -193,7 +193,7 @@ These status codes are always expected from any endpoint, so I will not include 
     }
   }
   ```
-  `id` and `roleName` will always be included. The values of `fields` in query is case-sensitive. `genderId` can't be requested, use `genderName` instead.  
+  `id` and `roleName` will always be included. The values of `fields` in query is case-sensitive. `genderId` can't be requested, use `genderName` instead. You can use `all` as a field to get all of the fields possible. Use `all` only if necessary.  
   Expected status codes:  
   - `400`: Validation error. More information in `message`.
   - `401`: Invalid session key.

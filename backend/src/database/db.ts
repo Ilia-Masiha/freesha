@@ -128,37 +128,44 @@ export async function getUser(
     id: usersTable.id,
     roleName: rolesTable.roleName,
   };
+  const all = fields.includes("all");
 
   let equality;
   if (typeof idOrEmail === "number") equality = eq(usersTable.id, idOrEmail);
   if (typeof idOrEmail === "string") equality = eq(usersTable.email, idOrEmail);
 
-  if (fields.includes("name")) columns.name = usersTable.name;
-  if (fields.includes("email")) columns.email = usersTable.email;
+  if (all || fields.includes("name")) columns.name = usersTable.name;
+  if (all || fields.includes("email")) columns.email = usersTable.email;
   if (getPassword && fields.includes("hashedPassword"))
     columns.hashedPassword = usersTable.password;
 
-  if (fields.includes("skills")) columns.skills = skillsQuery;
-  if (fields.includes("languageNames"))
+  if (all || fields.includes("skills")) columns.skills = skillsQuery;
+  if (all || fields.includes("languageNames"))
     columns.languageNames = languageNamesQuery;
-  if (fields.includes("socialLinks")) columns.socialLinks = socialLinksQuery;
+  if (all || fields.includes("socialLinks"))
+    columns.socialLinks = socialLinksQuery;
 
-  if (fields.includes("educationDegrees"))
+  if (all || fields.includes("educationDegrees"))
     columns.educationDegrees = educationDegreesQuery;
-  if (fields.includes("workExperiences"))
+  if (all || fields.includes("workExperiences"))
     columns.workExperiences = workExperiencesQuery;
 
-  if (fields.includes("postalCode")) columns.postalCode = usersTable.postalCode;
-  if (fields.includes("homeAddress"))
+  if (all || fields.includes("postalCode"))
+    columns.postalCode = usersTable.postalCode;
+  if (all || fields.includes("homeAddress"))
     columns.homeAddress = usersTable.homeAddress;
-  if (fields.includes("genderName"))
+  if (all || fields.includes("genderName"))
     columns.genderName = gendersTable.genderName;
-  if (fields.includes("jobTitle")) columns.jobTitle = usersTable.jobTitle;
-  if (fields.includes("bio")) columns.bio = usersTable.bio;
-  if (fields.includes("birthDate")) columns.birthDate = usersTable.birthDate;
-  if (fields.includes("createdAt")) columns.createdAt = usersTable.createdAt;
-  if (fields.includes("updatedAt")) columns.updatedAt = usersTable.updatedAt;
-  if (fields.includes("lastLoginAt"))
+  if (all || fields.includes("jobTitle"))
+    columns.jobTitle = usersTable.jobTitle;
+  if (all || fields.includes("bio")) columns.bio = usersTable.bio;
+  if (all || fields.includes("birthDate"))
+    columns.birthDate = usersTable.birthDate;
+  if (all || fields.includes("createdAt"))
+    columns.createdAt = usersTable.createdAt;
+  if (all || fields.includes("updatedAt"))
+    columns.updatedAt = usersTable.updatedAt;
+  if (all || fields.includes("lastLoginAt"))
     columns.lastLoginAt = usersTable.lastLoginAt;
 
   try {
