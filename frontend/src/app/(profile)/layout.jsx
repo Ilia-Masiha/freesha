@@ -1,3 +1,4 @@
+import Providers from "@/providers/Providers";
 import "../globals.css";
 import SideBar from "@/components/Profile/SideBar";
 
@@ -17,7 +18,7 @@ export default function Layout({ children }) {
           <section className="col-span-9 h-screen sticky top-0">
             <header className="w-full h-10 bg-primary"></header>
             <main className="sticky top-10 left-0 w-full h-screen rounded-tr-2xl bg-bg-primary p-5 px-6 overflow-y-auto pb-20">
-              {children}
+              <Providers>{children}</Providers>
             </main>
           </section>
         </main>

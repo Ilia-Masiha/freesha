@@ -1,5 +1,5 @@
-import { Toaster } from "react-hot-toast";
 import "../globals.css";
+import Providers from "@/providers/Providers";
 
 export const metadata = {
   title: "Create Next App",
@@ -10,8 +10,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="fa" dir="rtl">
       <body className="antialiased bg-primary">
-        <main>{children}</main>
-        <Toaster />
+        <main>
+          <Providers>{children}</Providers>
+        </main>
       </body>
     </html>
   );
