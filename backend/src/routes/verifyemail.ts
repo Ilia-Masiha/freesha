@@ -1,6 +1,6 @@
 import express from "express";
 
-import { verifyemailValidator } from "../middlewares/validation.js";
+import { verifyemailValidator } from "../middlewares/validation/users.js";
 import { verifyemail } from "../controllers/verifyemail.js";
 
 const router = express.Router();

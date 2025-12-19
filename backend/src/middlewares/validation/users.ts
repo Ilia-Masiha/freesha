@@ -1,7 +1,7 @@
 import { body, param, query } from "express-validator";
 import validator from "validator";
 
-import { capitalize, isArrayUnique, isNone } from "../helpers/utils.js";
+import { capitalize, isArrayUnique, isNone } from "../../helpers/utils.js";
 
 const nameValidator = () =>
   body("name")
@@ -273,48 +273,6 @@ const fieldsValidator = () =>
       value.split(",").map((value) => value.trim())
     );
 
-const titleValidator = () =>
-  body("title")
-    .trim()
-    .notEmpty()
-    .withMessage("عنوان نباید خالی باشد")
-    .isString()
-    .withMessage("عنوان باید یک رشته باشد")
-    .isLength({ min: 5, max: 60 })
-    .withMessage("طول عنوان باید بین 5 تا 60 کاراکتر باشد");
-
-const descriptionValidator = () =>
-  body("description")
-    .trim()
-    .notEmpty()
-    .withMessage("توضیحات نباید خالی باشد")
-    .isString()
-    .withMessage("توضیحات باید یک رشته باشد")
-    .isLength({ min: 30, max: 5000 })
-    .withMessage("طول توضیحات باید بین 30 تا 5000 کاراکتر باشد");
-
-const budgetLowValidator = () =>
-  body("budgetLow")
-    .trim()
-    .notEmpty()
-    .withMessage("کف بودجه نباید خالی باشد")
-    .isInt({ min: 500_000, max: 1_000_000_000 })
-    .withMessage(
-      "کف بودجه باید عددی بین 500،000 ریال تا 1،000،000،000 ریال باشد"
-    )
-    .toInt();
-
-const budgetHighValidator = () =>
-  body("budgetHigh")
-    .trim()
-    .notEmpty()
-    .withMessage("سقف بودجه نباید خالی باشد")
-    .isInt({ min: 500_000, max: 1_000_000_000 })
-    .withMessage(
-      "سقف بودجه باید عددی بین 500،000 ریال تا 1،000،000،000 ریال باشد"
-    )
-    .toInt();
-
 export const registerValidator = () => [
   nameValidator(),
   emailValidator(),
@@ -351,10 +309,3 @@ export const updateUserValidator = () => [
 ];
 
 export const getUserValidator = () => [userIdValidator(), fieldsValidator()];
-
-export const createJobPostValidator = () => [
-  titleValidator(),
-  descriptionValidator(),
-  budgetLowValidator(),
-  budgetHighValidator(),
-];
