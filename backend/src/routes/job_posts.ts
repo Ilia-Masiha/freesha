@@ -1,6 +1,6 @@
 import express from "express";
 
-import { createJobPostValidator } from "../middlewares/validation.js";
+import { createJobPostValidator } from "../middlewares/validation/job_posts.js";
 import { verifyUser } from "../middlewares/auth.js";
 import { createJobPost } from "../controllers/job_posts.js";
 

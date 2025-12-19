@@ -4,7 +4,7 @@ import { getUser, updateUser } from "../controllers/users.js";
 import {
   getUserValidator,
   updateUserValidator,
-} from "../middlewares/validation.js";
+} from "../middlewares/validation/users.js";
 import { verifyUser } from "../middlewares/auth.js";
 
 const router = express.Router();
