@@ -183,7 +183,7 @@ export const userWorkExperiencesTable = pgTable(
   ]
 );
 
-export const userPortfolioTable = pgTable("user_portfolio", {
+export const userPortfoliosTable = pgTable("user_portfolios", {
   userId: integer("user_id")
     .notNull()
     .references(() => usersTable.id),
