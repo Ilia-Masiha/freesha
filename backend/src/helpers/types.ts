@@ -33,6 +33,7 @@ export interface User {
 
   educationDegrees?: EducationDegree[];
   workExperiences?: WorkExperience[];
+  portfolios?: Portfolio[];
 
   createdAt?: Date;
   updatedAt?: Date;
