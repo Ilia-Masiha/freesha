@@ -77,3 +77,16 @@ export function isArrayUnique(items: any[]): boolean {
 export function capitalize(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
 }
+
+export function portfoliosSkillsCustom(value: any): boolean {
+  if (isNone(value)) return false;
+  if (typeof value !== "object") return false;
+  if (isNone(value.length)) return false;
+  if (value.length <= 0) return false;
+  for (const item of value) {
+    if (typeof item !== "string") return false;
+    if (item.length <= 0) return false;
+    if (item.length > 30) return false;
+  }
+  return true;
+}

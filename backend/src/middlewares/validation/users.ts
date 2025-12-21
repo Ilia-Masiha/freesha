@@ -1,7 +1,13 @@
 import { body, param, query } from "express-validator";
 import validator from "validator";
 
-import { capitalize, isArrayUnique, isNone } from "../../helpers/utils.js";
+import {
+  capitalize,
+  isArrayUnique,
+  isNone,
+  portfoliosSkillsCustom,
+} from "../../helpers/utils.js";
+import { messages } from "../../helpers/messages.js";
 
 const nameValidator = () =>
   body("name")
@@ -222,6 +228,11 @@ const portfoliosItemsValidator = () =>
       "طول لینک پروژۀ درایه های نمونه کار ها باید حداکثر 100 کاراکتر باشد"
     )
 
+    .custom((value) => value.skills)
+    .withMessage("درایه های نمونه کار ها باید مهارت ها داشته باشند")
+    .custom(portfoliosSkillsCustom)
+    .withMessage(messages.portfoliosSkillsRule)
+
     .custom((value) => !isNone(value.description))
     .withMessage("درایه های نمونه کار ها باید توضیحات داشته باشند")
     .custom((value) => typeof value.description === "string")
@@ -341,6 +352,8 @@ export const updateUserValidator = () => [
   educationDegreesItemsValidator().optional(),
   workExperiencesValidator().optional(),
   workExperiencesItemsValidator().optional(),
+  portfoliosValidator().optional(),
+  portfoliosItemsValidator().optional(),
 ];
 
 export const getUserValidator = () => [userIdValidator(), fieldsValidator()];
