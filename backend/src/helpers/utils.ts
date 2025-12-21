@@ -79,6 +79,7 @@ export function capitalize(value: string): string {
 }
 
 export function portfoliosSkillsCustom(value: any): boolean {
+  value = value.skills;
   if (isNone(value)) return false;
   if (typeof value !== "object") return false;
   if (isNone(value.length)) return false;

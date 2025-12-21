@@ -153,7 +153,7 @@ export async function getUser(
   if (all || fields.includes("workExperiences"))
     columns.workExperiences = workExperiencesQuery;
   if (all || fields.includes("portfolios"))
-    columns.workExperiences = portfoliosQuery;
+    columns.portfolios = portfoliosQuery;
 
   if (all || fields.includes("postalCode"))
     columns.postalCode = usersTable.postalCode;
