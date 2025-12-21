@@ -3,12 +3,17 @@ import { sql } from "drizzle-orm";
 import {
   userEducationDegreesTable,
   userLanguagesTable,
+  userPortfoliosTable,
   userSkillsTable,
   userSocialLinksTable,
   usersTable,
   userWorkExperiencesTable,
 } from "./schema.js";
-import { EducationDegree, WorkExperience } from "../helpers/types.js";
+import {
+  EducationDegree,
+  Portfolio,
+  WorkExperience,
+} from "../helpers/types.js";
 
 export const skillsQuery = sql<string[]>`(
       SELECT COALESCE(ARRAY_AGG(DISTINCT ${userSkillsTable.skill}), '{}')
@@ -58,4 +63,21 @@ export const workExperiencesQuery = sql<Omit<WorkExperience, "userId">[]>`(
       )
       FROM ${userWorkExperiencesTable}
       WHERE ${userWorkExperiencesTable.userId} = ${usersTable.id}
+    )`;
+
+export const portfoliosQuery = sql<Omit<Portfolio, "userId">[]>`(
+      SELECT COALESCE(
+        JSON_AGG(
+          JSON_BUILD_OBJECT(
+            'title', "title",
+            'projectUrl', "project_url",
+            'skills', "skills",
+            'description', "description",
+            'createdAt', "created_at"
+          )
+        ),
+        '[]'::json
+      )
+      FROM ${userPortfoliosTable}
+      WHERE ${userPortfoliosTable.userId} = ${usersTable.id}
     )`;

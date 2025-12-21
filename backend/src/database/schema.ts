@@ -6,6 +6,7 @@ import {
   uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 import {
   GenderName,
@@ -113,7 +114,7 @@ export const userSkillsTable = pgTable(
     userId: integer("user_id")
       .notNull()
       .references(() => usersTable.id),
-    skill: varchar("skill", { length: 25 }).notNull(),
+    skill: varchar("skill", { length: 30 }).notNull(),
   },
   (table) => [
     uniqueIndex("user_id_skill_unique_idx").on(table.userId, table.skill),
@@ -181,6 +182,24 @@ export const userWorkExperiencesTable = pgTable(
     ),
   ]
 );
+
+export const userPortfoliosTable = pgTable("user_portfolios", {
+  userId: integer("user_id")
+    .notNull()
+    .references(() => usersTable.id),
+  title: varchar("title", { length: 50 }).notNull(),
+  projectUrl: varchar("project_url", { length: 100 }).notNull(),
+  skills: varchar("skills", { length: 30 })
+    .array()
+    .notNull()
+    .default(sql`'{}'::varchar[]`),
+  /*images: varchar("images", { length: 200 })
+    .array()
+    .notNull()
+    .default(sql`ARRAY::varchar[]`),*/
+  description: varchar("description", { length: 2000 }).notNull().default(""),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
 
 export const userSocialLinksTable = pgTable(
   "user_social_links",

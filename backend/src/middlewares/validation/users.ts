@@ -1,7 +1,13 @@
 import { body, param, query } from "express-validator";
 import validator from "validator";
 
-import { capitalize, isArrayUnique, isNone } from "../../helpers/utils.js";
+import {
+  capitalize,
+  isArrayUnique,
+  isNone,
+  portfoliosSkillsCustom,
+} from "../../helpers/utils.js";
+import { messages } from "../../helpers/messages.js";
 
 const nameValidator = () =>
   body("name")
@@ -115,8 +121,8 @@ const skillsItemsValidator = () =>
   body("skills.*")
     .isString()
     .withMessage("درایه های مهارت ها باید رشته باشند")
-    .isLength({ min: 1, max: 25 })
-    .withMessage("درایه های مهارت ها باید بین 1 تا 25 کاراکتر باشند");
+    .isLength({ min: 1, max: 30 })
+    .withMessage("درایه های مهارت ها باید بین 1 تا 30 کاراکتر باشند");
 
 const languageNamesValidator = () =>
   body("languageNames")
@@ -198,6 +204,46 @@ const educationDegreesItemsValidator = () =>
 
     .custom((value) => Object.keys(value).length === 3)
     .withMessage("درایه های مدارک تحصیلی باید دقیقا 3 کلید داشته باشند");
+
+const portfoliosValidator = () =>
+  body("portfolios")
+    .isArray({ min: 0 })
+    .withMessage("نمونه کار ها باید یک آرایه باشد");
+
+const portfoliosItemsValidator = () =>
+  body("portfolios.*")
+    .custom((value) => value.title)
+    .withMessage("درایه های نمونه کار ها باید عنوان داشته باشند")
+    .custom((value) => typeof value.title === "string")
+    .withMessage("عنوان درایه های نمونه کار ها باید رشته باشد")
+    .custom((value) => value.title.length <= 50)
+    .withMessage("طول عنوان درایه های نمونه کار ها باید حداکثر 50 کاراکتر باشد")
+
+    .custom((value) => value.projectUrl)
+    .withMessage("درایه های نمونه کار ها باید لینک پروژه داشته باشند")
+    .custom((value) => typeof value.projectUrl === "string")
+    .withMessage("لینک پروژۀ درایه های نمونه کار ها باید رشته باشد")
+    .custom((value) => value.projectUrl.length <= 100)
+    .withMessage(
+      "طول لینک پروژۀ درایه های نمونه کار ها باید حداکثر 100 کاراکتر باشد"
+    )
+
+    .custom((value) => value.skills)
+    .withMessage("درایه های نمونه کار ها باید مهارت ها داشته باشند")
+    .custom(portfoliosSkillsCustom)
+    .withMessage(messages.portfoliosSkillsRule)
+
+    .custom((value) => !isNone(value.description))
+    .withMessage("درایه های نمونه کار ها باید توضیحات داشته باشند")
+    .custom((value) => typeof value.description === "string")
+    .withMessage("توضیحات درایه های نمونه کار ها باید رشته باشد")
+    .custom((value) => value.description.length <= 2000)
+    .withMessage(
+      "طول توضیحات درایه های نمونه کار ها باید حداکثر 2000 کاراکتر باشد"
+    )
+
+    .custom((value) => Object.keys(value).length === 4)
+    .withMessage("درایه های نمونه کار ها باید دقیقا 4 کلید داشته باشند");
 
 const workExperiencesValidator = () =>
   body("workExperiences")
@@ -306,6 +352,8 @@ export const updateUserValidator = () => [
   educationDegreesItemsValidator().optional(),
   workExperiencesValidator().optional(),
   workExperiencesItemsValidator().optional(),
+  portfoliosValidator().optional(),
+  portfoliosItemsValidator().optional(),
 ];
 
 export const getUserValidator = () => [userIdValidator(), fieldsValidator()];

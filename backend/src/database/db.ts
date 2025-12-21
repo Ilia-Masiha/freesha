@@ -8,6 +8,7 @@ import {
   rolesTable,
   userEducationDegreesTable,
   userLanguagesTable,
+  userPortfoliosTable,
   userSkillsTable,
   userSocialLinksTable,
   usersTable,
@@ -21,6 +22,7 @@ import {
   EducationDegree,
   JobPost,
   None,
+  Portfolio,
   PreRegisterInfo,
   Transaction,
   User,
@@ -29,6 +31,7 @@ import {
 import {
   educationDegreesQuery,
   languageNamesQuery,
+  portfoliosQuery,
   skillsQuery,
   socialLinksQuery,
   workExperiencesQuery,
@@ -149,6 +152,8 @@ export async function getUser(
     columns.educationDegrees = educationDegreesQuery;
   if (all || fields.includes("workExperiences"))
     columns.workExperiences = workExperiencesQuery;
+  if (all || fields.includes("portfolios"))
+    columns.portfolios = portfoliosQuery;
 
   if (all || fields.includes("postalCode"))
     columns.postalCode = usersTable.postalCode;
@@ -188,13 +193,14 @@ export async function updateUser(
 ): Promise<DbResponse<Partial<User> | None>> {
   try {
     const { skills, languageNames, socialLinks } = values;
-    let { educationDegrees, workExperiences } = values;
+    let { educationDegrees, workExperiences, portfolios } = values;
 
     delete values.skills;
     delete values.languageNames;
     delete values.socialLinks;
     delete values.educationDegrees;
     delete values.workExperiences;
+    delete values.portfolios;
 
     educationDegrees = educationDegrees?.map(
       (value) => ((value.userId = id), value)
@@ -202,6 +208,7 @@ export async function updateUser(
     workExperiences = workExperiences?.map(
       (value) => ((value.userId = id), value)
     );
+    portfolios = portfolios?.map((value) => ((value.userId = id), value));
 
     const result = await db.transaction(async (tx: Transaction) => {
       await tx
@@ -222,6 +229,7 @@ export async function updateUser(
         id,
         workExperiences as Required<WorkExperience>[]
       );
+      await insertPortfolios(tx, id, portfolios as Required<Portfolio>[]);
 
       const user = await tx
         .select({
@@ -236,6 +244,7 @@ export async function updateUser(
 
           educationDegrees: educationDegreesQuery,
           workExperiences: workExperiencesQuery,
+          portfolios: portfoliosQuery,
 
           postalCode: usersTable.postalCode,
           homeAddress: usersTable.homeAddress,
@@ -369,6 +378,26 @@ async function insertWorkExperiences(
   }
 
   await tx.insert(userWorkExperiencesTable).values(workExperiences);
+}
+
+async function insertPortfolios(
+  tx: Transaction,
+  id: number,
+  portfolios: Required<Portfolio>[] | None
+): Promise<void> {
+  if (isNone(portfolios)) {
+    return;
+  }
+
+  await tx
+    .delete(userPortfoliosTable)
+    .where(eq(userPortfoliosTable.userId, id));
+
+  if (portfolios.length === 0) {
+    return;
+  }
+
+  await tx.insert(userPortfoliosTable).values(portfolios);
 }
 
 export async function insertJobPost(

@@ -6,6 +6,7 @@ import { QueryResult } from "pg";
 import {
   jobPostsTable,
   userEducationDegreesTable,
+  userPortfoliosTable,
   userWorkExperiencesTable,
 } from "../database/schema.js";
 
@@ -32,6 +33,7 @@ export interface User {
 
   educationDegrees?: EducationDegree[];
   workExperiences?: WorkExperience[];
+  portfolios?: Portfolio[];
 
   createdAt?: Date;
   updatedAt?: Date;
@@ -69,6 +71,10 @@ export type EducationDegree = Optional<
 >;
 export type WorkExperience = Optional<
   typeof userWorkExperiencesTable.$inferSelect,
+  "userId"
+>;
+export type Portfolio = Optional<
+  typeof userPortfoliosTable.$inferSelect,
   "userId"
 >;
 export type JobPost = Optional<
