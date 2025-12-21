@@ -73,7 +73,7 @@ export const portfoliosQuery = sql<Omit<Portfolio, "userId">[]>`(
             'projectUrl', "project_url",
             'skills', "skills",
             'description', "description",
-            'createdAt', "created_at",
+            'createdAt', "created_at"
           )
         ),
         '[]'::json

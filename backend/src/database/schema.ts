@@ -192,7 +192,7 @@ export const userPortfoliosTable = pgTable("user_portfolios", {
   skills: varchar("skills", { length: 30 })
     .array()
     .notNull()
-    .default(sql`ARRAY::varchar[]`),
+    .default(sql`'{}'::varchar[]`),
   /*images: varchar("images", { length: 200 })
     .array()
     .notNull()

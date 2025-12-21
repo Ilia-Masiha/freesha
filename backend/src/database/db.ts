@@ -31,6 +31,7 @@ import {
 import {
   educationDegreesQuery,
   languageNamesQuery,
+  portfoliosQuery,
   skillsQuery,
   socialLinksQuery,
   workExperiencesQuery,
@@ -151,6 +152,8 @@ export async function getUser(
     columns.educationDegrees = educationDegreesQuery;
   if (all || fields.includes("workExperiences"))
     columns.workExperiences = workExperiencesQuery;
+  if (all || fields.includes("portfolios"))
+    columns.workExperiences = portfoliosQuery;
 
   if (all || fields.includes("postalCode"))
     columns.postalCode = usersTable.postalCode;
@@ -241,6 +244,7 @@ export async function updateUser(
 
           educationDegrees: educationDegreesQuery,
           workExperiences: workExperiencesQuery,
+          portfolios: portfoliosQuery,
 
           postalCode: usersTable.postalCode,
           homeAddress: usersTable.homeAddress,

@@ -171,6 +171,7 @@ try {
     .onConflictDoNothing();
 
   customLog("database", "Languages seeded successfully");
+  customLog("database", "Seeding process successful, Exiting with code 0");
   process.exit(0);
 } catch (error) {
   customLog("database", `Seeding languages failed: ${error}`);
