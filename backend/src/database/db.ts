@@ -155,6 +155,8 @@ export async function getUser(
   if (all || fields.includes("portfolios"))
     columns.portfolios = portfoliosQuery;
 
+  if (all || fields.includes("phoneNumber"))
+    columns.phoneNumber = usersTable.phoneNumber;
   if (all || fields.includes("postalCode"))
     columns.postalCode = usersTable.postalCode;
   if (all || fields.includes("homeAddress"))
@@ -246,6 +248,7 @@ export async function updateUser(
           workExperiences: workExperiencesQuery,
           portfolios: portfoliosQuery,
 
+          phoneNumber: usersTable.phoneNumber,
           postalCode: usersTable.postalCode,
           homeAddress: usersTable.homeAddress,
           genderName: gendersTable.genderName,

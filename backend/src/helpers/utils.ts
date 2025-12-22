@@ -91,3 +91,31 @@ export function portfoliosSkillsCustom(value: any): boolean {
   }
   return true;
 }
+
+export function isNumericCustom(value: string): boolean {
+  const digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+  for (const character of value) {
+    if (!digits.includes(character)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export function isPhoneNumber(value: string): boolean {
+  if (value === "") {
+    return true;
+  }
+  if (value[0] !== "+") {
+    return false;
+  }
+  if (value.length < 12) {
+    return false;
+  }
+
+  value = value.slice(1);
+
+  return isNumericCustom(value);
+}

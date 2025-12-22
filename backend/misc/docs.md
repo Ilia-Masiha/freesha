@@ -254,6 +254,7 @@ These status codes are always expected from any endpoint, so I will not include 
       "name": "John Doe",
       "email": "john@doe.com",
       "roleName": "user",
+      "phoneNumber": "+12345678900",
       "postalCode": "0123456789",
       "homeAddress": "221B Baker St. London",
       "genderName": "M",
@@ -289,7 +290,19 @@ These status codes are always expected from any endpoint, so I will not include 
           "startDate": "2005-01-17",
           "endDate": "2007-09-11"
         }
-      ]
+      ],
+      "portfolios": [
+        {
+          "title": "Online shop",
+          "projectUrl": "https://example.com",
+          "skills": [
+            "Next.js",
+            "Express.js"
+          ],
+          "description": "This text is explaining the project",
+          "createdAt": "2025-11-19T15:03:33.379721"
+        }
+      ],
     }
   }
   ```
