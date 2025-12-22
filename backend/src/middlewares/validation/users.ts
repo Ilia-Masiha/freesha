@@ -5,6 +5,8 @@ import {
   capitalize,
   isArrayUnique,
   isNone,
+  isNumericCustom,
+  isPhoneNumber,
   portfoliosSkillsCustom,
 } from "../../helpers/utils.js";
 import { messages } from "../../helpers/messages.js";
@@ -59,15 +61,24 @@ const userIdValidator = () =>
     .withMessage("آیدی کاربر باید یک عدد صحیح مثبت باشد")
     .toInt();
 
+const phoneNumberValidator = () =>
+  body("phoneNumber")
+    .trim()
+    .isString()
+    .withMessage("شماره تلفن همراه باید یک رشته باشد")
+    .isLength({ max: 16 })
+    .withMessage("شماره تلفن همراه نباید بیش از 16 کاراکتر باشد")
+    .custom(isPhoneNumber)
+    .withMessage(messages.phoneNumberRule);
+
 const postalCodeValidator = () =>
   body("postalCode")
     .trim()
     .isString()
     .withMessage("کد پستی باید یک رشته باشد")
-    .isLength({ min: 10, max: 10 })
     .custom((value: string) => value.length === 0 || value.length === 10)
     .withMessage("کد پستی باید 10 یا 0 کاراکتر باشد")
-    .isNumeric()
+    .custom(isNumericCustom)
     .withMessage("کد پستی باید فقط شامل ارقام باشد");
 
 const homeAddressValidator = () =>
@@ -334,6 +345,7 @@ export const updateUserValidator = () => [
 
   nameValidator().optional(),
 
+  phoneNumberValidator().optional(),
   postalCodeValidator().optional(),
   homeAddressValidator().optional(),
   genderIdValidator().optional(),
