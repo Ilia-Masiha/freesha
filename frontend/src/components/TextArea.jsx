@@ -1,10 +1,19 @@
-const TextArea = ({ label, name, className = "" }) => {
+const TextArea = ({ register, errors, label, name, className = "" }) => {
   return (
     <div className={`flex flex-col justify-start gap-y-1 mb-3 ${className}`}>
-      <label htmlFor={name} className="text-txt text-sm font-semibold mb-1">
-        {label}
-      </label>
+      <div className="flex justify-between items-center mb-1">
+        <label htmlFor={name} className="text-txt text-sm font-semibold">
+          {label}
+        </label>
+        {errors && (
+          <span className="text-xs text-error">
+            {errors[name]?.message && errors[name]?.message}
+          </span>
+        )}
+      </div>
+
       <textarea
+        {...(register && register(name))}
         id={name}
         name={name}
         autoComplete="off"

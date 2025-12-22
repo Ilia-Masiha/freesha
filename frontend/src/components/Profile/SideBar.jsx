@@ -1,26 +1,36 @@
 "use client";
 import { profileMenuData } from "@/constants/profileMenuData";
+import { useGetUserData } from "@/hooks/userHooks";
 import Link from "next/link";
 import { GoPencil } from "react-icons/go";
 
 const SideBar = () => {
+  const { completeUser, completeUserLoading } = useGetUserData();
+  const { data } = completeUser || {};
+
   return (
     <aside className="h-full sticky right-0 top-0 bg-primary">
       {/* avatar | name | jobTitle */}
-      <div className="relative top-0 w-full flex flex-col justify-center items-center gap-y-1 pt-5">
-        <div className="relative w-[70px] h-[70px] rounded-full bg-secondary hover:bg-secondary/80 text-white cursor-pointer text-2xl flex justify-center items-center">
-          M
-          <span className="absolute right-0 bottom-0 flex justify-center items-center rounded-full bg-bg-primary text-primary text-sm p-1">
-            <GoPencil />
-          </span>
+      {!completeUserLoading && data && (
+        <div className="relative top-0 w-full flex flex-col justify-center items-center gap-y-1 pt-5">
+          <div className="relative w-[70px] h-[70px] rounded-full bg-secondary hover:bg-secondary/80 text-white cursor-pointer text-2xl flex justify-center items-center">
+            M
+            <span className="absolute right-0 bottom-0 flex justify-center items-center rounded-full bg-bg-primary text-primary text-sm p-1">
+              <GoPencil />
+            </span>
+          </div>
+          <h3 className="text-xl font-semibold text-txt-secondary">
+            {data?.name}
+          </h3>
+          {data.jobTitle ? (
+            <span className="text-secondary text-sm">{data.jobTitle}</span>
+          ) : (
+            <Link href="/profile/personal-information"><span className="text-secondary text-sm">افزودن عنوان شغلی</span></Link>
+          )}
         </div>
-        <h3 className="text-xl font-semibold text-txt-secondary">
-          Masih Mohammadpour
-        </h3>
-        <small className="text-secondary">FrontEnd Delveloper</small>
-      </div>
+      )}
       {/* menu */}
-      <div className="w-full mt-10">
+      <div className="w-full mt-7">
         <ul className="flex flex-col gap-y-3 pr-3">
           {profileMenuData.map((item) => {
             return (

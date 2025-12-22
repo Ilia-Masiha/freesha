@@ -1,13 +1,29 @@
-import { getUser } from "@/services/userServices";
+import { getBasicUserData, getUser } from "@/services/userServices";
 import { useQuery } from "@tanstack/react-query";
 
-export const useGetUser = () => {
-  const { data: user, isLoading: userLoading } = useQuery({
-    queryKey: ["get-user"],
-    queryFn: getUser,
+export const useGetBasicUserData = () => {
+  const { data: basicUser, isLoading: basicUserLoading } = useQuery({
+    queryKey: ["basic-user"],
+    queryFn: getBasicUserData,
     retry: false,
     refetchOnWindowFocus: true,
   });
 
-  return { user, userLoading };
+  return { basicUser, basicUserLoading };
+};
+
+export const useGetUserData = () => {
+  const { basicUser, basicUserLoading } = useGetBasicUserData();
+
+  const userId = basicUser?.data?.id;
+
+  const { data: completeUser, isLoading: completeUserLoading } = useQuery({
+    queryKey: ["complete-user", userId],
+    queryFn: () => getUser(userId),
+    enabled: !!userId && !basicUserLoading,
+    retry: false,
+    refetchOnWindowFocus: true,
+  });
+
+  return { completeUser, completeUserLoading };
 };
