@@ -9,16 +9,39 @@ const DateInput = ({
   label,
   className,
   placeholder = "تاریخ را انتخاب کنید",
+  errors,
+  value,
+  onChange,
 }) => {
-  const [selectedDate, setSelectedDate] = useState(null);
+  const handleDateChange = (dateObject) => {
+    if (dateObject) {
+      const gregorianDate = dateObject.convert(persian, "gregorian");
+      const year = gregorianDate.year;
+      const month = String(gregorianDate.month).padStart(2, "0");
+      const day = String(gregorianDate.day).padStart(2, "0");
+      const formattedDate = `${year}-${month}-${day}`;
+      onChange(formattedDate);
+    } else {
+      onChange("");
+    }
+  };
+
   return (
-    <div className={`${className} flex flex-col mt-0.5`}>
-      <label htmlFor={name} className="text-txt text-sm font-semibold mb-1.5">
-        {label}
-      </label>
+    <div className={`${className} flex flex-col mt-0.5 mb-3`}>
+      <div className="flex justify-between items-center mb-1.5">
+        <label htmlFor={name} className="text-txt text-sm font-semibold">
+          {label}
+        </label>
+        {errors && (
+          <span className="text-xs text-error">
+            {errors[name]?.message && errors[name]?.message}
+          </span>
+        )}
+      </div>
+
       <DatePicker
-        value={selectedDate}
-        onChange={setSelectedDate}
+        value={value}
+        onChange={handleDateChange}
         name={name}
         id={name}
         calendar={persian}
