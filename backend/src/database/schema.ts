@@ -24,6 +24,7 @@ export const usersTable = pgTable("users", {
     .notNull()
     .references(() => rolesTable.id),
 
+  phoneNumber: varchar("phone_number", {length: 16}).notNull().default(""),
   postalCode: varchar("postal_code", { length: 10 }).notNull().default(""),
   homeAddress: varchar("home_address", { length: 500 }).notNull().default(""),
   genderId: integer("gender_id")
