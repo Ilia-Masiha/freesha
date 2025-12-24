@@ -9,6 +9,7 @@ import Select from "@/components/Select";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useGetBasicUserData, useUpdateUser } from "@/hooks/userHooks";
 
 const genderOptions = [
   { value: "1", label: "نامشخص" },
@@ -65,6 +66,8 @@ const schema = yup.object({
 });
 
 const PersonalInformation = () => {
+  const { mutateAsync } = useUpdateUser();
+  const { basicUser, basicUserLoading } = useGetBasicUserData();
   const {
     register,
     handleSubmit,
@@ -76,10 +79,16 @@ const PersonalInformation = () => {
     mode: "onTouched",
   });
 
-  const signupHandler = (data) => {
-    console.log(data);
+  const updateHandler = async (data) => {
+    try {
+      const res = await mutateAsync({ id: basicUser.data.id, data });
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
+  if (basicUserLoading) return <p>loading...</p>;
   return (
     <section>
       <Title
@@ -89,7 +98,7 @@ const PersonalInformation = () => {
       />
       <article className="mt-16">
         <form
-          onSubmit={handleSubmit(signupHandler)}
+          onSubmit={handleSubmit(updateHandler)}
           className="grid grid-cols-9 gap-5 mt-10 items-start"
         >
           <FormInput

@@ -4,6 +4,7 @@ import Title from "@/common/Title";
 import LanguagesSelector from "@/components/Profile/LanguagesSelector";
 import ResumeUploader from "@/components/Profile/ResumeUploader";
 import SkillsSelector from "@/components/Profile/SkillsSelector";
+import { useGetBasicUserData, useUpdateUser } from "@/hooks/userHooks";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { PiFilesDuotone } from "react-icons/pi";
@@ -15,6 +16,9 @@ const schema = yup.object({
 });
 
 const Resume = () => {
+  const { mutateAsync } = useUpdateUser();
+    const { basicUser, basicUserLoading } = useGetBasicUserData();
+  
   const {
     handleSubmit,
     control,
@@ -29,9 +33,15 @@ const Resume = () => {
   });
 
   const updateUserHandler = async (data) => {
-    console.log(data);
+    try{
+      const res = await mutateAsync({ id: basicUser.data.id, data });
+      console.log(res);
+    }catch(err){
+      console.log(err)
+    }
   };
 
+  if (basicUserLoading) return <p>loading...</p>;
   return (
     <section>
       <Title

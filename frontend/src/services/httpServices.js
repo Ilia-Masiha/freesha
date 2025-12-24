@@ -10,6 +10,7 @@ const http = {
   post: app.post,
   delete: app.delete,
   put: app.put,
+  patch : app.patch
 };
 
 export default http;

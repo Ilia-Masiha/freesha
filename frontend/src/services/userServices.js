@@ -7,3 +7,7 @@ export const getBasicUserData = () => {
 export const getUser = (id, fields = "all") => {
   return http.get(`/users/${id}?fields=${fields}`).then((res) => res.data);
 };
+
+export const updateUser = ({id , data}) => {
+  return http.patch(`/users/${id}` , data).then((res) => res.data);
+};

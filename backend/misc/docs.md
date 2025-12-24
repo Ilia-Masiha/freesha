@@ -254,7 +254,7 @@ These status codes are always expected from any endpoint, so I will not include 
       "name": "John Doe",
       "email": "john@doe.com",
       "roleName": "user",
-      "phoneNumber": "+12345678900",
+      "phoneNumber": "09123456789",
       "postalCode": "0123456789",
       "homeAddress": "221B Baker St. London",
       "genderName": "M",
