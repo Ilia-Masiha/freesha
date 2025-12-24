@@ -1,5 +1,7 @@
 import { Tag, None, ResObj, EducationDegree, WorkExperience } from "./types.js";
 
+const phoneNumberRegex = /^09\d{9}$/;
+
 export function timeNow(): string {
   return new Date().toTimeString().split(" ")[0]!;
 }
@@ -108,14 +110,6 @@ export function isPhoneNumber(value: string): boolean {
   if (value === "") {
     return true;
   }
-  if (value[0] !== "+") {
-    return false;
-  }
-  if (value.length < 12) {
-    return false;
-  }
 
-  value = value.slice(1);
-
-  return isNumericCustom(value);
+  return phoneNumberRegex.test(value);
 }
