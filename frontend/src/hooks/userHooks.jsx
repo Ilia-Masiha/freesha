@@ -1,5 +1,5 @@
-import { getBasicUserData, getUser } from "@/services/userServices";
-import { useQuery } from "@tanstack/react-query";
+import { getBasicUserData, getUser, updateUser } from "@/services/userServices";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useGetBasicUserData = () => {
   const { data: basicUser, isLoading: basicUserLoading } = useQuery({
@@ -27,3 +27,8 @@ export const useGetUserData = () => {
 
   return { completeUser, completeUserLoading };
 };
+
+export const useUpdateUser = () =>
+  useMutation({
+    mutationFn: updateUser,
+  });
