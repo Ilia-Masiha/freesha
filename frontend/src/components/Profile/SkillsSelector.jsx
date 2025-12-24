@@ -1,9 +1,10 @@
 "use client";
 import { useState, useMemo } from "react";
+import { useFormContext, Controller } from "react-hook-form";
 import { skillsData } from "@/constants/skills";
 import Select from "../Select";
 
-const SkillsSelector = ({ initialSkills = [] }) => {
+const SkillsSelector = ({ control, name = "skills", initialSkills = [] }) => {
   const [selectedSkills, setSelectedSkills] = useState(initialSkills);
 
   const skillOptions = useMemo(() => {
@@ -26,6 +27,7 @@ const SkillsSelector = ({ initialSkills = [] }) => {
       : [];
 
     setSelectedSkills(selectedSkillsArray);
+    return selectedSkillsArray;
   };
 
   return (
@@ -37,13 +39,24 @@ const SkillsSelector = ({ initialSkills = [] }) => {
         >
           مهارت ها
         </label>
-        <Select
-          name="skills"
-          isMulti={true}
-          options={skillOptions}
-          value={selectedValues}
-          onChange={handleChange}
-          placeholder="لیست مهارت ها"
+        <Controller
+          name={name}
+          control={control}
+          defaultValue={initialSkills}
+          render={({ field }) => (
+            <Select
+              {...field}
+              name={name}
+              isMulti={true}
+              options={skillOptions}
+              value={selectedValues}
+              onChange={(selectedOptions) => {
+                const newValue = handleChange(selectedOptions);
+                field.onChange(newValue);
+              }}
+              placeholder="لیست مهارت ها"
+            />
+          )}
         />
       </div>
     </div>

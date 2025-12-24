@@ -2,8 +2,13 @@
 import { useState, useMemo } from "react";
 import { languagesData } from "@/constants/languages";
 import Select from "../Select";
+import { Controller } from "react-hook-form";
 
-const LanguagesSelector = ({ initialLanguages = [] }) => {
+const LanguagesSelector = ({
+  control,
+  name = "languageNames",
+  initialLanguages = [],
+}) => {
   const [selectedLanguages, setSelectedLanguages] = useState(initialLanguages);
 
   const languageOptions = useMemo(() => {
@@ -26,6 +31,7 @@ const LanguagesSelector = ({ initialLanguages = [] }) => {
       : [];
 
     setSelectedLanguages(selectedLanguagesArray);
+    return selectedLanguagesArray;
   };
 
   return (
@@ -35,15 +41,26 @@ const LanguagesSelector = ({ initialLanguages = [] }) => {
           htmlFor="languages"
           className="text-txt text-sm font-semibold mb-1.5"
         >
-            زبان های مسلط
+          زبان های مسلط
         </label>
-        <Select
-          name="languages"
-          isMulti={true}
-          options={languageOptions}
-          value={selectedValues}
-          onChange={handleChange}
-          placeholder="لیست زبان ها"
+        <Controller
+          name={name}
+          control={control}
+          defaultValue={initialLanguages}
+          render={({ field }) => (
+            <Select
+              {...field}
+              name={name}
+              isMulti={true}
+              options={languageOptions}
+              value={selectedValues}
+              onChange={(selectedOptions) => {
+                const newValue = handleChange(selectedOptions);
+                field.onChange(newValue);
+              }}
+              placeholder="لیست زبان ها"
+            />
+          )}
         />
       </div>
     </div>
