@@ -55,6 +55,7 @@ const otpValidator = () =>
 
 const userIdValidator = () =>
   param("userId")
+    .trim()
     .notEmpty()
     .withMessage("آیدی کاربر ضروری است")
     .isInt({ min: 1 })
