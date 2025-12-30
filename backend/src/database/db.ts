@@ -1,5 +1,5 @@
 import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { Pool } from "pg";
 
 import {
@@ -414,6 +414,34 @@ export async function insertJobPost(
     });
 
     return makeDbResponse(result[0], null);
+  } catch (error) {
+    return makeDbResponse(null, error as Error);
+  }
+}
+
+export async function getJobPost(
+  filters: Partial<JobPost>
+): Promise<DbResponse<JobPost | None>> {
+  const equalities = [];
+  let conditions;
+
+  // Handling all of the filters
+  if (!isNone(filters.id)) {
+    equalities.push(eq(jobPostsTable.id, filters.id));
+  }
+
+  if (!isNone(filters.clientId)) {
+    equalities.push(eq(jobPostsTable.clientId, filters.clientId));
+  }
+
+  // Applying filters on conditions
+  for (const equality of equalities) {
+    conditions = isNone(conditions) ? equality : and(conditions, equality);
+  }
+
+  try {
+    const result = await db.select().from(jobPostsTable).where(conditions);
+    return makeDbResponse<JobPost | None>(result[0], null);
   } catch (error) {
     return makeDbResponse(null, error as Error);
   }

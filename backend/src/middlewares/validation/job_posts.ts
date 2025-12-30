@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, param, query } from "express-validator";
 
 const titleValidator = () =>
   body("title")
@@ -42,9 +42,32 @@ const budgetHighValidator = () =>
     )
     .toInt();
 
+const jobPostIdValidator = () =>
+  param("jobPostId")
+    .trim()
+    .notEmpty()
+    .withMessage("آیدی آگهی کار ضروری است")
+    .isInt({ min: 1 })
+    .withMessage("آیدی آگهی کار باید یک عدد صحیح مثبت باشد")
+    .toInt();
+
+const clientIdValidator = () =>
+  query("clientId")
+    .trim()
+    .notEmpty()
+    .withMessage("آیدی کارفرما ضروری است")
+    .isInt({ min: 1 })
+    .withMessage("آیدی کارفرما باید یک عدد صحیح مثبت باشد")
+    .toInt();
+
 export const createJobPostValidator = () => [
   titleValidator(),
   descriptionValidator(),
   budgetLowValidator(),
   budgetHighValidator(),
+];
+
+export const getJobPostValidator = () => [
+  jobPostIdValidator().optional(),
+  clientIdValidator().optional(),
 ];

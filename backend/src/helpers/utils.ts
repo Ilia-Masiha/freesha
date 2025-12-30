@@ -22,7 +22,10 @@ export function generateOtp(length = 5): string {
   return result;
 }
 
-export function makeResObj(message: string, data: Object = {}): ResObj {
+export function makeResObj(message: string, data: Object | None = {}): ResObj {
+  if (isNone(data)) {
+    data = {};
+  }
   return { message, data };
 }
 

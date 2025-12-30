@@ -46,3 +46,35 @@ export async function createJobPost(
   });
   return res.status(201).json(resObj);
 }
+
+export async function getJobPost(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | void> {
+  const validationError = validationResult(req).array()[0];
+
+  if (validationError) {
+    const resObj = makeResObj(validationError.msg);
+    return res.status(400).json(resObj);
+  }
+
+  const validatedData = matchedData(req);
+  if (validatedData.jobPostId) {
+    validatedData.id = validatedData.jobPostId;
+    delete validatedData.jobPostId;
+  }
+
+  if (Object.keys(validatedData).length <= 0) {
+    const resObj = makeResObj(messages.noFilterJobPost);
+    return res.status(400).json(resObj);
+  }
+
+  const dbResponse = await db.getJobPost(validatedData);
+  if (dbResponse.error) {
+    return next(dbResponse.error);
+  }
+
+  const resObj = makeResObj(messages.gotJobPost, dbResponse.result);
+  return res.status(200).json(resObj);
+}
