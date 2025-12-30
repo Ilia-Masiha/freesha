@@ -60,16 +60,21 @@ export async function getJobPost(
   }
 
   const validatedData = matchedData(req);
+  if (validatedData.jobPostId) {
+    validatedData.id = validatedData.jobPostId;
+    delete validatedData.jobPostId;
+  }
+
   if (Object.keys(validatedData).length <= 0) {
     const resObj = makeResObj(messages.noFilterJobPost);
     return res.status(400).json(resObj);
   }
 
   const dbResponse = await db.getJobPost(validatedData);
-  if (dbResponse.error || !dbResponse.result) {
+  if (dbResponse.error) {
     return next(dbResponse.error);
   }
 
   const resObj = makeResObj(messages.gotJobPost, dbResponse.result);
-  return res.status(201).json(resObj);
+  return res.status(200).json(resObj);
 }
