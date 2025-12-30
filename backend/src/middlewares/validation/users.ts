@@ -239,6 +239,8 @@ const portfoliosItemsValidator = () =>
     .withMessage(
       "طول لینک پروژۀ درایه های نمونه کار ها باید حداکثر 100 کاراکتر باشد"
     )
+    .custom((value) => validator.isURL(value.projectUrl))
+    .withMessage("لینک پروژۀ درایه های نمونه کار ها باید معتبر باشد")
 
     .custom((value) => value.skills)
     .withMessage("درایه های نمونه کار ها باید مهارت ها داشته باشند")
