@@ -60,6 +60,11 @@ export async function getJobPost(
   }
 
   const validatedData = matchedData(req);
+  if (Object.keys(validatedData).length <= 0) {
+    const resObj = makeResObj(messages.noFilterJobPost);
+    return res.status(400).json(resObj);
+  }
+
   const dbResponse = await db.getJobPost(validatedData);
   if (dbResponse.error || !dbResponse.result) {
     return next(dbResponse.error);
