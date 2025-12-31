@@ -4,7 +4,7 @@ export const getBasicUserData = () => {
   return http.get("/auth/me").then((res) => res.data);
 };
 
-export const getUser = (id, fields = "all") => {
+export const getUser = (id , fields) => {
   return http.get(`/users/${id}?fields=${fields}`).then((res) => res.data);
 };
 

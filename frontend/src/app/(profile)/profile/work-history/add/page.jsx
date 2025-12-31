@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { PiClockUserDuotone } from "react-icons/pi";
+import { useGetUserData, useUpdateUser } from "@/hooks/userHooks";
 
 const defaultValues = {
   jobTitle: "",
@@ -42,6 +43,9 @@ const schema = yup.object({
 });
 
 const AddWorkHistory = () => {
+  const { mutateAsync } = useUpdateUser();
+  const { completeUser, completeUserLoading } =
+    useGetUserData("workExperiences");
   const {
     register,
     handleSubmit,
@@ -54,9 +58,18 @@ const AddWorkHistory = () => {
   });
 
   const updateHandler = async (data) => {
-    console.log(data);
+    try {
+      const res = await mutateAsync({
+        id: completeUser.data.id,
+        data: { workExperiences: [...completeUser.data.workExperiences, data] },
+      });
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
+  if (completeUserLoading) return <div>loading...</div>;
   return (
     <section>
       <Title
