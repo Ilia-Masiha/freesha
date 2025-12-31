@@ -4,7 +4,12 @@ import { useFormContext, Controller } from "react-hook-form";
 import { skillsData } from "@/constants/skills";
 import Select from "../Select";
 
-const SkillsSelector = ({ control, name = "skills", initialSkills = [] }) => {
+const SkillsSelector = ({
+  control,
+  name = "skills",
+  initialSkills = [],
+  errors,
+}) => {
   const [selectedSkills, setSelectedSkills] = useState(initialSkills);
 
   const skillOptions = useMemo(() => {
@@ -32,13 +37,18 @@ const SkillsSelector = ({ control, name = "skills", initialSkills = [] }) => {
 
   return (
     <div className="w-full">
-      <div className="w-[50%] flex flex-col items-start justify-center">
-        <label
-          htmlFor="skills"
-          className="text-txt text-sm font-semibold mb-1.5"
-        >
-          مهارت ها
-        </label>
+      <div className="w-full flex flex-col items-start justify-center">
+        <div className="w-full flex justify-between items-center mb-1">
+          <label htmlFor={name} className="text-txt text-sm font-semibold">
+            مهارت ها
+          </label>
+          {errors && (
+            <span className="text-xs text-error">
+              {errors[name]?.message && errors[name]?.message}
+            </span>
+          )}
+        </div>
+
         <Controller
           name={name}
           control={control}

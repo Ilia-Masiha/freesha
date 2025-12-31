@@ -191,7 +191,6 @@ const PersonalInformation = () => {
               text="به روزرسانی"
               type="submit"
               disabled={!isValid || !isDirty || isSubmitting}
-              className="disabled:cursor-not-allowed disabled:opacity-65"
             />
           </div>
         </form>

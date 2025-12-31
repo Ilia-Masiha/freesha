@@ -17,8 +17,8 @@ const schema = yup.object({
 
 const Resume = () => {
   const { mutateAsync } = useUpdateUser();
-    const { basicUser, basicUserLoading } = useGetBasicUserData();
-  
+  const { basicUser, basicUserLoading } = useGetBasicUserData();
+
   const {
     handleSubmit,
     control,
@@ -33,11 +33,11 @@ const Resume = () => {
   });
 
   const updateHandler = async (data) => {
-    try{
+    try {
       const res = await mutateAsync({ id: basicUser.data.id, data });
       console.log(res);
-    }catch(err){
-      console.log(err)
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -54,7 +54,9 @@ const Resume = () => {
           onSubmit={handleSubmit(updateHandler)}
           className="flex flex-col gap-y-10"
         >
-          <SkillsSelector control={control} />
+          <div className="w-[50%]">
+            <SkillsSelector control={control} />
+          </div>
           <LanguagesSelector control={control} />
           <ResumeUploader />
           <div>
