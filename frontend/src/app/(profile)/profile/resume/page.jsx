@@ -32,7 +32,7 @@ const Resume = () => {
     mode: "onTouched",
   });
 
-  const updateUserHandler = async (data) => {
+  const updateHandler = async (data) => {
     try{
       const res = await mutateAsync({ id: basicUser.data.id, data });
       console.log(res);
@@ -51,7 +51,7 @@ const Resume = () => {
       />
       <article className="mt-16">
         <form
-          onSubmit={handleSubmit(updateUserHandler)}
+          onSubmit={handleSubmit(updateHandler)}
           className="flex flex-col gap-y-10"
         >
           <SkillsSelector control={control} />

@@ -12,14 +12,14 @@ export const useGetBasicUserData = () => {
   return { basicUser, basicUserLoading };
 };
 
-export const useGetUserData = () => {
+export const useGetUserData = (fields = "all") => {
   const { basicUser, basicUserLoading } = useGetBasicUserData();
 
   const userId = basicUser?.data?.id;
 
   const { data: completeUser, isLoading: completeUserLoading } = useQuery({
-    queryKey: ["complete-user", userId],
-    queryFn: () => getUser(userId),
+    queryKey: ["complete-user", userId , fields],
+    queryFn: () => getUser(userId , fields),
     enabled: !!userId && !basicUserLoading,
     retry: false,
     refetchOnWindowFocus: true,
