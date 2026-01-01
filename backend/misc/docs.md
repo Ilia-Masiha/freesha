@@ -299,8 +299,7 @@ These status codes are always expected from any endpoint, so I will not include 
             "Next.js",
             "Express.js"
           ],
-          "description": "This text is explaining the project",
-          "createdAt": "2025-11-19T15:03:33.379721"
+          "description": "This text is explaining the project"
         }
       ],
     }
