@@ -199,7 +199,6 @@ export const userPortfoliosTable = pgTable("user_portfolios", {
     .notNull()
     .default(sql`ARRAY::varchar[]`),*/
   description: varchar("description", { length: 2000 }).notNull().default(""),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const userSocialLinksTable = pgTable(
