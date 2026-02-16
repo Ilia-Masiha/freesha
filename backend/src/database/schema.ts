@@ -14,6 +14,7 @@ import {
   LanguageCode,
   RoleName,
 } from "../helpers/types.js";
+import { JobPostStatusIds } from "../helpers/enums.js";
 
 export const usersTable = pgTable("users", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
@@ -56,8 +57,8 @@ export const jobPostsTable = pgTable("job_posts", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   title: varchar("title", { length: 60 }).notNull(),
   description: varchar("description", { length: 5000 }).notNull(),
-  budget_low: integer("budget_low").notNull(),
-  budget_high: integer("budget_high").notNull(),
+  budgetLow: integer("budget_low").notNull(),
+  budgetHigh: integer("budget_high").notNull(),
   clientId: integer("client_id")
     .notNull()
     .references(() => usersTable.id),
@@ -69,7 +70,7 @@ export const jobPostsTable = pgTable("job_posts", {
 });
 
 export const jobPostStatusesTable = pgTable("job_post_statuses", {
-  id: integer("id").notNull().unique(),
+  id: integer("id").$type<JobPostStatusIds>().notNull().unique(),
   statusName: varchar("status_name", { length: 20 })
     .$type<JobPostStatus>()
     .notNull(),
@@ -79,30 +80,30 @@ export const offersTable = pgTable(
   "offers",
   {
     id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-    freelancer_id: integer("freelancer_id")
+    freelancerId: integer("freelancer_id")
       .notNull()
       .references(() => usersTable.id),
-    job_post_id: integer("job_post_id")
+    jobPostId: integer("job_post_id")
       .notNull()
       .references(() => jobPostsTable.id),
-    offering_budget: integer("offering_budget").notNull(),
+    offeringBudget: integer("offering_budget").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
   (table) => [
     uniqueIndex("freelancer_id_job_post_id_unique_idx").on(
-      table.freelancer_id,
-      table.job_post_id
+      table.freelancerId,
+      table.jobPostId
     ),
   ]
 );
 
 export const acceptedOffersTable = pgTable("accepted_offers", {
-  job_post_id: integer("job_post_id")
+  jobPostId: integer("job_post_id")
     .notNull()
     .unique()
     .references(() => jobPostsTable.id),
-  offer_id: integer("offer_id")
+  offerId: integer("offer_id")
     .notNull()
     .unique()
     .references(() => offersTable.id),

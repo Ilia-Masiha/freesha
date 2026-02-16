@@ -8,6 +8,7 @@ import {
   rolesTable,
 } from "../src/database/schema.js";
 import { customLog } from "../src/helpers/utils.js";
+import { JobPostStatusIds } from "../src/helpers/enums.js";
 
 connectDb();
 
@@ -31,10 +32,11 @@ try {
   await db
     .insert(jobPostStatusesTable)
     .values([
-      { id: 1, statusName: "pending" },
-      { id: 2, statusName: "accepted" },
-      { id: 3, statusName: "cancelled" },
-      { id: 4, statusName: "done" },
+      { id: JobPostStatusIds.Pending, statusName: "pending" },
+      { id: JobPostStatusIds.Accepted, statusName: "accepted" },
+      { id: JobPostStatusIds.Cancelled, statusName: "cancelled" },
+      { id: JobPostStatusIds.Done, statusName: "done" },
+      { id: JobPostStatusIds.Expired, statusName: "expired" },
     ])
     .onConflictDoNothing();
 

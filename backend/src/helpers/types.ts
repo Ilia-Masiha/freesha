@@ -59,7 +59,12 @@ export type SessionData = Required<
 
 export type Tag = "server" | "database" | "redis";
 export type RoleName = "user" | "admin";
-export type JobPostStatus = "pending" | "accepted" | "cancelled" | "done";
+export type JobPostStatus =
+  | "pending"
+  | "accepted"
+  | "cancelled"
+  | "done"
+  | "expired";
 export type GenderName = "N" | "M" | "F";
 export type None = undefined | null;
 export type DbResult = QueryResult | Object | Object[] | null | undefined;

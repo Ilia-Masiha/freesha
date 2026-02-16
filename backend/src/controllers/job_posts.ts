@@ -31,8 +31,8 @@ export async function createJobPost(
     statusId: JobPostStatusIds.Pending,
     title: validatedData.title,
     description: validatedData.description,
-    budget_low: validatedData.budgetLow,
-    budget_high: validatedData.budgetHigh,
+    budgetLow: validatedData.budgetLow,
+    budgetHigh: validatedData.budgetHigh,
   };
 
   const dbResponse = await db.insertJobPost(jobPost);
