@@ -10,7 +10,6 @@ import {
   userLanguagesTable,
   userPortfoliosTable,
   userSkillsTable,
-  userSocialLinksTable,
   usersTable,
   userWorkExperiencesTable,
 } from "./schema.js";
@@ -33,7 +32,6 @@ import {
   languageNamesQuery,
   portfoliosQuery,
   skillsQuery,
-  socialLinksQuery,
   workExperiencesQuery,
 } from "./queries.js";
 import { fixDatabaseUrl } from "../helpers/utils_indep.js";
@@ -155,7 +153,7 @@ export async function getUser(
   if (all || fields.includes("languageNames"))
     columns.languageNames = languageNamesQuery;
   if (all || fields.includes("socialLinks"))
-    columns.socialLinks = socialLinksQuery;
+    columns.socialLinks = usersTable.socialLinks;
 
   if (all || fields.includes("educationDegrees"))
     columns.educationDegrees = educationDegreesQuery;
@@ -203,12 +201,11 @@ export async function updateUser(
   values: Partial<User>
 ): Promise<DbResponse<Partial<User> | None>> {
   try {
-    const { skills, languageNames, socialLinks } = values;
+    const { skills, languageNames } = values;
     let { educationDegrees, workExperiences, portfolios } = values;
 
     delete values.skills;
     delete values.languageNames;
-    delete values.socialLinks;
     delete values.educationDegrees;
     delete values.workExperiences;
     delete values.portfolios;
@@ -229,7 +226,6 @@ export async function updateUser(
 
       await insertSkills(tx, id, skills);
       await insertLanguages(tx, id, languageNames);
-      await insertSocialLinks(tx, id, socialLinks);
       await insertEducationDegrees(
         tx,
         id,
@@ -251,7 +247,7 @@ export async function updateUser(
 
           skills: skillsQuery,
           languageNames: languageNamesQuery,
-          socialLinks: socialLinksQuery,
+          socialLinks: usersTable.socialLinks,
 
           educationDegrees: educationDegreesQuery,
           workExperiences: workExperiencesQuery,
@@ -325,31 +321,6 @@ async function insertLanguages(
   }
 
   await tx.insert(userLanguagesTable).values(userLanguages);
-}
-
-async function insertSocialLinks(
-  tx: Transaction,
-  id: number,
-  socialLinks: string[] | None
-): Promise<void> {
-  if (isNone(socialLinks)) {
-    return;
-  }
-
-  const socialLinksObjects = [];
-  for (const socialLink of socialLinks) {
-    socialLinksObjects.push({ userId: id, link: socialLink });
-  }
-
-  await tx
-    .delete(userSocialLinksTable)
-    .where(eq(userSocialLinksTable.userId, id));
-
-  if (socialLinks.length === 0) {
-    return;
-  }
-
-  await tx.insert(userSocialLinksTable).values(socialLinksObjects);
 }
 
 async function insertEducationDegrees(

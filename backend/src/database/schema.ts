@@ -36,6 +36,11 @@ export const usersTable = pgTable("users", {
   bio: varchar("bio", { length: 400 }).notNull().default(""),
   birthDate: date("birth_date"),
 
+  socialLinks: varchar("social_links", { length: 100 })
+    .array()
+    .notNull()
+    .default(sql`'{}'::varchar[]`),
+
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
   lastLoginAt: timestamp("last_login_at").notNull().defaultNow(),
@@ -201,16 +206,3 @@ export const userPortfoliosTable = pgTable("user_portfolios", {
     .default(sql`ARRAY::varchar[]`),*/
   description: varchar("description", { length: 2000 }).notNull().default(""),
 });
-
-export const userSocialLinksTable = pgTable(
-  "user_social_links",
-  {
-    userId: integer("user_id")
-      .notNull()
-      .references(() => usersTable.id),
-    link: varchar("link", { length: 100 }).notNull(),
-  },
-  (table) => [
-    uniqueIndex("user_id_link_unique_idx").on(table.userId, table.link),
-  ]
-);
