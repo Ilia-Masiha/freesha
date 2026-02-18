@@ -34,7 +34,7 @@ import {
   skillsQuery,
   workExperiencesQuery,
 } from "./queries.js";
-import { fixDatabaseUrl } from "../helpers/utils_indep.js";
+import { fixDatabaseUrl } from "../helpers/utils.js";
 
 export const defaultFields = [
   // "id" and "roleName" are hard-coded

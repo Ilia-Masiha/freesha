@@ -2,7 +2,7 @@ import "../helpers/load_env.js";
 
 import { defineConfig } from "drizzle-kit";
 
-import { fixDatabaseUrl } from "../helpers/utils_indep.js";
+import { fixDatabaseUrl } from "../helpers/utils.js";
 
 fixDatabaseUrl();
 
