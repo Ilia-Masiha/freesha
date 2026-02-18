@@ -1,14 +1,10 @@
-import "../src/helpers/load_env.js";
+import "../helpers/load_env.js";
 
-import { connectDb, db } from "../src/database/db.js";
-import {
-  gendersTable,
-  jobPostStatusesTable,
-  languagesTable,
-  rolesTable,
-} from "../src/database/schema.js";
-import { customLog } from "../src/helpers/utils.js";
-import { JobPostStatusIds } from "../src/helpers/enums.js";
+import { connectDb, db } from "./db.js";
+import { gendersTable, languagesTable, rolesTable } from "./schema/users.js";
+import { jobPostStatusesTable } from "./schema/job_posts.js";
+import { customLog } from "../helpers/utils.js";
+import { JobPostStatusIds } from "../helpers/enums.js";
 
 connectDb();
 

@@ -4,11 +4,11 @@ import { PgTransaction } from "drizzle-orm/pg-core";
 import { QueryResult } from "pg";
 
 import {
-  jobPostsTable,
   userEducationDegreesTable,
   userPortfoliosTable,
   userWorkExperiencesTable,
-} from "../database/schema.js";
+} from "../database/schema/users.js";
+import { jobPostsTable } from "../database/schema/job_posts.js";
 
 type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 

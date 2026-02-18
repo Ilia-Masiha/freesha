@@ -7,7 +7,7 @@ import {
   userSkillsTable,
   usersTable,
   userWorkExperiencesTable,
-} from "./schema.js";
+} from "./schema/users.js";
 import {
   EducationDegree,
   Portfolio,

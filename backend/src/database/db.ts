@@ -4,7 +4,6 @@ import { Pool } from "pg";
 
 import {
   gendersTable,
-  jobPostsTable,
   rolesTable,
   userEducationDegreesTable,
   userLanguagesTable,
@@ -12,7 +11,8 @@ import {
   userSkillsTable,
   usersTable,
   userWorkExperiencesTable,
-} from "./schema.js";
+} from "./schema/users.js";
+import { jobPostsTable } from "./schema/job_posts.js";
 import { customLog, isNone } from "../helpers/utils.js";
 import {
   DbError,
