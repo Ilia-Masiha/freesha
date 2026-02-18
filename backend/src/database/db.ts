@@ -8,7 +8,6 @@ import {
   userEducationDegreesTable,
   userLanguagesTable,
   userPortfoliosTable,
-  userSkillsTable,
   usersTable,
   userWorkExperiencesTable,
 } from "./schema/users.js";
@@ -31,7 +30,6 @@ import {
   educationDegreesQuery,
   languageNamesQuery,
   portfoliosQuery,
-  skillsQuery,
   workExperiencesQuery,
 } from "./queries.js";
 import { fixDatabaseUrl } from "../helpers/utils.js";
@@ -130,7 +128,7 @@ export async function updateLastLogin(
 }
 
 export async function getUser(
-  idOrEmail: number,
+  idOrEmail: number | string,
   fields: string[],
   getPassword: boolean = false
 ): Promise<DbResponse<Partial<User> | None>> {
@@ -149,7 +147,7 @@ export async function getUser(
   if (getPassword && fields.includes("hashedPassword"))
     columns.hashedPassword = usersTable.password;
 
-  if (all || fields.includes("skills")) columns.skills = skillsQuery;
+  if (all || fields.includes("skills")) columns.skills = usersTable.skills;
   if (all || fields.includes("languageNames"))
     columns.languageNames = languageNamesQuery;
   if (all || fields.includes("socialLinks"))
@@ -201,10 +199,9 @@ export async function updateUser(
   values: Partial<User>
 ): Promise<DbResponse<Partial<User> | None>> {
   try {
-    const { skills, languageNames } = values;
+    const { languageNames } = values;
     let { educationDegrees, workExperiences, portfolios } = values;
 
-    delete values.skills;
     delete values.languageNames;
     delete values.educationDegrees;
     delete values.workExperiences;
@@ -224,7 +221,6 @@ export async function updateUser(
         .set({ ...values, updatedAt: sql`NOW()` })
         .where(eq(usersTable.id, id));
 
-      await insertSkills(tx, id, skills);
       await insertLanguages(tx, id, languageNames);
       await insertEducationDegrees(
         tx,
@@ -245,7 +241,7 @@ export async function updateUser(
           email: usersTable.email,
           roleName: rolesTable.roleName,
 
-          skills: skillsQuery,
+          skills: usersTable.skills,
           languageNames: languageNamesQuery,
           socialLinks: usersTable.socialLinks,
 
@@ -275,29 +271,6 @@ export async function updateUser(
   } catch (error) {
     return makeDbResponse(null, error as Error);
   }
-}
-
-async function insertSkills(
-  tx: Transaction,
-  id: number,
-  skills: string[] | None
-): Promise<void> {
-  if (isNone(skills)) {
-    return;
-  }
-
-  const skillsObjects = [];
-  for (const skill of skills) {
-    skillsObjects.push({ userId: id, skill: skill });
-  }
-
-  await tx.delete(userSkillsTable).where(eq(userSkillsTable.userId, id));
-
-  if (skills.length === 0) {
-    return;
-  }
-
-  await tx.insert(userSkillsTable).values(skillsObjects);
 }
 
 async function insertLanguages(

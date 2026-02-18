@@ -30,6 +30,10 @@ export const usersTable = pgTable("users", {
   bio: varchar("bio", { length: 400 }).notNull().default(""),
   birthDate: date("birth_date"),
 
+  skills: varchar("skills", { length: 30 })
+    .array()
+    .notNull()
+    .default(sql`'{}'::varchar[]`),
   socialLinks: varchar("social_links", { length: 100 })
     .array()
     .notNull()
@@ -51,19 +55,6 @@ export const gendersTable = pgTable("genders", {
     .$type<GenderName>()
     .notNull(),
 });
-
-export const userSkillsTable = pgTable(
-  "user_skills",
-  {
-    userId: integer("user_id")
-      .notNull()
-      .references(() => usersTable.id),
-    skill: varchar("skill", { length: 30 }).notNull(),
-  },
-  (table) => [
-    uniqueIndex("user_id_skill_unique_idx").on(table.userId, table.skill),
-  ]
-);
 
 export const userLanguagesTable = pgTable(
   "user_languages",

@@ -4,7 +4,6 @@ import {
   userEducationDegreesTable,
   userLanguagesTable,
   userPortfoliosTable,
-  userSkillsTable,
   usersTable,
   userWorkExperiencesTable,
 } from "./schema/users.js";
@@ -13,12 +12,6 @@ import {
   Portfolio,
   WorkExperience,
 } from "../helpers/types.js";
-
-export const skillsQuery = sql<string[]>`(
-      SELECT COALESCE(ARRAY_AGG(DISTINCT ${userSkillsTable.skill}), '{}')
-      FROM ${userSkillsTable}
-      WHERE ${userSkillsTable.userId} = ${usersTable.id}
-    )`;
 
 export const languageNamesQuery = sql<string[]>`(
       SELECT COALESCE(ARRAY_AGG(DISTINCT ${userLanguagesTable.languageName}), '{}')
