@@ -360,8 +360,8 @@ These status codes are always expected from any endpoint, so I will not include 
       "statusId": 1,
       "title": "Designing the database of an online shop",
       "description": "I'm currently giving you a lot of information about this project",
-      "budget_low": 500000,
-      "budget_high": 1000000,
+      "budgetLow": 500000,
+      "budgetHigh": 1000000,
       "id": 1,
       "createdAt": "2025-12-06T17:39:01.244Z",
       "updatedAt": "2025-12-06T17:39:01.244Z"

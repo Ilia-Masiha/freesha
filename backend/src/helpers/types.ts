@@ -4,11 +4,11 @@ import { PgTransaction } from "drizzle-orm/pg-core";
 import { QueryResult } from "pg";
 
 import {
-  jobPostsTable,
   userEducationDegreesTable,
   userPortfoliosTable,
   userWorkExperiencesTable,
-} from "../database/schema.js";
+} from "../database/schema/users.js";
+import { jobPostsTable } from "../database/schema/job_posts.js";
 
 type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
@@ -59,7 +59,12 @@ export type SessionData = Required<
 
 export type Tag = "server" | "database" | "redis";
 export type RoleName = "user" | "admin";
-export type JobPostStatus = "pending" | "accepted" | "cancelled" | "done";
+export type JobPostStatus =
+  | "pending"
+  | "accepted"
+  | "cancelled"
+  | "done"
+  | "expired";
 export type GenderName = "N" | "M" | "F";
 export type None = undefined | null;
 export type DbResult = QueryResult | Object | Object[] | null | undefined;

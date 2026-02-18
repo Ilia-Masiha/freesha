@@ -3,4 +3,5 @@ export enum JobPostStatusIds {
   Accepted,
   Cancelled,
   Done,
+  Expired,
 }

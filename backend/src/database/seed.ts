@@ -1,13 +1,10 @@
-import "../src/helpers/load_env.js";
+import "../helpers/load_env.js";
 
-import { connectDb, db } from "../src/database/db.js";
-import {
-  gendersTable,
-  jobPostStatusesTable,
-  languagesTable,
-  rolesTable,
-} from "../src/database/schema.js";
-import { customLog } from "../src/helpers/utils.js";
+import { connectDb, db } from "./db.js";
+import { gendersTable, languagesTable, rolesTable } from "./schema/users.js";
+import { jobPostStatusesTable } from "./schema/job_posts.js";
+import { customLog } from "../helpers/utils.js";
+import { JobPostStatusIds } from "../helpers/enums.js";
 
 connectDb();
 
@@ -31,10 +28,11 @@ try {
   await db
     .insert(jobPostStatusesTable)
     .values([
-      { id: 1, statusName: "pending" },
-      { id: 2, statusName: "accepted" },
-      { id: 3, statusName: "cancelled" },
-      { id: 4, statusName: "done" },
+      { id: JobPostStatusIds.Pending, statusName: "pending" },
+      { id: JobPostStatusIds.Accepted, statusName: "accepted" },
+      { id: JobPostStatusIds.Cancelled, statusName: "cancelled" },
+      { id: JobPostStatusIds.Done, statusName: "done" },
+      { id: JobPostStatusIds.Expired, statusName: "expired" },
     ])
     .onConflictDoNothing();
 

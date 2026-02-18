@@ -4,16 +4,14 @@ import { Pool } from "pg";
 
 import {
   gendersTable,
-  jobPostsTable,
   rolesTable,
   userEducationDegreesTable,
   userLanguagesTable,
   userPortfoliosTable,
-  userSkillsTable,
-  userSocialLinksTable,
   usersTable,
   userWorkExperiencesTable,
-} from "./schema.js";
+} from "./schema/users.js";
+import { jobPostsTable } from "./schema/job_posts.js";
 import { customLog, isNone } from "../helpers/utils.js";
 import {
   DbError,
@@ -32,11 +30,9 @@ import {
   educationDegreesQuery,
   languageNamesQuery,
   portfoliosQuery,
-  skillsQuery,
-  socialLinksQuery,
   workExperiencesQuery,
 } from "./queries.js";
-import { fixDatabaseUrl } from "../helpers/utils_indep.js";
+import { fixDatabaseUrl } from "../helpers/utils.js";
 
 export const defaultFields = [
   // "id" and "roleName" are hard-coded
@@ -132,7 +128,7 @@ export async function updateLastLogin(
 }
 
 export async function getUser(
-  idOrEmail: number,
+  idOrEmail: number | string,
   fields: string[],
   getPassword: boolean = false
 ): Promise<DbResponse<Partial<User> | None>> {
@@ -151,11 +147,11 @@ export async function getUser(
   if (getPassword && fields.includes("hashedPassword"))
     columns.hashedPassword = usersTable.password;
 
-  if (all || fields.includes("skills")) columns.skills = skillsQuery;
+  if (all || fields.includes("skills")) columns.skills = usersTable.skills;
   if (all || fields.includes("languageNames"))
     columns.languageNames = languageNamesQuery;
   if (all || fields.includes("socialLinks"))
-    columns.socialLinks = socialLinksQuery;
+    columns.socialLinks = usersTable.socialLinks;
 
   if (all || fields.includes("educationDegrees"))
     columns.educationDegrees = educationDegreesQuery;
@@ -203,12 +199,10 @@ export async function updateUser(
   values: Partial<User>
 ): Promise<DbResponse<Partial<User> | None>> {
   try {
-    const { skills, languageNames, socialLinks } = values;
+    const { languageNames } = values;
     let { educationDegrees, workExperiences, portfolios } = values;
 
-    delete values.skills;
     delete values.languageNames;
-    delete values.socialLinks;
     delete values.educationDegrees;
     delete values.workExperiences;
     delete values.portfolios;
@@ -227,9 +221,7 @@ export async function updateUser(
         .set({ ...values, updatedAt: sql`NOW()` })
         .where(eq(usersTable.id, id));
 
-      await insertSkills(tx, id, skills);
       await insertLanguages(tx, id, languageNames);
-      await insertSocialLinks(tx, id, socialLinks);
       await insertEducationDegrees(
         tx,
         id,
@@ -249,9 +241,9 @@ export async function updateUser(
           email: usersTable.email,
           roleName: rolesTable.roleName,
 
-          skills: skillsQuery,
+          skills: usersTable.skills,
           languageNames: languageNamesQuery,
-          socialLinks: socialLinksQuery,
+          socialLinks: usersTable.socialLinks,
 
           educationDegrees: educationDegreesQuery,
           workExperiences: workExperiencesQuery,
@@ -281,29 +273,6 @@ export async function updateUser(
   }
 }
 
-async function insertSkills(
-  tx: Transaction,
-  id: number,
-  skills: string[] | None
-): Promise<void> {
-  if (isNone(skills)) {
-    return;
-  }
-
-  const skillsObjects = [];
-  for (const skill of skills) {
-    skillsObjects.push({ userId: id, skill: skill });
-  }
-
-  await tx.delete(userSkillsTable).where(eq(userSkillsTable.userId, id));
-
-  if (skills.length === 0) {
-    return;
-  }
-
-  await tx.insert(userSkillsTable).values(skillsObjects);
-}
-
 async function insertLanguages(
   tx: Transaction,
   id: number,
@@ -325,31 +294,6 @@ async function insertLanguages(
   }
 
   await tx.insert(userLanguagesTable).values(userLanguages);
-}
-
-async function insertSocialLinks(
-  tx: Transaction,
-  id: number,
-  socialLinks: string[] | None
-): Promise<void> {
-  if (isNone(socialLinks)) {
-    return;
-  }
-
-  const socialLinksObjects = [];
-  for (const socialLink of socialLinks) {
-    socialLinksObjects.push({ userId: id, link: socialLink });
-  }
-
-  await tx
-    .delete(userSocialLinksTable)
-    .where(eq(userSocialLinksTable.userId, id));
-
-  if (socialLinks.length === 0) {
-    return;
-  }
-
-  await tx.insert(userSocialLinksTable).values(socialLinksObjects);
 }
 
 async function insertEducationDegrees(

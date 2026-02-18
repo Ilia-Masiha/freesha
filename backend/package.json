@@ -8,9 +8,9 @@
     "start": "node ./dist/index.js",
     "dev": "nodemon --exec tsx ./src/index.ts",
     "build": "tsc --build",
-    "generate": "drizzle-kit generate --name=init --config ./misc/drizzle.config.ts",
-    "migrate": "drizzle-kit migrate --config ./misc/drizzle.config.ts",
-    "seed": "tsx ./misc/seed.ts",
+    "generate": "tsx ./node_modules/drizzle-kit/bin.cjs generate --config ./src/database/drizzle.config.ts",
+    "migrate": "tsx ./node_modules/drizzle-kit/bin.cjs migrate --config ./src/database/drizzle.config.ts",
+    "seed": "tsx ./src/database/seed.ts",
     "test": "jest",
     "test:units": "jest --testPathPatterns=./src/__tests__/units",
     "test:e2e": "jest --testPathPatterns=./src/__tests__/e2e"
