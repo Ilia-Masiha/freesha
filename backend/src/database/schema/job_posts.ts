@@ -1,4 +1,5 @@
 import {
+  date,
   integer,
   pgTable,
   timestamp,
@@ -9,19 +10,29 @@ import {
 import { JobPostStatus } from "../../helpers/types.js";
 import { JobPostStatusIds } from "../../helpers/consts.js";
 import { usersTable } from "./users.js";
+import { sql } from "drizzle-orm";
 
 export const jobPostsTable = pgTable("job_posts", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   title: varchar("title", { length: 60 }).notNull(),
+  slug: varchar("slug", { length: 100 }).notNull().unique(),
   description: varchar("description", { length: 5000 }).notNull(),
   budgetLow: integer("budget_low").notNull(),
   budgetHigh: integer("budget_high").notNull(),
+  deadline: date("deadline").notNull(),
+
   clientId: integer("client_id")
     .notNull()
     .references(() => usersTable.id),
   statusId: integer("status_id")
     .notNull()
     .references(() => jobPostStatusesTable.id),
+
+  requiredSkills: varchar("required_skills", { length: 30 })
+    .array()
+    .notNull()
+    .default(sql`'{}'::varchar[]`),
+
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

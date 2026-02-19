@@ -145,3 +145,25 @@ export function fixDatabaseUrl(): void {
     process.env.DATABASE_URL = dockerizeDatabaseUrl(process.env.DATABASE_URL);
   }
 }
+
+function numberToBase64URLCompact(num: number) {
+  const byteLength = Math.ceil(Math.log2(num + 1) / 8) || 1;
+  const buffer = Buffer.alloc(byteLength);
+
+  buffer.writeUIntBE(num, 0, byteLength);
+
+  return buffer
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+}
+
+function getUniqueString(): string {
+  return numberToBase64URLCompact(Date.now());
+}
+
+export function convertToSlug(str: string): string {
+  const firstPart = str.toLowerCase().replace(" ", "-");
+  return `${firstPart}-${getUniqueString()}`;
+}
