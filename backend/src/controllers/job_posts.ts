@@ -4,8 +4,8 @@ import { matchedData, validationResult } from "express-validator";
 import * as db from "../database/db.js";
 import { makeResObj } from "../helpers/utils.js";
 import { JobPost } from "../helpers/types.js";
-import { JobPostStatusIds } from "../helpers/enums.js";
-import { messages } from "../helpers/messages.js";
+import { JobPostStatusIds } from "../helpers/consts.js";
+import { messages } from "../helpers/consts.js";
 
 export async function createJobPost(
   req: Request,

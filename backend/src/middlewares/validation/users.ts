@@ -9,7 +9,7 @@ import {
   isPhoneNumber,
   portfoliosSkillsCustom,
 } from "../../helpers/utils.js";
-import { messages } from "../../helpers/messages.js";
+import { messages } from "../../helpers/consts.js";
 
 const nameValidator = () =>
   body("name")

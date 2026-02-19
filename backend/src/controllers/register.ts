@@ -9,7 +9,7 @@ import path from "node:path";
 import * as db from "../database/db.js";
 import { redisSet, redisTtl } from "../database/redis.js";
 import { generateOtp, makeResObj } from "../helpers/utils.js";
-import { messages } from "../helpers/messages.js";
+import { messages } from "../helpers/consts.js";
 
 const OTP_EXP = 3 * 60;
 const OTP_WINDOW = 1.5 * 60;

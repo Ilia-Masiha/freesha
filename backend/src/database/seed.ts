@@ -4,7 +4,7 @@ import { connectDb, db } from "./db.js";
 import { gendersTable, languagesTable, rolesTable } from "./schema/users.js";
 import { jobPostStatusesTable } from "./schema/job_posts.js";
 import { customLog } from "../helpers/utils.js";
-import { JobPostStatusIds } from "../helpers/enums.js";
+import { JobPostStatusIds } from "../helpers/consts.js";
 
 connectDb();
 

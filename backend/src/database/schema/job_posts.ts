@@ -7,7 +7,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { JobPostStatus } from "../../helpers/types.js";
-import { JobPostStatusIds } from "../../helpers/enums.js";
+import { JobPostStatusIds } from "../../helpers/consts.js";
 import { usersTable } from "./users.js";
 
 export const jobPostsTable = pgTable("job_posts", {

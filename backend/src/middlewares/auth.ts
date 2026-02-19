@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 
 import { makeResObj } from "../helpers/utils.js";
-import { messages } from "../helpers/messages.js";
+import { messages } from "../helpers/consts.js";
 import { None, SessionData } from "../helpers/types.js";
 import { redisDel, redisGet, redisSet } from "../database/redis.js";
 
