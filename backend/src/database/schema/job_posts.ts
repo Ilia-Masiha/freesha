@@ -77,3 +77,16 @@ export const acceptedOffersTable = pgTable("accepted_offers", {
     .references(() => offersTable.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+export const jobPostTagsTable = pgTable(
+  "job_post_tags",
+  {
+    jobPostId: integer("job_post_id")
+      .notNull()
+      .references(() => jobPostsTable.id),
+    tag: varchar("tag", { length: 30 }).notNull(),
+  },
+  (table) => [
+    uniqueIndex("job_post_id_tag_unique_idx").on(table.jobPostId, table.tag),
+  ]
+);

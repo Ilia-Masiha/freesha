@@ -11,7 +11,7 @@ import {
   usersTable,
   userWorkExperiencesTable,
 } from "./schema/users.js";
-import { jobPostsTable } from "./schema/job_posts.js";
+import { jobPostsTable, jobPostTagsTable } from "./schema/job_posts.js";
 import { customLog, isNone } from "../helpers/utils.js";
 import {
   DbError,
@@ -360,13 +360,27 @@ export async function insertJobPost(
   jobPost: JobPost
 ): Promise<DbResponse<DbResult>> {
   try {
-    const result = await db.insert(jobPostsTable).values(jobPost).returning({
-      id: jobPostsTable.id,
-      createdAt: jobPostsTable.createdAt,
-      updatedAt: jobPostsTable.updatedAt,
+    const { tags } = jobPost;
+
+    delete jobPost.tags;
+
+    const result = await db.transaction(async (tx: Transaction) => {
+      const newInfo = await tx.insert(jobPostsTable).values(jobPost).returning({
+        id: jobPostsTable.id,
+        slug: jobPostsTable.slug,
+        createdAt: jobPostsTable.createdAt,
+        updatedAt: jobPostsTable.updatedAt,
+      });
+
+      if (newInfo[0] === undefined)
+        throw "Something went wrong while inserting a new job post";
+
+      await insertTags(tx, newInfo[0].id, tags);
+
+      return newInfo[0];
     });
 
-    return makeDbResponse(result[0], null);
+    return makeDbResponse(result, null);
   } catch (error) {
     return makeDbResponse(null, error as Error);
   }
@@ -398,4 +412,27 @@ export async function getJobPost(
   } catch (error) {
     return makeDbResponse(null, error as Error);
   }
+}
+
+async function insertTags(
+  tx: Transaction,
+  id: number,
+  tags: string[] | None
+): Promise<void> {
+  if (isNone(tags)) {
+    return;
+  }
+
+  const jobPostTags = [];
+  for (const tag of tags) {
+    jobPostTags.push({ jobPostId: id, tag: tag });
+  }
+
+  await tx.delete(jobPostTagsTable).where(eq(jobPostTagsTable.jobPostId, id));
+
+  if (jobPostTags.length === 0) {
+    return;
+  }
+
+  await tx.insert(jobPostTagsTable).values(jobPostTags);
 }

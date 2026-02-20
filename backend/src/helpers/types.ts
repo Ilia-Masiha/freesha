@@ -85,7 +85,9 @@ export type Portfolio = Optional<
 export type JobPost = Optional<
   typeof jobPostsTable.$inferSelect,
   "id" | "createdAt" | "updatedAt"
->;
+> & {
+  tags?: string[];
+};
 export type Transaction = PgTransaction<
   NodePgQueryResultHKT,
   Record<string, never>,
