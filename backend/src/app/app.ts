@@ -25,13 +25,13 @@ export function createApp(): Application {
 
   const minuteLimiter = rateLimit({
     windowMs: 60 * 1000,
-    limit: 65,
+    limit: 110,
     message: limitResponse,
   });
 
   const secondLimiter = rateLimit({
     windowMs: 1 * 1000,
-    limit: 3,
+    limit: 4,
     message: limitResponse,
   });
 

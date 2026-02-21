@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import { matchedData, validationResult } from "express-validator";
 
-import * as db from "../database/db.js";
-import { makeResObj } from "../helpers/utils.js";
+import * as db from "../database/sections/job_posts.js";
+import { convertToSlug, makeResObj } from "../helpers/utils.js";
 import { JobPost } from "../helpers/types.js";
-import { JobPostStatusIds } from "../helpers/enums.js";
-import { messages } from "../helpers/messages.js";
+import { JobPostStatusIds } from "../helpers/consts.js";
+import { messages } from "../helpers/consts.js";
 
 export async function createJobPost(
   req: Request,
@@ -27,15 +27,22 @@ export async function createJobPost(
 
   const userId = req.sessionData!.id;
   const jobPost: JobPost = {
-    clientId: userId,
-    statusId: JobPostStatusIds.Pending,
     title: validatedData.title,
+    slug: convertToSlug(validatedData.title),
     description: validatedData.description,
     budgetLow: validatedData.budgetLow,
     budgetHigh: validatedData.budgetHigh,
+    deadline: validatedData.deadline,
+
+    clientId: userId,
+    statusId: JobPostStatusIds.Pending,
+    categoryId: validatedData.categoryId,
+
+    requiredSkills: validatedData.requiredSkills,
+    tags: validatedData.tags,
   };
 
-  const dbResponse = await db.insertJobPost(jobPost);
+  const dbResponse = await db.insertJobPost({ ...jobPost });
   if (dbResponse.error || !dbResponse.result) {
     return next(dbResponse.error);
   }

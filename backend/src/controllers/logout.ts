@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express-serve-static-core";
 import { clearSessionData } from "../middlewares/auth.js";
 import { None } from "../helpers/types.js";
 import { isNone, makeResObj } from "../helpers/utils.js";
-import { messages } from "../helpers/messages.js";
+import { messages } from "../helpers/consts.js";
 
 export async function logout(
   req: Request,

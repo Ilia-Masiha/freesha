@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 
 import { customLog, makeResObj } from "../helpers/utils.js";
-import { messages } from "../helpers/messages.js";
+import { messages } from "../helpers/consts.js";
 
 export function error404Middleware(
   _req: Request,

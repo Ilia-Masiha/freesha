@@ -2,9 +2,10 @@ import "../helpers/load_env.js";
 
 import { connectDb, db } from "./db.js";
 import { gendersTable, languagesTable, rolesTable } from "./schema/users.js";
-import { jobPostStatusesTable } from "./schema/job_posts.js";
+import { categoriesTable, jobPostStatusesTable } from "./schema/job_posts.js";
 import { customLog } from "../helpers/utils.js";
-import { JobPostStatusIds } from "../helpers/enums.js";
+import { categories, JobPostStatusIds } from "../helpers/consts.js";
+import { Category } from "../helpers/types.js";
 
 connectDb();
 
@@ -169,10 +170,26 @@ try {
     .onConflictDoNothing();
 
   customLog("database", "Languages seeded successfully");
-  customLog("database", "Seeding process successful, Exiting with code 0");
-  process.exit(0);
 } catch (error) {
   customLog("database", `Seeding languages failed: ${error}`);
   customLog("database", "Seeding process will be terminated");
   process.exit(1);
 }
+
+try {
+  const values: Category[] = [];
+
+  for (let i = 0; i < categories.length; i++)
+    values.push({ id: i, category: categories[i] ?? "fail" });
+
+  await db.insert(categoriesTable).values(values).onConflictDoNothing();
+
+  customLog("database", "Categories seeded successfully");
+} catch (error) {
+  customLog("database", `Seeding categories failed: ${error}`);
+  customLog("database", "Seeding process will be terminated");
+  process.exit(1);
+}
+
+customLog("database", "Seeding process successful, Exiting with code 0");
+process.exit(0);
