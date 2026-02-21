@@ -8,7 +8,10 @@ import {
   userPortfoliosTable,
   userWorkExperiencesTable,
 } from "../database/schema/users.js";
-import { jobPostsTable } from "../database/schema/job_posts.js";
+import {
+  categoriesTable,
+  jobPostsTable,
+} from "../database/schema/job_posts.js";
 
 type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
@@ -88,6 +91,7 @@ export type JobPost = Optional<
 > & {
   tags?: string[];
 };
+export type Category = typeof categoriesTable.$inferInsert;
 export type Transaction = PgTransaction<
   NodePgQueryResultHKT,
   Record<string, never>,

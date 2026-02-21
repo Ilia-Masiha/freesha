@@ -36,6 +36,7 @@ export async function createJobPost(
 
     clientId: userId,
     statusId: JobPostStatusIds.Pending,
+    categoryId: validatedData.categoryId,
 
     requiredSkills: validatedData.requiredSkills,
   };

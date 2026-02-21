@@ -27,6 +27,10 @@ export const jobPostsTable = pgTable("job_posts", {
   statusId: integer("status_id")
     .notNull()
     .references(() => jobPostStatusesTable.id),
+  categoryId: integer("category_id")
+    .notNull()
+    .default(0)
+    .references(() => categoriesTable.id),
 
   requiredSkills: varchar("required_skills", { length: 30 })
     .array()
@@ -90,3 +94,8 @@ export const jobPostTagsTable = pgTable(
     uniqueIndex("job_post_id_tag_unique_idx").on(table.jobPostId, table.tag),
   ]
 );
+
+export const categoriesTable = pgTable("categories", {
+  id: integer("id").notNull().unique(),
+  category: varchar("category", { length: 50 }).notNull().unique(),
+});
