@@ -1,4 +1,8 @@
-import { capitalize, isArrayUnique } from "../../helpers/utils.js";
+import {
+  capitalize,
+  convertToSlug,
+  isArrayUnique,
+} from "../../helpers/utils.js";
 
 describe("testing isArrayUnique", () => {
   it("should return false for non-unique arrays", () => {
@@ -35,5 +39,28 @@ describe("testing capitalize", () => {
     expect(capitalize("Capitalized")).toStrictEqual("Capitalized");
     expect(capitalize("Test")).toStrictEqual("Test");
     expect(capitalize("E")).toStrictEqual("E");
+  });
+});
+
+describe("testing convertToSlug", () => {
+  it("should replace all of the spaces", () => {
+    expect(convertToSlug("hello there friend", false)).toStrictEqual(
+      "hello-there-friend"
+    );
+    expect(convertToSlug("a b c d e f g h", false)).toStrictEqual(
+      "a-b-c-d-e-f-g-h"
+    );
+  });
+
+  it("should lowercase the input", () => {
+    expect(convertToSlug("TESTING INput now", false)).toStrictEqual(
+      "testing-input-now"
+    );
+  });
+
+  it("should handle edge-cases", () => {
+    expect(convertToSlug("  2   3 1 1    4 - ", false)).toStrictEqual(
+      "--2---3-1-1----4---"
+    );
   });
 });

@@ -22,7 +22,6 @@ export async function insertJobPost(
     const result = await db.transaction(async (tx: Transaction) => {
       const newInfo = await tx.insert(jobPostsTable).values(jobPost).returning({
         id: jobPostsTable.id,
-        slug: jobPostsTable.slug,
         createdAt: jobPostsTable.createdAt,
         updatedAt: jobPostsTable.updatedAt,
       });

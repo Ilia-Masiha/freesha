@@ -39,9 +39,10 @@ export async function createJobPost(
     categoryId: validatedData.categoryId,
 
     requiredSkills: validatedData.requiredSkills,
+    tags: validatedData.tags,
   };
 
-  const dbResponse = await db.insertJobPost(jobPost);
+  const dbResponse = await db.insertJobPost({ ...jobPost });
   if (dbResponse.error || !dbResponse.result) {
     return next(dbResponse.error);
   }

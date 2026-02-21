@@ -115,6 +115,7 @@ const bioValidator = () =>
 
 const birthDateValidator = () =>
   body("birthDate")
+    .trim()
     .notEmpty()
     .withMessage("تاریخ تولد نمی تواند خالی باشد")
     .isString()
@@ -131,6 +132,7 @@ const skillsValidator = () =>
 
 const skillsItemsValidator = () =>
   body("skills.*")
+    .trim()
     .isString()
     .withMessage("درایه های مهارت ها باید رشته باشند")
     .isLength({ min: 1, max: 30 })

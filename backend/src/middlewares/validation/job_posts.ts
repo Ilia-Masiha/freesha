@@ -1,5 +1,8 @@
 import { body, param, query } from "express-validator";
 
+import { categories } from "../../helpers/consts.js";
+import { isArrayUnique } from "../../helpers/utils.js";
+
 const titleValidator = () =>
   body("title")
     .trim()
@@ -60,11 +63,67 @@ const clientIdValidator = () =>
     .withMessage("آیدی کارفرما باید یک عدد صحیح مثبت باشد")
     .toInt();
 
+const deadlineValidator = () =>
+  body("deadline")
+    .trim()
+    .notEmpty()
+    .withMessage("ددلاین ضروری است")
+    .isString()
+    .withMessage("ددلاین باید یک رشته باشد")
+    .isDate({ format: "YYYY-MM-DD", strictMode: true, delimiters: ["-"] })
+    .withMessage("ددلاین باید در فرمت YYYY-MM-DD باشد");
+
+const categoryIdValidator = () =>
+  body("categoryId")
+    .notEmpty()
+    .withMessage("آیدی کتگوری ضروری است")
+    .isInt({ min: 0, max: categories.length - 1 })
+    .withMessage(`آیدی کتگوری باید عددی از 0 تا ${categories.length - 1} باشد`);
+
+const requiredSkillsValidator = () =>
+  body("requiredSkills")
+    .isArray({ min: 0 })
+    .withMessage("مهارت های مورد نیاز باید یک آرایه باشد")
+    .custom(isArrayUnique)
+    .withMessage("مهارت های مورد نیاز نباید تکراری باشند");
+
+const requiredSkillsItemsValidator = () =>
+  body("requiredSkills.*")
+    .trim()
+    .isString()
+    .withMessage("درایه های مهارت های مورد نیاز باید رشته باشند")
+    .isLength({ min: 1, max: 30 })
+    .withMessage(
+      "درایه های مهارت های مورد نیاز باید بین 1 تا 30 کاراکتر باشند"
+    );
+
+const tagsValidator = () =>
+  body("tags")
+    .isArray({ min: 0 })
+    .withMessage("تگ ها باید یک آرایه باشد")
+    .custom(isArrayUnique)
+    .withMessage("تگ ها نباید تکراری باشند");
+
+const tagsItemsValidator = () =>
+  body("tags.*")
+    .trim()
+    .isString()
+    .withMessage("درایه های تگ ها باید رشته باشند")
+    .isLength({ min: 1, max: 30 })
+    .withMessage("درایه های تگ ها باید بین 1 تا 30 کاراکتر باشند");
+
 export const createJobPostValidator = () => [
   titleValidator(),
   descriptionValidator(),
   budgetLowValidator(),
   budgetHighValidator(),
+  deadlineValidator(),
+  categoryIdValidator(),
+
+  requiredSkillsValidator(),
+  requiredSkillsItemsValidator(),
+  tagsValidator(),
+  tagsItemsValidator(),
 ];
 
 export const getJobPostValidator = () => [

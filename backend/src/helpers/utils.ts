@@ -163,7 +163,10 @@ function getUniqueString(): string {
   return numberToBase64URLCompact(Date.now());
 }
 
-export function convertToSlug(str: string): string {
-  const firstPart = str.toLowerCase().replace(" ", "-");
-  return `${firstPart}-${getUniqueString()}`;
+export function convertToSlug(str: string, unique: boolean = true): string {
+  const firstPart = str.toLowerCase().replace(/ /g, "-");
+  if (unique) {
+    return `${firstPart}-${getUniqueString()}`;
+  }
+  return firstPart;
 }
