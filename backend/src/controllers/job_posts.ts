@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import { matchedData, validationResult } from "express-validator";
 
-import * as db from "../database/db.js";
+import * as db from "../database/sections/job_posts.js";
 import { convertToSlug, makeResObj } from "../helpers/utils.js";
 import { JobPost } from "../helpers/types.js";
 import { JobPostStatusIds } from "../helpers/consts.js";

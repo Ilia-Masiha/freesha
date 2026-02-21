@@ -6,7 +6,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
-import * as db from "../database/db.js";
+import * as db from "../database/sections/users.js";
 import { redisSet, redisTtl } from "../database/redis.js";
 import { generateOtp, makeResObj } from "../helpers/utils.js";
 import { messages } from "../helpers/consts.js";

@@ -3,7 +3,7 @@ import { validationResult, matchedData } from "express-validator";
 import { randomUUID } from "node:crypto";
 import bcrypt from "bcryptjs";
 
-import * as db from "../database/db.js";
+import * as db from "../database/sections/users.js";
 import { redisDel, redisGet } from "../database/redis.js";
 import { messages } from "../helpers/consts.js";
 import { PreRegisterInfo, SessionData } from "../helpers/types.js";

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import { matchedData, validationResult } from "express-validator";
 
-import * as db from "../database/db.js";
+import * as db from "../database/sections/users.js";
 import { makeResObj } from "../helpers/utils.js";
 import { messages } from "../helpers/consts.js";
 
