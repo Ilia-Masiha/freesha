@@ -1,7 +1,7 @@
 import { Controller } from "react-hook-form";
 import TagsInput from "react-tagsinput";
 
-const TagsInputComponent = ({ control , label , errors , className , name}) => {
+const TagsInputComponent = ({ control, label, errors, className, name }) => {
   return (
     <div className={`flex flex-col justify-start gap-y-1 mb-3 ${className}`}>
       <div className="flex justify-between items-center mb-1">
@@ -19,6 +19,7 @@ const TagsInputComponent = ({ control , label , errors , className , name}) => {
         control={control}
         render={({ field }) => (
           <TagsInput
+            name={name}
             value={field.value || []}
             onChange={field.onChange}
             onlyUnique
@@ -26,7 +27,8 @@ const TagsInputComponent = ({ control , label , errors , className , name}) => {
             focusedClassName="border-tertiary"
             inputProps={{
               placeholder: "تگ مورد نظر را بنویسید و enter بزنید",
-              className: "outline-none border-none text-txt-primary px-2 py-2 w-[150%]",
+              className:
+                "outline-none border-none text-txt-primary px-2 py-2 w-[150%]",
             }}
             tagProps={{
               className:
