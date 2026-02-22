@@ -12,7 +12,7 @@
   --color-txt-primary: #1a1a1a;
   --color-txt-secondary: #FFFFFF;
   --color-txt-tertiary: #61615E;
-  --shadow-custom: 6px 6px rgba(196, 159, 50, 0.6); 
+  --shadow-custom: 6px 6px rgba(196, 159, 50, 0.6);
 }
 
 * {
@@ -22,7 +22,8 @@
   user-select: none;
 }
 
-html , body {
+html,
+body {
   scrollbar-width: none;
 }
 
@@ -112,4 +113,8 @@ input[type=number] {
 .custom-date-picker .rmdp-day:focus span {
   background-color: var(--color-secondary) !important;
   color: white !important;
+}
+
+.react-tagsinput-remove:before {
+  content: "×";
 }
