@@ -9,11 +9,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="fa" dir="rtl">
+    <html lang="fa" dir="rtl" className="h-full">
       <Providers>
-        <body className={`antialiased`}>
+        <body className="antialiased bg-bg-primary h-full flex flex-col">
           <Header />
-          <main>{children}</main>
+          <main className="flex-1 overflow-y-auto">
+            <div className="pb-20">{children}</div>
+          </main>
         </body>
       </Providers>
     </html>

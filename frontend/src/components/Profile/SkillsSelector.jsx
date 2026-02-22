@@ -9,6 +9,7 @@ const SkillsSelector = ({
   name = "skills",
   initialSkills = [],
   errors,
+  label
 }) => {
   const [selectedSkills, setSelectedSkills] = useState(initialSkills);
 
@@ -40,7 +41,7 @@ const SkillsSelector = ({
       <div className="w-full flex flex-col items-start justify-center">
         <div className="w-full flex justify-between items-center mb-1">
           <label htmlFor={name} className="text-txt text-sm font-semibold">
-            مهارت ها
+            {!label ? "مهارت ها" : label}
           </label>
           {errors && (
             <span className="text-xs text-error">

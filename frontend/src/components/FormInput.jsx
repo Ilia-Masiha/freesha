@@ -9,7 +9,7 @@ const FormInput = ({
   return (
     <div className={`flex flex-col justify-start gap-y-1 mb-3 ${className}`}>
       <div className="flex justify-between items-center mb-1">
-        <label htmlFor={name} className="text-txt text-sm font-semibold">
+        <label htmlFor={name} className="text-sm font-semibold">
           {label}
         </label>
         {errors && (
