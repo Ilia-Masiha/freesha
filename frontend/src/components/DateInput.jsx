@@ -1,6 +1,5 @@
 "use client";
 import DatePicker from "react-multi-date-picker";
-import { useState } from "react";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 
@@ -12,6 +11,7 @@ const DateInput = ({
   errors,
   value,
   onChange,
+  onBlur=null
 }) => {
   const handleDateChange = (dateObject) => {
     if (dateObject) {
@@ -42,6 +42,7 @@ const DateInput = ({
       <DatePicker
         value={value}
         onChange={handleDateChange}
+        onBlur={onBlur}
         name={name}
         id={name}
         calendar={persian}
