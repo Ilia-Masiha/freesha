@@ -47,8 +47,8 @@ export async function getJobPost(
   let conditions;
 
   // Handling all of the filters
-  if (!isNone(filters.id)) {
-    equalities.push(eq(jobPostsTable.id, filters.id));
+  if (!isNone(filters.slug)) {
+    equalities.push(eq(jobPostsTable.slug, filters.slug));
   }
 
   if (!isNone(filters.clientId)) {

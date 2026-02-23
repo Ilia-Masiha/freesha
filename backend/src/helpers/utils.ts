@@ -160,7 +160,7 @@ function numberToBase64URLCompact(num: number) {
 }
 
 function getUniqueString(): string {
-  return numberToBase64URLCompact(Date.now());
+  return numberToBase64URLCompact(Date.now() - 1771860000000);
 }
 
 export function convertToSlug(str: string, unique: boolean = true): string {
@@ -168,5 +168,5 @@ export function convertToSlug(str: string, unique: boolean = true): string {
   if (unique) {
     return `${firstPart}-${getUniqueString()}`;
   }
-  return firstPart;
+  return encodeURIComponent(firstPart);
 }

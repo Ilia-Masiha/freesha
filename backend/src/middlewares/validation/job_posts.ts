@@ -45,14 +45,15 @@ const budgetHighValidator = () =>
     )
     .toInt();
 
-const jobPostIdValidator = () =>
-  param("jobPostId")
+const jobPostSlugValidator = () =>
+  param("jobPostSlug")
     .trim()
     .notEmpty()
-    .withMessage("آیدی آگهی کار ضروری است")
-    .isInt({ min: 1 })
-    .withMessage("آیدی آگهی کار باید یک عدد صحیح مثبت باشد")
-    .toInt();
+    .withMessage("شناسه آگهی کار ضروری است")
+    .isString()
+    .withMessage("شناسه آگهی کار باید یک رشته")
+    .isLength({ max: 100 })
+    .withMessage("طول شناسه آگهی کار نباید بیش از 100 کاراکتر باشد");
 
 const clientIdValidator = () =>
   query("clientId")
@@ -76,9 +77,11 @@ const deadlineValidator = () =>
 const categoryIdValidator = () =>
   body("categoryId")
     .notEmpty()
-    .withMessage("آیدی کتگوری ضروری است")
+    .withMessage("آیدی دسته بندی ضروری است")
     .isInt({ min: 0, max: categories.length - 1 })
-    .withMessage(`آیدی کتگوری باید عددی از 0 تا ${categories.length - 1} باشد`);
+    .withMessage(
+      `آیدی دسته بندی باید عددی از 0 تا ${categories.length - 1} باشد`
+    );
 
 const requiredSkillsValidator = () =>
   body("requiredSkills")
@@ -126,7 +129,6 @@ export const createJobPostValidator = () => [
   tagsItemsValidator(),
 ];
 
-export const getJobPostValidator = () => [
-  jobPostIdValidator().optional(),
-  clientIdValidator().optional(),
-];
+export const getJobPostValidator = () => [jobPostSlugValidator()];
+
+export const getJobPostsValidator = () => [clientIdValidator().optional()];
