@@ -10,6 +10,7 @@ import {
 } from "../../helpers/types.js";
 import { jobPostsTable, jobPostTagsTable } from "../schema/job_posts.js";
 import { isNone } from "../../helpers/utils.js";
+import { tagsQuery } from "../queries.js";
 
 export async function insertJobPost(
   jobPost: JobPost
@@ -61,7 +62,27 @@ export async function getJobPost(
   }
 
   try {
-    const result = await db.select().from(jobPostsTable).where(conditions);
+    const result = await db
+      .select({
+        title: jobPostsTable.title,
+        slug: jobPostsTable.slug,
+        description: jobPostsTable.description,
+        budgetLow: jobPostsTable.budgetLow,
+        budgetHigh: jobPostsTable.budgetHigh,
+        deadline: jobPostsTable.deadline,
+
+        clientId: jobPostsTable.clientId,
+        statusId: jobPostsTable.statusId,
+        categoryId: jobPostsTable.categoryId,
+
+        requiredSkills: jobPostsTable.requiredSkills,
+        tags: tagsQuery,
+
+        createdAt: jobPostsTable.createdAt,
+        updatedAt: jobPostsTable.updatedAt,
+      })
+      .from(jobPostsTable)
+      .where(conditions);
     return makeDbResponse<JobPost | None>(result[0], null);
   } catch (error) {
     return makeDbResponse(null, error as Error);

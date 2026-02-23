@@ -12,6 +12,7 @@ import {
   Portfolio,
   WorkExperience,
 } from "../helpers/types.js";
+import { jobPostsTable, jobPostTagsTable } from "./schema/job_posts.js";
 
 export const languageNamesQuery = sql<string[]>`(
       SELECT COALESCE(ARRAY_AGG(DISTINCT ${userLanguagesTable.languageName}), '{}')
@@ -65,4 +66,10 @@ export const portfoliosQuery = sql<Omit<Portfolio, "userId">[]>`(
       )
       FROM ${userPortfoliosTable}
       WHERE ${userPortfoliosTable.userId} = ${usersTable.id}
+    )`;
+
+export const tagsQuery = sql<string[]>`(
+      SELECT COALESCE(ARRAY_AGG(DISTINCT ${jobPostTagsTable.tag}), '{}')
+      FROM ${jobPostTagsTable}
+      WHERE ${jobPostTagsTable.jobPostId} = ${jobPostsTable.id}
     )`;
