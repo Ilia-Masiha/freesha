@@ -21,16 +21,21 @@ export async function insertJobPost(
     delete jobPost.tags;
 
     const result = await db.transaction(async (tx: Transaction) => {
-      const newInfo = await tx.insert(jobPostsTable).values(jobPost).returning({
-        id: jobPostsTable.id,
-        createdAt: jobPostsTable.createdAt,
-        updatedAt: jobPostsTable.updatedAt,
-      });
+      const newInfo: Record<string, any> = await tx
+        .insert(jobPostsTable)
+        .values(jobPost)
+        .returning({
+          id: jobPostsTable.id,
+          createdAt: jobPostsTable.createdAt,
+          updatedAt: jobPostsTable.updatedAt,
+        });
 
       if (newInfo[0] === undefined)
         throw "Something went wrong while inserting a new job post";
 
       await insertTags(tx, newInfo[0].id, tags);
+
+      delete newInfo[0].id;
 
       return newInfo[0];
     });

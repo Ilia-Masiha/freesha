@@ -113,7 +113,8 @@ const tagsItemsValidator = () =>
     .isString()
     .withMessage("درایه های تگ ها باید رشته باشند")
     .isLength({ min: 1, max: 30 })
-    .withMessage("درایه های تگ ها باید بین 1 تا 30 کاراکتر باشند");
+    .withMessage("درایه های تگ ها باید بین 1 تا 30 کاراکتر باشند")
+    .customSanitizer((tagItem: string) => tagItem.toLowerCase());
 
 export const createJobPostValidator = () => [
   titleValidator(),

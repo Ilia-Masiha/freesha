@@ -347,7 +347,11 @@ These status codes are always expected from any endpoint, so I will not include 
     "title": "Designing the database of an online shop",
     "description": "I'm currently giving you a lot of information about this project",
     "budgetLow": 500000,
-    "budgetHigh": 1000000
+    "budgetHigh": 1000000,
+    "deadline": "2026-03-15",
+    "tags": ["database", "web", "data"],
+    "categoryId": 2,
+    "requiredSkills": ["Databases", "PostgreSQL"]
   }
   ```
   Response body will contain a `message` about the result of your request. If successful, `data` will also contain information about the created job post. Response body will be in this format (If status code is `201`):  
@@ -356,13 +360,24 @@ These status codes are always expected from any endpoint, so I will not include 
   {
     "message": "آگهی کار با موفقیت ایجاد شد",
     "data": {
-      "clientId": 5,
-      "statusId": 1,
       "title": "Designing the database of an online shop",
+      "slug": "designing-the-database-of-an-online-shop-Q2h0",
       "description": "I'm currently giving you a lot of information about this project",
       "budgetLow": 500000,
       "budgetHigh": 1000000,
-      "id": 1,
+      "deadline": "2026-03-15",
+      "clientId": 5,
+      "statusId": 1,
+      "categoryId": 2,
+      "requiredSkills": [
+          "Databases",
+          "PostgreSQL"
+      ],
+      "tags": [
+          "database",
+          "web",
+          "data"
+      ],
       "createdAt": "2025-12-06T17:39:01.244Z",
       "updatedAt": "2025-12-06T17:39:01.244Z"
     }
