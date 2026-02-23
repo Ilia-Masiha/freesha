@@ -10,6 +10,7 @@ import {
 } from "../../helpers/types.js";
 import { jobPostsTable, jobPostTagsTable } from "../schema/job_posts.js";
 import { isNone } from "../../helpers/utils.js";
+import { tagsQuery } from "../queries.js";
 
 export async function insertJobPost(
   jobPost: JobPost
@@ -20,16 +21,21 @@ export async function insertJobPost(
     delete jobPost.tags;
 
     const result = await db.transaction(async (tx: Transaction) => {
-      const newInfo = await tx.insert(jobPostsTable).values(jobPost).returning({
-        id: jobPostsTable.id,
-        createdAt: jobPostsTable.createdAt,
-        updatedAt: jobPostsTable.updatedAt,
-      });
+      const newInfo: Record<string, any> = await tx
+        .insert(jobPostsTable)
+        .values(jobPost)
+        .returning({
+          id: jobPostsTable.id,
+          createdAt: jobPostsTable.createdAt,
+          updatedAt: jobPostsTable.updatedAt,
+        });
 
       if (newInfo[0] === undefined)
         throw "Something went wrong while inserting a new job post";
 
       await insertTags(tx, newInfo[0].id, tags);
+
+      delete newInfo[0].id;
 
       return newInfo[0];
     });
@@ -47,8 +53,8 @@ export async function getJobPost(
   let conditions;
 
   // Handling all of the filters
-  if (!isNone(filters.id)) {
-    equalities.push(eq(jobPostsTable.id, filters.id));
+  if (!isNone(filters.slug)) {
+    equalities.push(eq(jobPostsTable.slug, filters.slug));
   }
 
   if (!isNone(filters.clientId)) {
@@ -61,7 +67,27 @@ export async function getJobPost(
   }
 
   try {
-    const result = await db.select().from(jobPostsTable).where(conditions);
+    const result = await db
+      .select({
+        title: jobPostsTable.title,
+        slug: jobPostsTable.slug,
+        description: jobPostsTable.description,
+        budgetLow: jobPostsTable.budgetLow,
+        budgetHigh: jobPostsTable.budgetHigh,
+        deadline: jobPostsTable.deadline,
+
+        clientId: jobPostsTable.clientId,
+        statusId: jobPostsTable.statusId,
+        categoryId: jobPostsTable.categoryId,
+
+        requiredSkills: jobPostsTable.requiredSkills,
+        tags: tagsQuery,
+
+        createdAt: jobPostsTable.createdAt,
+        updatedAt: jobPostsTable.updatedAt,
+      })
+      .from(jobPostsTable)
+      .where(conditions);
     return makeDbResponse<JobPost | None>(result[0], null);
   } catch (error) {
     return makeDbResponse(null, error as Error);
