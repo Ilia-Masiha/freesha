@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express-serve-static-core";
 import { matchedData, validationResult } from "express-validator";
 
 import * as db from "../database/sections/job_posts.js";
-import { convertToSlug, makeResObj } from "../helpers/utils.js";
+import { convertToSlug, isNone, makeResObj } from "../helpers/utils.js";
 import { JobPost } from "../helpers/types.js";
 import { JobPostStatusIds } from "../helpers/consts.js";
 import { messages } from "../helpers/consts.js";
@@ -73,11 +73,11 @@ export async function getJobPost(
   }
 
   const dbResponse = await db.getJobPost(validatedData);
-  if (dbResponse.error) {
+  if (dbResponse.error || isNone(dbResponse.result)) {
     return next(dbResponse.error);
   }
 
-  const resObj = makeResObj(messages.gotJobPost, dbResponse.result);
+  const resObj = makeResObj(messages.gotJobPost, dbResponse.result[0]);
   return res.status(200).json(resObj);
 }
 
