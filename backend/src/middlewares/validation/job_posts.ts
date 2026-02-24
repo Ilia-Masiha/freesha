@@ -55,56 +55,6 @@ const jobPostSlugValidator = () =>
     .isLength({ max: 100 })
     .withMessage("طول شناسه آگهی کار نباید بیش از 100 کاراکتر باشد");
 
-const clientIdQueryValidator = () =>
-  query("clientId")
-    .trim()
-    .notEmpty()
-    .withMessage("آیدی کارفرما نمی تواند خالی باشد")
-    .isInt({ min: 1 })
-    .withMessage("آیدی کارفرما باید یک عدد صحیح مثبت باشد")
-    .toInt();
-
-const categoryIdQueryValidator = () =>
-  query("categoryId")
-    .trim()
-    .notEmpty()
-    .withMessage("آیدی دسته بندی نمی تواند خالی باشد")
-    .isInt({ min: 0, max: categories.length - 1 })
-    .withMessage(
-      `آیدی دسته بندی باید عددی از 0 تا ${categories.length - 1} باشد`
-    )
-    .toInt();
-
-const orderByQueryValidator = () =>
-  query("orderBy")
-    .trim()
-    .notEmpty()
-    .withMessage("مرتب سازی نمی تواند خالی باشد")
-    .isString()
-    .withMessage("مرتب سازی باید یک رشته باشد");
-
-const budgetLowQueryValidator = () =>
-  query("budgetLow")
-    .trim()
-    .notEmpty()
-    .withMessage("کف بودجه نباید خالی باشد")
-    .isInt({ min: 500_000, max: 1_000_000_000 })
-    .withMessage(
-      "کف بودجه باید عددی بین 500،000 ریال تا 1،000،000،000 ریال باشد"
-    )
-    .toInt();
-
-const budgetHighQueryValidator = () =>
-  query("budgetHigh")
-    .trim()
-    .notEmpty()
-    .withMessage("سقف بودجه نباید خالی باشد")
-    .isInt({ min: 500_000, max: 1_000_000_000 })
-    .withMessage(
-      "سقف بودجه باید عددی بین 500،000 ریال تا 1،000،000،000 ریال باشد"
-    )
-    .toInt();
-
 const deadlineValidator = () =>
   body("deadline")
     .trim()
@@ -158,6 +108,64 @@ const tagsItemsValidator = () =>
     .withMessage("درایه های تگ ها باید بین 1 تا 30 کاراکتر باشند")
     .customSanitizer((tagItem: string) => tagItem.toLowerCase());
 
+const clientIdQueryValidator = () =>
+  query("clientId")
+    .trim()
+    .notEmpty()
+    .withMessage("آیدی کارفرما نمی تواند خالی باشد")
+    .isInt({ min: 1 })
+    .withMessage("آیدی کارفرما باید یک عدد صحیح مثبت باشد")
+    .toInt();
+
+const categoryIdQueryValidator = () =>
+  query("categoryId")
+    .trim()
+    .notEmpty()
+    .withMessage("آیدی دسته بندی نمی تواند خالی باشد")
+    .isInt({ min: 0, max: categories.length - 1 })
+    .withMessage(
+      `آیدی دسته بندی باید عددی از 0 تا ${categories.length - 1} باشد`
+    )
+    .toInt();
+
+const orderByQueryValidator = () =>
+  query("orderBy")
+    .trim()
+    .notEmpty()
+    .withMessage("مرتب سازی نمی تواند خالی باشد")
+    .isString()
+    .withMessage("مرتب سازی باید یک رشته باشد");
+
+const budgetLowQueryValidator = () =>
+  query("budgetLow")
+    .trim()
+    .notEmpty()
+    .withMessage("کف بودجه نباید خالی باشد")
+    .isInt({ min: 500_000, max: 1_000_000_000 })
+    .withMessage(
+      "کف بودجه باید عددی بین 500،000 ریال تا 1،000،000،000 ریال باشد"
+    )
+    .toInt();
+
+const budgetHighQueryValidator = () =>
+  query("budgetHigh")
+    .trim()
+    .notEmpty()
+    .withMessage("سقف بودجه نباید خالی باشد")
+    .isInt({ min: 500_000, max: 1_000_000_000 })
+    .withMessage(
+      "سقف بودجه باید عددی بین 500،000 ریال تا 1،000،000،000 ریال باشد"
+    )
+    .toInt();
+
+const searchQueryValidator = () =>
+  query("search")
+    .trim()
+    .notEmpty()
+    .withMessage("عبارت جست و جو نباید خالی باشد")
+    .isString()
+    .withMessage("عبارت جست و جو باید یک رشته باشد");
+
 export const createJobPostValidator = () => [
   titleValidator(),
   descriptionValidator(),
@@ -180,4 +188,5 @@ export const getJobPostsValidator = () => [
   orderByQueryValidator().optional(),
   budgetLowQueryValidator().optional(),
   budgetHighQueryValidator().optional(),
+  searchQueryValidator().optional(),
 ];

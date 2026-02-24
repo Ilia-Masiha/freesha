@@ -36,6 +36,10 @@ export const jobPostsTable = pgTable("job_posts", {
     .array()
     .notNull()
     .default(sql`'{}'::varchar[]`),
+  tags: varchar("tags", { length: 30 })
+    .array()
+    .notNull()
+    .default(sql`'{}'::varchar[]`),
 
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -81,19 +85,6 @@ export const acceptedOffersTable = pgTable("accepted_offers", {
     .references(() => offersTable.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
-
-export const jobPostTagsTable = pgTable(
-  "job_post_tags",
-  {
-    jobPostId: integer("job_post_id")
-      .notNull()
-      .references(() => jobPostsTable.id),
-    tag: varchar("tag", { length: 30 }).notNull(),
-  },
-  (table) => [
-    uniqueIndex("job_post_id_tag_unique_idx").on(table.jobPostId, table.tag),
-  ]
-);
 
 export const categoriesTable = pgTable("categories", {
   id: integer("id").notNull().unique(),

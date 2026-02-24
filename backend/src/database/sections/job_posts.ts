@@ -1,46 +1,31 @@
-import { and, asc, desc, eq, gte, lte, SQL } from "drizzle-orm";
+import {
+  and,
+  arrayContains,
+  asc,
+  desc,
+  eq,
+  gte,
+  ilike,
+  lte,
+  or,
+  SQL,
+} from "drizzle-orm";
 
 import { db, makeDbResponse } from "../db.js";
-import {
-  DbResponse,
-  DbResult,
-  JobPost,
-  None,
-  Transaction,
-} from "../../helpers/types.js";
-import { jobPostsTable, jobPostTagsTable } from "../schema/job_posts.js";
+import { DbResponse, DbResult, JobPost, None } from "../../helpers/types.js";
+import { jobPostsTable } from "../schema/job_posts.js";
 import { isNone } from "../../helpers/utils.js";
-import { tagsQuery } from "../queries.js";
 
 export async function insertJobPost(
   jobPost: JobPost
 ): Promise<DbResponse<DbResult>> {
   try {
-    const { tags } = jobPost;
-
-    delete jobPost.tags;
-
-    const result = await db.transaction(async (tx: Transaction) => {
-      const newInfo: Record<string, any> = await tx
-        .insert(jobPostsTable)
-        .values(jobPost)
-        .returning({
-          id: jobPostsTable.id,
-          createdAt: jobPostsTable.createdAt,
-          updatedAt: jobPostsTable.updatedAt,
-        });
-
-      if (newInfo[0] === undefined)
-        throw "Something went wrong while inserting a new job post";
-
-      await insertTags(tx, newInfo[0].id, tags);
-
-      delete newInfo[0].id;
-
-      return newInfo[0];
+    const result = await db.insert(jobPostsTable).values(jobPost).returning({
+      createdAt: jobPostsTable.createdAt,
+      updatedAt: jobPostsTable.updatedAt,
     });
 
-    return makeDbResponse(result, null);
+    return makeDbResponse(result[0], null);
   } catch (error) {
     return makeDbResponse(null, error as Error);
   }
@@ -74,6 +59,16 @@ export async function getJobPost(
     equalities.push(lte(jobPostsTable.budgetHigh, filters.budgetHigh));
   }
 
+  if (!isNone(filters.search) && typeof filters.search === "string") {
+    equalities.push(
+      or(
+        ilike(jobPostsTable.title, `%${filters.search}%`),
+        ilike(jobPostsTable.description, `%${filters.search}%`),
+        arrayContains(jobPostsTable.tags, [filters.search.toLowerCase()])
+      )
+    );
+  }
+
   if (filters.orderBy === "earliest") {
     orderBy = desc(jobPostsTable.createdAt);
   }
@@ -98,7 +93,7 @@ export async function getJobPost(
         categoryId: jobPostsTable.categoryId,
 
         requiredSkills: jobPostsTable.requiredSkills,
-        tags: tagsQuery,
+        tags: jobPostsTable.tags,
 
         createdAt: jobPostsTable.createdAt,
         updatedAt: jobPostsTable.updatedAt,
@@ -110,27 +105,4 @@ export async function getJobPost(
   } catch (error) {
     return makeDbResponse(null, error as Error);
   }
-}
-
-async function insertTags(
-  tx: Transaction,
-  id: number,
-  tags: string[] | None
-): Promise<void> {
-  if (isNone(tags)) {
-    return;
-  }
-
-  const jobPostTags = [];
-  for (const tag of tags) {
-    jobPostTags.push({ jobPostId: id, tag: tag });
-  }
-
-  await tx.delete(jobPostTagsTable).where(eq(jobPostTagsTable.jobPostId, id));
-
-  if (jobPostTags.length === 0) {
-    return;
-  }
-
-  await tx.insert(jobPostTagsTable).values(jobPostTags);
 }
