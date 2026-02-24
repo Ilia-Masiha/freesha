@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, asc, desc, eq, gte, lte, SQL } from "drizzle-orm";
 
 import { db, makeDbResponse } from "../db.js";
 import {
@@ -47,9 +47,10 @@ export async function insertJobPost(
 }
 
 export async function getJobPost(
-  filters: Partial<JobPost>
-): Promise<DbResponse<JobPost | None>> {
+  filters: Record<string, any>
+): Promise<DbResponse<JobPost[] | None>> {
   const equalities = [];
+  let orderBy: SQL = asc(jobPostsTable.createdAt);
   let conditions;
 
   // Handling all of the filters
@@ -59,6 +60,22 @@ export async function getJobPost(
 
   if (!isNone(filters.clientId)) {
     equalities.push(eq(jobPostsTable.clientId, filters.clientId));
+  }
+
+  if (!isNone(filters.categoryId)) {
+    equalities.push(eq(jobPostsTable.categoryId, filters.categoryId));
+  }
+
+  if (!isNone(filters.budgetLow)) {
+    equalities.push(gte(jobPostsTable.budgetLow, filters.budgetLow));
+  }
+
+  if (!isNone(filters.budgetHigh)) {
+    equalities.push(lte(jobPostsTable.budgetHigh, filters.budgetHigh));
+  }
+
+  if (filters.orderBy === "earliest") {
+    orderBy = desc(jobPostsTable.createdAt);
   }
 
   // Applying filters on conditions
@@ -87,8 +104,9 @@ export async function getJobPost(
         updatedAt: jobPostsTable.updatedAt,
       })
       .from(jobPostsTable)
-      .where(conditions);
-    return makeDbResponse<JobPost | None>(result[0], null);
+      .where(conditions)
+      .orderBy(orderBy);
+    return makeDbResponse<JobPost[] | None>(result, null);
   } catch (error) {
     return makeDbResponse(null, error as Error);
   }
