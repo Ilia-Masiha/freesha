@@ -398,14 +398,17 @@ These status codes are always expected from any endpoint, so I will not include 
   - `200`: Successfully got the job post.
 
 - `GET /job_posts` (Protected):  
-  This endpoint is used to get the information of several job posts. At least one filter must be set. Filters are explained here:  
+  This endpoint is used to get the information of several job posts. Filters are explained here:  
   - `search=word` means there must be a `word` in the job posts' title or description or one of the tags must be exactly `word`.  
   - `clientId=5` means all of the job posts must belong to the user with the id of `5`.  
   - `categoryId=2` means all of the job posts must belong to the category with the id of `2`.  
   - `budgetLow=1000000` means that the job posts' `budgetLow` must be `1000000` or greater than it.  
   - `budgetHigh=50000000` means that the job posts' `budgetHigh` must be `50000000` or less than it.  
-  - `orderBy=earliest` sorts the job posts by their `createdAt` property descendingly, meaning the older job posts will appear first.  
-  - `orderBy=latest` sorts the job posts by their `createdAt` property ascendingly, meaning the newer job posts will appear first. This is the default.  
+  - `orderBy=latest` sorts the job posts by their `createdAt` property descendingly, meaning the newer job posts will appear first. This is the default.  
+  - `orderBy=earliest` sorts the job posts by their `createdAt` property ascendingly, meaning the older job posts will appear first.  
+  - `orderBy=expensive` sorts the job posts by their `budgetHigh` property descendingly, meaning the higher paying job posts will appear first.  
+  - `orderBy=cheap` sorts the job posts by their `budgetHigh` property ascendingly, meaning the lower paying job posts will appear first.  
+  - `limit` and `page` query params are the typical params used for pagination. `page` starts from `1` and both of the params are required.
 
   Response body contains an array of job posts in the `data` property.
 

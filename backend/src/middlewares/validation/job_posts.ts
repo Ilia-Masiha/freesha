@@ -166,6 +166,24 @@ const searchQueryValidator = () =>
     .isString()
     .withMessage("عبارت جست و جو باید یک رشته باشد");
 
+const limitQueryValidator = () =>
+  query("limit")
+    .trim()
+    .notEmpty()
+    .withMessage("لیمیت ضروری است")
+    .isInt({ min: 1, max: 40 })
+    .withMessage("لیمیت باید عددی صحیح از 1 تا 40 باشد")
+    .toInt();
+
+const pageQueryValidator = () =>
+  query("page")
+    .trim()
+    .notEmpty()
+    .withMessage("صفحه ضروری است")
+    .isInt({ min: 1 })
+    .withMessage("صفحه باید یک عدد صحیح مثبت باشد")
+    .toInt();
+
 export const createJobPostValidator = () => [
   titleValidator(),
   descriptionValidator(),
@@ -183,6 +201,9 @@ export const createJobPostValidator = () => [
 export const getJobPostValidator = () => [jobPostSlugValidator()];
 
 export const getJobPostsValidator = () => [
+  limitQueryValidator(),
+  pageQueryValidator(),
+
   clientIdQueryValidator().optional(),
   categoryIdQueryValidator().optional(),
   orderByQueryValidator().optional(),

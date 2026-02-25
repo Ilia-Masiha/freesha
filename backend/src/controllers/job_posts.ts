@@ -67,17 +67,13 @@ export async function getJobPost(
   }
 
   const validatedData = matchedData(req);
-  if (validatedData.jobPostSlug) {
-    validatedData.slug = validatedData.jobPostSlug;
-    delete validatedData.jobPostSlug;
-  }
 
-  const dbResponse = await db.getJobPost(validatedData);
+  const dbResponse = await db.getJobPost(validatedData.jobPostSlug);
   if (dbResponse.error || isNone(dbResponse.result)) {
     return next(dbResponse.error);
   }
 
-  const resObj = makeResObj(messages.gotJobPost, dbResponse.result[0]);
+  const resObj = makeResObj(messages.gotJobPost, dbResponse.result);
   return res.status(200).json(resObj);
 }
 
@@ -94,13 +90,9 @@ export async function getJobPosts(
   }
 
   const validatedData = matchedData(req);
+  const { limit, page } = validatedData;
 
-  if (Object.keys(validatedData).length <= 0) {
-    const resObj = makeResObj(messages.noFilterJobPost);
-    return res.status(400).json(resObj);
-  }
-
-  const dbResponse = await db.getJobPost(validatedData);
+  const dbResponse = await db.getJobPosts(validatedData, limit, page);
   if (dbResponse.error) {
     return next(dbResponse.error);
   }
