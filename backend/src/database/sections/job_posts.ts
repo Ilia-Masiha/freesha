@@ -57,7 +57,7 @@ export async function getJobPosts(
 ): Promise<DbResponse<JobPost[] | None>> {
   const equalities = [];
   const offset = (page - 1) * limit;
-  let orderBy: SQL = asc(jobPostsTable.createdAt);
+  let orderBy: SQL = desc(jobPostsTable.createdAt);
   let conditions;
 
   // Handling all of the filters
@@ -87,8 +87,17 @@ export async function getJobPosts(
     );
   }
 
+  // Handling sorting
   if (filters.orderBy === "earliest") {
-    orderBy = desc(jobPostsTable.createdAt);
+    orderBy = asc(jobPostsTable.createdAt);
+  }
+
+  if (filters.orderBy === "expensive") {
+    orderBy = desc(jobPostsTable.budgetHigh);
+  }
+
+  if (filters.orderBy === "cheap") {
+    orderBy = asc(jobPostsTable.budgetHigh);
   }
 
   // Applying filters on conditions
