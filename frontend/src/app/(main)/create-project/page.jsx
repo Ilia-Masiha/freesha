@@ -10,31 +10,12 @@ import SkillsSelector from "@/components/Profile/SkillsSelector";
 import DateInput from "@/components/DateInput";
 import "react-tagsinput/react-tagsinput.css";
 import TextArea from "@/components/TextArea";
-import TagsInputComponent from "@/components/CreateProject/TagsInputComponent";
+import TagsInputComponent from "@/components/projects/TagsInputComponent";
 import Btn from "@/common/Btn";
 import { useCreateProject } from "@/hooks/projectHooks";
 import { toEnglishDigits } from "@/utils/toEnglishDigits";
+import { categoryOptions } from "@/constants/categories";
 
-const options = [
-  { label: "سایر حوزه‌های تخصصی", value: 0 },
-  { label: "طراحی وب سایت", value: 1 },
-  { label: "پایگاه داده", value: 2 },
-  { label: "دواپس و رایانش ابری", value: 3 },
-  { label: "طراحی اپلیکیشن موبایل", value: 4 },
-  { label: "طراحی رابط کاربری و تجربه کاربری", value: 5 },
-  { label: "طراحی گرافیک", value: 6 },
-  { label: "ویدئو و انیمیشن", value: 7 },
-  { label: "نویسندگی و تولید محتوا", value: 8 },
-  { label: "بازاریابی دیجیتال", value: 9 },
-  { label: "تجارت الکترونیک", value: 10 },
-  { label: "توسعه بازی", value: 11 },
-  { label: "امنیت سایبری", value: 12 },
-  { label: "هوش مصنوعی و یادگیری ماشین", value: 13 },
-  { label: "کسب و کار و مدیریت رسانه", value: 14 },
-  { label: "آموزش و مشاوره", value: 15 },
-  { label: "خدمات تخصصی", value: 16 },
-  { label: "آفیس و بهره‌وری", value: 17 },
-];
 
 const defaultValues = {
   title: "",
@@ -185,9 +166,9 @@ const CreateProject = () => {
                   onChange={(selected) => {
                     field.onChange(selected ? selected.value : "");
                   }}
-                  options={options}
+                  options={categoryOptions}
                   value={
-                    options.find((option) => option.value === field.value) ||
+                    categoryOptions.find((option) => option.value === field.value) ||
                     null
                   }
                 />
